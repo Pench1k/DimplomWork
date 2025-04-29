@@ -12,12 +12,14 @@ namespace BLL.Service
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IUnitOfWork unitOfWork)
+        public UserService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
         public async Task<bool> Add(RegisterUserDto dto)
@@ -61,30 +63,21 @@ namespace BLL.Service
             return await _userManager.Users.ToListAsync();
         }
 
-        public async Task<ApplicationUser?> GetByLoginAsync(string login)
-        {
-            return await _userManager.FindByNameAsync(login);
-        }
-
         public async Task<ApplicationUser?> GetByUserNameAsync(string userName)
         {
             return await _userManager.FindByNameAsync(userName);
         }
 
-        public async Task<SignInResult> LoginAsync(LoginUserDto dto)
+        public async Task<string> LoginAsync(LoginUserDto dto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-           
-            var user = await _userManager.FindByNameAsync(dto.UserName);
-            if (user == null)
-                return SignInResult.Failed;
-
-           
-            var result = await _signInManager.PasswordSignInAsync(user, dto.Password, isPersistent: false, lockoutOnFailure: false);
-
-            return result;
+            var user = await GetByUserNameAsync(dto.UserName);
+            if(user != null)
+            {
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, dto.Password, false, false);
+                if (result.Succeeded)
+                    return _tokenService.CreateToken(user);
+            }
+            throw new Exception("Failed to login");
         }
 
         public async Task LogoutAsync()

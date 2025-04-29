@@ -1,4 +1,5 @@
-﻿using DAL.Interface;
+﻿using DAL.Context;
+using DAL.Interface;
 using DAL.Models;
 using DAL.Reporitory;
 using DAL.Repository;
@@ -10,6 +11,9 @@ namespace DAL
     {
         public static IServiceCollection AddDynamicLinkLibary (this IServiceCollection service)
         {
+          
+
+
             service.AddScoped<IArrivalFromTheWarehouse, ArrivalFromTheWarehouseRepository>();
             service.AddScoped<IComing, ComingRepository>();
             service.AddScoped<IComputer, ComputerRepository>();

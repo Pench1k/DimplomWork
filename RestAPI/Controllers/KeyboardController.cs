@@ -1,5 +1,6 @@
 ﻿using BLL.DTO;
 using BLL.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace RestAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class KeyboardController : Controller
     {
         private readonly IKeyboardService _keyboardService;
@@ -37,6 +39,7 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var result = await _keyboardService.GetAllAsync();

@@ -9,9 +9,10 @@ namespace RestAPI.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
+
         public AccountController(IUserService userService)
         {
-            _userService = userService;
+            _userService = userService;          
         }
 
         [HttpPost]
@@ -32,6 +33,16 @@ namespace RestAPI.Controllers
             }
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest();
+            var token = await _userService.LoginAsync(loginUserDto);
 
+            HttpContext.Response.Cookies.Append("tasty-cookies", token);
+
+            return Ok(token);
+        }
     }
 }

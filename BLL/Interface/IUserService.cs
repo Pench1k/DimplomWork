@@ -10,12 +10,9 @@ namespace BLL.Interface
         Task<bool> Update(ApplicationUser user);
         Task Delete(ApplicationUser user);
 
-        Task<SignInResult> LoginAsync(LoginUserDto dto);
+        Task<string> LoginAsync(LoginUserDto dto);
 
-        Task LogoutAsync();
-
-        Task<ApplicationUser?> GetByLoginAsync(string login);
-
+        Task LogoutAsync();      
         Task<IEnumerable<ApplicationUser>> GetAllAsync();
 
         Task<ApplicationUser?> GetByUserNameAsync(string userName);
