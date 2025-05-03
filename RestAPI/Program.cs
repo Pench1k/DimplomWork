@@ -3,14 +3,10 @@ using BLL;
 using BLL.Interface;
 using BLL.Service;
 using DAL.Context;
-using DAL.Interface;
 using DAL.Models;
-using DAL.Repository;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace RestAPI
 {
@@ -22,6 +18,11 @@ namespace RestAPI
 
 
             // Add services to the container.
+
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(5001); // ”казываем нужный порт
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,6 +39,17 @@ namespace RestAPI
 
             builder.Services.AddBusinessLogical();
             builder.Services.AddApiAuthentication(builder.Configuration);
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowUI", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7216") 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+                });
+            });
 
 
             var app = builder.Build();
@@ -57,11 +69,12 @@ namespace RestAPI
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always
             });
-            
+
+            app.UseCors("AllowUI");
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            
 
             app.MapControllers();
 

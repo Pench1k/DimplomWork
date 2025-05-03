@@ -1,11 +1,13 @@
 ﻿using BLL.DTO;
 using BLL.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RestAPI.Controllers
 {
     [Route("api/deanoffice")]
     [ApiController]
+    [Authorize(Roles = "admin")]
     public class DeanOfficeController : Controller
     {
         private readonly IDeanOfficeService _deanOfficeService;

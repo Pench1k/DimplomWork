@@ -40,7 +40,13 @@ namespace RestAPI.Controllers
                 return BadRequest();
             var token = await _userService.LoginAsync(loginUserDto);
 
-            HttpContext.Response.Cookies.Append("tasty-cookies", token);
+
+            HttpContext.Response.Cookies.Append("tasty-cookies", token, new CookieOptions { 
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+
 
             return Ok(token);
         }

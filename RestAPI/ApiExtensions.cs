@@ -42,7 +42,16 @@ namespace RestAPI
 
             });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+                options.AddPolicy("MethodistOnly", policy => policy.RequireRole("Методист"));
+                options.AddPolicy("RectorOnly", policy => policy.RequireRole("Проректор"));
+                options.AddPolicy("ResponWarehouseOnly", policy => policy.RequireRole("Ответственный за склад"));
+                options.AddPolicy("EngineerOnly", policy => policy.RequireRole("Инженер коммуникационного центра"));
+            });
+
+            
 
         }
     }

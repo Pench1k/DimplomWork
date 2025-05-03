@@ -7,6 +7,7 @@ using DAL.Repository;
 
 namespace BLL.Service
 {
+
     public class DeanOfficeService : IDeanOfficeService
     {
         private readonly IUnitOfWork _unitOfWork;

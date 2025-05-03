@@ -15,6 +15,8 @@ namespace BLL.Interface
         Task LogoutAsync();      
         Task<IEnumerable<ApplicationUser>> GetAllAsync();
 
+        Task<IEnumerable<string>> GetRolesAsync(ApplicationUser user);
+
         Task<ApplicationUser?> GetByUserNameAsync(string userName);
     }
 }

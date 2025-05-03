@@ -68,6 +68,11 @@ namespace BLL.Service
             return await _userManager.FindByNameAsync(userName);
         }
 
+        public async Task<IEnumerable<string>> GetRolesAsync(ApplicationUser user)
+        {
+            return await _userManager.GetRolesAsync(user);
+        }
+
         public async Task<string> LoginAsync(LoginUserDto dto)
         {
             var user = await GetByUserNameAsync(dto.UserName);
@@ -75,7 +80,12 @@ namespace BLL.Service
             {
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, dto.Password, false, false);
                 if (result.Succeeded)
-                    return _tokenService.CreateToken(user);
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
+                    
+                    return _tokenService.CreateToken(user, roles);
+                }
+                    
             }
             throw new Exception("Failed to login");
         }
