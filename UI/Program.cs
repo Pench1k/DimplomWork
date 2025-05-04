@@ -8,10 +8,29 @@ namespace UI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddAuthentication("Cookies").AddCookie("Cookies", options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.Cookie.Name = "auth-cookie";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
+
+
             builder.Services.AddHttpClient("AuthorizedClient", client =>
             {
                 client.BaseAddress = new Uri("http://localhost:5001/");
-            });
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler()
+             {
+                 AllowAutoRedirect = true,
+                 UseCookies = true,
+             });
 
 
             var app = builder.Build();
@@ -29,6 +48,7 @@ namespace UI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

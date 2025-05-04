@@ -7,6 +7,7 @@ using DAL.Models;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace RestAPI
 {
@@ -21,7 +22,10 @@ namespace RestAPI
 
             builder.WebHost.ConfigureKestrel(options =>
             {
-                options.ListenAnyIP(5001); // ”казываем нужный порт
+                options.Listen(IPAddress.Any, 5001, listenOptions =>
+                {
+                    listenOptions.UseHttps();
+                });
             });
 
             builder.Services.AddControllers();
@@ -65,7 +69,7 @@ namespace RestAPI
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {
-                MinimumSameSitePolicy = SameSiteMode.Strict,
+                MinimumSameSitePolicy = SameSiteMode.Lax,
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.Always
             });

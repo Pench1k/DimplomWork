@@ -41,10 +41,12 @@ namespace RestAPI.Controllers
             var token = await _userService.LoginAsync(loginUserDto);
 
 
-            HttpContext.Response.Cookies.Append("tasty-cookies", token, new CookieOptions { 
+            HttpContext.Response.Cookies.Append("tasty-cookies", token, new CookieOptions
+            {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None
+                Secure = true,              // Обязательно при SameSite=None
+                SameSite = SameSiteMode.None,  // Разрешает межсайтовые запросы
+                Expires = DateTime.UtcNow.AddHours(1)
             });
 
 

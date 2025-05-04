@@ -5,4 +5,11 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <ul>
+        <li>User.Identity.IsAuthenticated: @User.Identity.IsAuthenticated</li>
+        <li>Roles: @string.Join(", ", User.Claims.Where(c => c.Type == "role").Select(c => c.Value))</li>
+    </ul>
 </div>
+
+
