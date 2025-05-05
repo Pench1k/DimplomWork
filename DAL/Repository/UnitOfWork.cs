@@ -33,7 +33,7 @@ namespace DAL.Repository
         public IGenericRepository<Screen> Screen { get; }
         public IGenericRepository<VideoСard> VideoCard { get; }
         public IGenericRepository<Warehouse> Warehouse { get; }
-        public IWorkers Workers { get; }
+        //public IWorkers Workers { get; }
         public IWriteDowns WriteDowns { get; }
 
         public UnitOfWork(ApplicationContext context, 
@@ -57,7 +57,7 @@ namespace DAL.Repository
             IGenericRepository<Screen> Screen,
             IGenericRepository<VideoСard> VideoCard,
             IGenericRepository<Warehouse> Warehouse,
-            IWorkers Workers,
+            //IWorkers Workers,
             IWriteDowns WriteDowns)
         {
             _context = context;
@@ -81,7 +81,7 @@ namespace DAL.Repository
             this.Screen = Screen;            
             this.VideoCard = VideoCard;
             this.Warehouse = Warehouse;
-            this.Workers = Workers;
+            //this.Workers = Workers;
             this.WriteDowns = WriteDowns;
         }
 

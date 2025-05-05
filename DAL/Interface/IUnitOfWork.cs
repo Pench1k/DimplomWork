@@ -27,8 +27,7 @@ namespace DAL.Interface
         IRepairComputer RepairComputer { get; }
         IGenericRepository<Screen> Screen { get; }
         IGenericRepository<VideoСard> VideoCard { get; }
-        IGenericRepository<Warehouse> Warehouse { get; }
-        IWorkers Workers { get; }   
+        IGenericRepository<Warehouse> Warehouse { get; }     
         IWriteDowns WriteDowns { get; }
 
 

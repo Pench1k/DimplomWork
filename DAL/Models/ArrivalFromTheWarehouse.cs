@@ -5,20 +5,20 @@
         public int Id { get; set; } 
 
         public int? ComputerPassportId { get; set; }
-        public ComputerPassport ComputerPassport { get; set; }
+        public ComputerPassport? ComputerPassport { get; set; }
 
         public int? WarehouseId { get; set; }
-        public Warehouse Warehouse { get; set; }
+        public Warehouse? Warehouse { get; set; }
 
         public int? OfficeId {  get; set; }
-        public Office Office { get; set; }
+        public Office? Office { get; set; }
 
-        public int? WorkerId { get; set; }
-        public Workers Worker { get; set; }
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
 
         public DateOnly DateOfArrivalFromTheWarehouse { get; set; }
 
-        public string Note { get; set; }
+        public string? Note { get; set; }
         public StatusForArrival Status { get; set; }
     }
 

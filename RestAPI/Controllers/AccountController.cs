@@ -34,7 +34,7 @@ namespace RestAPI.Controllers
             }
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
         {
             if (!ModelState.IsValid)
@@ -52,11 +52,19 @@ namespace RestAPI.Controllers
             return Ok(token);
         }
 
-        [HttpGet("users")]
+        [HttpGet("Users")]
         [Authorize(Roles = "admin")] // Добавляем аттрибут, чтобы только авторизованные пользователи могли вызвать этот метод
         public async Task<IActionResult> GetAllUsers()
         {
             var userAll = await _userService.GetAllAsync();
+            return Ok(userAll);
+        }
+
+        [HttpGet("User")]
+        [Authorize(Roles = "admin")] // Добавляем аттрибут, чтобы только авторизованные пользователи могли вызвать этот метод
+        public async Task<IActionResult> GetUser(string userName)
+        {
+            var userAll = await _userService.GetByUserNameAsync(userName);
             return Ok(userAll);
         }
     }

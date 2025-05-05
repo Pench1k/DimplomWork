@@ -25,7 +25,7 @@ namespace DAL
             service.AddScoped<IRepairComputer, RepairComputerRepository>();
                         
             
-            service.AddScoped<IWorkers, WorkersRepository>();
+            //service.AddScoped<IWorkers, WorkersRepository>();
             service.AddScoped<IWriteDowns, WriteDownsRepository>();
 
 

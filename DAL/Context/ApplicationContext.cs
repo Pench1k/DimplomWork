@@ -37,7 +37,7 @@ namespace DAL.Context
         public DbSet<Screen> Screens { get; set; }
         public DbSet<VideoСard> VideoCards { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<Workers> Workers { get; set; }
+
         public DbSet<WriteDowns> WriteDowns { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

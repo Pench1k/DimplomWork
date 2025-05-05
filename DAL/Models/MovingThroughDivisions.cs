@@ -14,11 +14,11 @@
         public Office? OfficeNew { get; set; }
 
 
-        public int? WorkerId { get; set; }
-        public Workers? Workers { get; set; }
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
 
         public DateOnly DateOfMovingThroughDivisions { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
 
         public StatusForMoving Status { get; set; }
     }

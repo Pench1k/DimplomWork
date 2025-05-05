@@ -34,6 +34,9 @@ namespace DAL.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -83,7 +86,12 @@ namespace DAL.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("WarehouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -92,6 +100,8 @@ namespace DAL.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -111,7 +121,6 @@ namespace DAL.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OfficeId")
@@ -120,10 +129,10 @@ namespace DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WarehouseId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("WorkerId")
+                    b.Property<int?>("WarehouseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -132,9 +141,9 @@ namespace DAL.Migrations
 
                     b.HasIndex("OfficeId");
 
-                    b.HasIndex("WarehouseId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("WorkerId");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("ArrivalFromTheWarehouses");
                 });
@@ -151,7 +160,6 @@ namespace DAL.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Provider")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("WarehouseId")
@@ -202,7 +210,7 @@ namespace DAL.Migrations
                     b.Property<int?>("VideoCardId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VideoСardId")
+                    b.Property<int?>("VideoСardId")
                         .HasColumnType("int");
 
                     b.Property<int?>("WarehouseId")
@@ -258,13 +266,10 @@ namespace DAL.Migrations
                     b.Property<int?>("OfficeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int?>("WarehouseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WorkerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkersId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -273,9 +278,9 @@ namespace DAL.Migrations
 
                     b.HasIndex("OfficeId");
 
-                    b.HasIndex("WarehouseId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("WorkersId");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("ComputerPassports");
                 });
@@ -289,7 +294,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -309,7 +313,6 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -328,7 +331,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -345,7 +347,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -362,7 +363,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -379,7 +379,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -402,7 +401,6 @@ namespace DAL.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OfficeNewId")
@@ -414,11 +412,8 @@ namespace DAL.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WorkersId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -428,7 +423,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("OfficeOldId");
 
-                    b.HasIndex("WorkersId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("MovingThroughDivisions");
                 });
@@ -442,7 +437,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -502,7 +496,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -519,7 +512,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -539,27 +531,22 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ServiceCenter")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WorkersId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ComputerPassportId");
 
-                    b.HasIndex("WorkersId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("RepairComputers");
                 });
@@ -573,7 +560,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -590,7 +576,6 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -607,42 +592,11 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Warehouses");
-                });
-
-            modelBuilder.Entity("DAL.Models.Workers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WarehouseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique()
-                        .HasFilter("[ApplicationUserId] IS NOT NULL");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("Workers");
                 });
 
             modelBuilder.Entity("DAL.Models.WriteDowns", b =>
@@ -657,23 +611,19 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WorkersId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ComputerPassportId");
 
-                    b.HasIndex("WorkersId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("WriteDowns");
                 });
@@ -707,31 +657,31 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d2f1bb0c-3fb6-4f8a-a20b-78827cc31554",
+                            Id = "f5f9a869-adc3-4f84-9b53-3864d00daac5",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c7c8b301-38ed-4141-a58b-118c38955d4f",
+                            Id = "f6d85ae4-f6bf-4bb9-97e6-42fb9405892b",
                             Name = "Ответственный за склад",
                             NormalizedName = "ОТВЕТСТВЕННЫЙ ЗА СКЛАД"
                         },
                         new
                         {
-                            Id = "d98ba1ab-78fa-43db-b14d-0fa315c7f1f3",
+                            Id = "5aa07e78-2424-437a-b75a-8f283e8f1caa",
                             Name = "Методист",
                             NormalizedName = "МЕТОДИСТ"
                         },
                         new
                         {
-                            Id = "a9d5403c-0278-4aec-ade0-4398c4604ed3",
+                            Id = "856f353e-39bd-416c-a4c0-f38ecb4d1976",
                             Name = "Инженер коммуниционного  центра",
                             NormalizedName = "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА"
                         },
                         new
                         {
-                            Id = "b522e1a6-1dbd-47cb-a14d-5c6e549384dc",
+                            Id = "ecd7d9d7-2f51-4a86-90a6-ce9be95969b0",
                             Name = "Проректор",
                             NormalizedName = "ПРОРЕКТОР"
                         });
@@ -843,6 +793,21 @@ namespace DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DAL.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("DAL.Models.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
+
+                    b.HasOne("DAL.Models.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Warehouse");
+                });
+
             modelBuilder.Entity("DAL.Models.ArrivalFromTheWarehouse", b =>
                 {
                     b.HasOne("DAL.Models.ComputerPassport", "ComputerPassport")
@@ -853,21 +818,21 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("OfficeId");
 
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.HasOne("DAL.Models.Warehouse", "Warehouse")
                         .WithMany()
                         .HasForeignKey("WarehouseId");
-
-                    b.HasOne("DAL.Models.Workers", "Worker")
-                        .WithMany()
-                        .HasForeignKey("WorkerId");
 
                     b.Navigation("ComputerPassport");
 
                     b.Navigation("Office");
 
-                    b.Navigation("Warehouse");
+                    b.Navigation("User");
 
-                    b.Navigation("Worker");
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("DAL.Models.Coming", b =>
@@ -919,9 +884,7 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Models.VideoСard", "VideoСard")
                         .WithMany("Computers")
-                        .HasForeignKey("VideoСardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("VideoСardId");
 
                     b.HasOne("DAL.Models.Warehouse", null)
                         .WithMany("Computers")
@@ -958,23 +921,21 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("OfficeId");
 
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.HasOne("DAL.Models.Warehouse", "Warehouse")
                         .WithMany()
                         .HasForeignKey("WarehouseId");
-
-                    b.HasOne("DAL.Models.Workers", "Workers")
-                        .WithMany()
-                        .HasForeignKey("WorkersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Computer");
 
                     b.Navigation("Office");
 
-                    b.Navigation("Warehouse");
+                    b.Navigation("User");
 
-                    b.Navigation("Workers");
+                    b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("DAL.Models.Department", b =>
@@ -1000,9 +961,9 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("OfficeOldId");
 
-                    b.HasOne("DAL.Models.Workers", "Workers")
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("WorkersId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ComputerPassport");
 
@@ -1010,7 +971,7 @@ namespace DAL.Migrations
 
                     b.Navigation("OfficeOld");
 
-                    b.Navigation("Workers");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Models.Office", b =>
@@ -1028,34 +989,13 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("ComputerPassportId");
 
-                    b.HasOne("DAL.Models.Workers", "Workers")
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("WorkersId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ComputerPassport");
 
-                    b.Navigation("Workers");
-                });
-
-            modelBuilder.Entity("DAL.Models.Workers", b =>
-                {
-                    b.HasOne("DAL.Models.ApplicationUser", "ApplicationUser")
-                        .WithOne("Worker")
-                        .HasForeignKey("DAL.Models.Workers", "ApplicationUserId");
-
-                    b.HasOne("DAL.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
-                    b.HasOne("DAL.Models.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId");
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("Warehouse");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Models.WriteDowns", b =>
@@ -1064,13 +1004,13 @@ namespace DAL.Migrations
                         .WithMany()
                         .HasForeignKey("ComputerPassportId");
 
-                    b.HasOne("DAL.Models.Workers", "Workers")
+                    b.HasOne("DAL.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("WorkersId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("ComputerPassport");
 
-                    b.Navigation("Workers");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1122,11 +1062,6 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DAL.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Worker");
                 });
 
             modelBuilder.Entity("DAL.Models.DeanOffice", b =>

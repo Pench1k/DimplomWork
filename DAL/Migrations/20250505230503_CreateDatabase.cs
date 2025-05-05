@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Create : Migration
+    public partial class CreateDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,40 +28,12 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DeanOffices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -72,7 +46,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,7 +59,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,7 +72,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -111,7 +85,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -124,7 +98,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,7 +124,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -163,7 +137,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,7 +150,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -189,7 +163,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,7 +176,7 @@ namespace DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -228,6 +202,185 @@ namespace DAL.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeanOfficeId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Departments_DeanOffices_DeanOfficeId",
+                        column: x => x.DeanOfficeId,
+                        principalTable: "DeanOffices",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfComing = table.Column<DateOnly>(type: "date", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comings_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Computers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProcessorId = table.Column<int>(type: "int", nullable: true),
+                    MotherboardId = table.Column<int>(type: "int", nullable: true),
+                    RamId = table.Column<int>(type: "int", nullable: true),
+                    OcId = table.Column<int>(type: "int", nullable: true),
+                    MemoryDiskId = table.Column<int>(type: "int", nullable: true),
+                    PowerUnitId = table.Column<int>(type: "int", nullable: true),
+                    VideoCardId = table.Column<int>(type: "int", nullable: true),
+                    VideoСardId = table.Column<int>(type: "int", nullable: true),
+                    MouseId = table.Column<int>(type: "int", nullable: true),
+                    KeyboardId = table.Column<int>(type: "int", nullable: true),
+                    ScreenId = table.Column<int>(type: "int", nullable: true),
+                    WarehouseId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Computers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Computers_Keyboards_KeyboardId",
+                        column: x => x.KeyboardId,
+                        principalTable: "Keyboards",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_MemoryDisks_MemoryDiskId",
+                        column: x => x.MemoryDiskId,
+                        principalTable: "MemoryDisks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Motherboards_MotherboardId",
+                        column: x => x.MotherboardId,
+                        principalTable: "Motherboards",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Mouses_MouseId",
+                        column: x => x.MouseId,
+                        principalTable: "Mouses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Ocs_OcId",
+                        column: x => x.OcId,
+                        principalTable: "Ocs",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_PowerUnits_PowerUnitId",
+                        column: x => x.PowerUnitId,
+                        principalTable: "PowerUnits",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Processor_ProcessorId",
+                        column: x => x.ProcessorId,
+                        principalTable: "Processor",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Rams_RamId",
+                        column: x => x.RamId,
+                        principalTable: "Rams",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Screens_ScreenId",
+                        column: x => x.ScreenId,
+                        principalTable: "Screens",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_VideoCards_VideoСardId",
+                        column: x => x.VideoСardId,
+                        principalTable: "VideoCards",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Computers_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    WarehouseId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Offices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    Body = table.Column<int>(type: "int", nullable: false),
+                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    NumberOfAvailableSeats = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Offices", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Offices_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -316,176 +469,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Departments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DeanOfficeId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Departments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Departments_DeanOffices_DeanOfficeId",
-                        column: x => x.DeanOfficeId,
-                        principalTable: "DeanOffices",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Comings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfComing = table.Column<DateOnly>(type: "date", nullable: false),
-                    WarehouseId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comings_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Computers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProcessorId = table.Column<int>(type: "int", nullable: true),
-                    MotherboardId = table.Column<int>(type: "int", nullable: true),
-                    RamId = table.Column<int>(type: "int", nullable: true),
-                    OcId = table.Column<int>(type: "int", nullable: true),
-                    MemoryDiskId = table.Column<int>(type: "int", nullable: true),
-                    PowerUnitId = table.Column<int>(type: "int", nullable: true),
-                    VideoCardId = table.Column<int>(type: "int", nullable: true),
-                    VideoСardId = table.Column<int>(type: "int", nullable: false),
-                    MouseId = table.Column<int>(type: "int", nullable: true),
-                    KeyboardId = table.Column<int>(type: "int", nullable: true),
-                    ScreenId = table.Column<int>(type: "int", nullable: true),
-                    WarehouseId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Computers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Computers_Keyboards_KeyboardId",
-                        column: x => x.KeyboardId,
-                        principalTable: "Keyboards",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_MemoryDisks_MemoryDiskId",
-                        column: x => x.MemoryDiskId,
-                        principalTable: "MemoryDisks",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Motherboards_MotherboardId",
-                        column: x => x.MotherboardId,
-                        principalTable: "Motherboards",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Mouses_MouseId",
-                        column: x => x.MouseId,
-                        principalTable: "Mouses",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Ocs_OcId",
-                        column: x => x.OcId,
-                        principalTable: "Ocs",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_PowerUnits_PowerUnitId",
-                        column: x => x.PowerUnitId,
-                        principalTable: "PowerUnits",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Processor_ProcessorId",
-                        column: x => x.ProcessorId,
-                        principalTable: "Processor",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Rams_RamId",
-                        column: x => x.RamId,
-                        principalTable: "Rams",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Screens_ScreenId",
-                        column: x => x.ScreenId,
-                        principalTable: "Screens",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_VideoCards_VideoСardId",
-                        column: x => x.VideoСardId,
-                        principalTable: "VideoCards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Computers_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Offices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<int>(type: "int", nullable: false),
-                    Body = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
-                    NumberOfAvailableSeats = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Offices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Offices_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Workers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
-                    WarehouseId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Workers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Workers_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Workers_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Workers_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ComputerPassports",
                 columns: table => new
                 {
@@ -495,14 +478,18 @@ namespace DAL.Migrations
                     ComputerId = table.Column<int>(type: "int", nullable: true),
                     DateOfReceipt = table.Column<DateOnly>(type: "date", nullable: false),
                     DateOfDebit = table.Column<DateOnly>(type: "date", nullable: false),
-                    WorkerId = table.Column<int>(type: "int", nullable: true),
-                    WorkersId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OfficeId = table.Column<int>(type: "int", nullable: true),
                     WarehouseId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ComputerPassports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComputerPassports_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ComputerPassports_Computers_ComputerId",
                         column: x => x.ComputerId,
@@ -518,12 +505,6 @@ namespace DAL.Migrations
                         column: x => x.WarehouseId,
                         principalTable: "Warehouses",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ComputerPassports_Workers_WorkersId",
-                        column: x => x.WorkersId,
-                        principalTable: "Workers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -535,14 +516,19 @@ namespace DAL.Migrations
                     ComputerPassportId = table.Column<int>(type: "int", nullable: true),
                     WarehouseId = table.Column<int>(type: "int", nullable: true),
                     OfficeId = table.Column<int>(type: "int", nullable: true),
-                    WorkerId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateOfArrivalFromTheWarehouse = table.Column<DateOnly>(type: "date", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ArrivalFromTheWarehouses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ArrivalFromTheWarehouses_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ArrivalFromTheWarehouses_ComputerPassports_ComputerPassportId",
                         column: x => x.ComputerPassportId,
@@ -558,11 +544,6 @@ namespace DAL.Migrations
                         column: x => x.WarehouseId,
                         principalTable: "Warehouses",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ArrivalFromTheWarehouses_Workers_WorkerId",
-                        column: x => x.WorkerId,
-                        principalTable: "Workers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -574,15 +555,19 @@ namespace DAL.Migrations
                     ComputerPassportId = table.Column<int>(type: "int", nullable: true),
                     OfficeOldId = table.Column<int>(type: "int", nullable: true),
                     OfficeNewId = table.Column<int>(type: "int", nullable: true),
-                    WorkerId = table.Column<int>(type: "int", nullable: true),
-                    WorkersId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DateOfMovingThroughDivisions = table.Column<DateOnly>(type: "date", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MovingThroughDivisions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MovingThroughDivisions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MovingThroughDivisions_ComputerPassports_ComputerPassportId",
                         column: x => x.ComputerPassportId,
@@ -598,11 +583,6 @@ namespace DAL.Migrations
                         column: x => x.OfficeOldId,
                         principalTable: "Offices",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MovingThroughDivisions_Workers_WorkersId",
-                        column: x => x.WorkersId,
-                        principalTable: "Workers",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -612,24 +592,23 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ComputerPassportId = table.Column<int>(type: "int", nullable: true),
-                    WorkerId = table.Column<int>(type: "int", nullable: true),
-                    WorkersId = table.Column<int>(type: "int", nullable: true),
-                    ServiceCenter = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ServiceCenter = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RepairComputers", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_RepairComputers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_RepairComputers_ComputerPassports_ComputerPassportId",
                         column: x => x.ComputerPassportId,
                         principalTable: "ComputerPassports",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_RepairComputers_Workers_WorkersId",
-                        column: x => x.WorkersId,
-                        principalTable: "Workers",
                         principalColumn: "Id");
                 });
 
@@ -640,24 +619,35 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ComputerPassportId = table.Column<int>(type: "int", nullable: true),
-                    WorkerId = table.Column<int>(type: "int", nullable: true),
-                    WorkersId = table.Column<int>(type: "int", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WriteDowns", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_WriteDowns_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_WriteDowns_ComputerPassports_ComputerPassportId",
                         column: x => x.ComputerPassportId,
                         principalTable: "ComputerPassports",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WriteDowns_Workers_WorkersId",
-                        column: x => x.WorkersId,
-                        principalTable: "Workers",
-                        principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "5aa07e78-2424-437a-b75a-8f283e8f1caa", null, "Методист", "МЕТОДИСТ" },
+                    { "856f353e-39bd-416c-a4c0-f38ecb4d1976", null, "Инженер коммуниционного  центра", "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА" },
+                    { "ecd7d9d7-2f51-4a86-90a6-ce9be95969b0", null, "Проректор", "ПРОРЕКТОР" },
+                    { "f5f9a869-adc3-4f84-9b53-3864d00daac5", null, "admin", "ADMIN" },
+                    { "f6d85ae4-f6bf-4bb9-97e6-42fb9405892b", null, "Ответственный за склад", "ОТВЕТСТВЕННЫЙ ЗА СКЛАД" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -671,14 +661,14 @@ namespace DAL.Migrations
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ArrivalFromTheWarehouses_UserId",
+                table: "ArrivalFromTheWarehouses",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ArrivalFromTheWarehouses_WarehouseId",
                 table: "ArrivalFromTheWarehouses",
                 column: "WarehouseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArrivalFromTheWarehouses_WorkerId",
-                table: "ArrivalFromTheWarehouses",
-                column: "WorkerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -713,6 +703,16 @@ namespace DAL.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_DepartmentId",
+                table: "AspNetUsers",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_WarehouseId",
+                table: "AspNetUsers",
+                column: "WarehouseId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -735,14 +735,14 @@ namespace DAL.Migrations
                 column: "OfficeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ComputerPassports_UserId",
+                table: "ComputerPassports",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ComputerPassports_WarehouseId",
                 table: "ComputerPassports",
                 column: "WarehouseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ComputerPassports_WorkersId",
-                table: "ComputerPassports",
-                column: "WorkersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Computers_KeyboardId",
@@ -820,9 +820,9 @@ namespace DAL.Migrations
                 column: "OfficeOldId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovingThroughDivisions_WorkersId",
+                name: "IX_MovingThroughDivisions_UserId",
                 table: "MovingThroughDivisions",
-                column: "WorkersId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Offices_DepartmentId",
@@ -835,26 +835,9 @@ namespace DAL.Migrations
                 column: "ComputerPassportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RepairComputers_WorkersId",
+                name: "IX_RepairComputers_UserId",
                 table: "RepairComputers",
-                column: "WorkersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Workers_ApplicationUserId",
-                table: "Workers",
-                column: "ApplicationUserId",
-                unique: true,
-                filter: "[ApplicationUserId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Workers_DepartmentId",
-                table: "Workers",
-                column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Workers_WarehouseId",
-                table: "Workers",
-                column: "WarehouseId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WriteDowns_ComputerPassportId",
@@ -862,9 +845,9 @@ namespace DAL.Migrations
                 column: "ComputerPassportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WriteDowns_WorkersId",
+                name: "IX_WriteDowns_UserId",
                 table: "WriteDowns",
-                column: "WorkersId");
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -907,13 +890,13 @@ namespace DAL.Migrations
                 name: "ComputerPassports");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "Computers");
 
             migrationBuilder.DropTable(
                 name: "Offices");
-
-            migrationBuilder.DropTable(
-                name: "Workers");
 
             migrationBuilder.DropTable(
                 name: "Keyboards");
@@ -946,13 +929,10 @@ namespace DAL.Migrations
                 name: "VideoCards");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Warehouses");
 
             migrationBuilder.DropTable(
                 name: "Departments");
-
-            migrationBuilder.DropTable(
-                name: "Warehouses");
 
             migrationBuilder.DropTable(
                 name: "DeanOffices");

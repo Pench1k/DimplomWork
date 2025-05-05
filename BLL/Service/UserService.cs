@@ -43,20 +43,20 @@ namespace BLL.Service
                 if (!result.Succeeded) return false;
 
 
-                if (dto.WarehouseId != 0 || dto.DepartmentId != 0)
-                {
-                    user = await _userManager.FindByNameAsync(dto.UserName);
-                    var worker = new Workers
-                    {
-                        ApplicationUserId = user.Id,
-                        DepartmentId = dto.DepartmentId,
-                        WarehouseId = dto.WarehouseId,
-                    };
+                //if (dto.WarehouseId != 0 || dto.DepartmentId != 0)
+                //{
+                //    user = await _userManager.FindByNameAsync(dto.UserName);
+                //    var worker = new Workers
+                //    {
+                //        ApplicationUserId = user.Id,
+                //        DepartmentId = dto.DepartmentId,
+                //        WarehouseId = dto.WarehouseId,
+                //    };
 
-                    await _unitOfWork.BeginTransactionAsync();
-                    await _unitOfWork.Workers.AddAsync(worker);
-                    await _unitOfWork.CommitAsync();
-                }
+                //    await _unitOfWork.BeginTransactionAsync();
+                //    await _unitOfWork.Workers.AddAsync(worker);
+                //    await _unitOfWork.CommitAsync();
+                //}
                 return true;
             }
             catch
@@ -77,39 +77,17 @@ namespace BLL.Service
 
             foreach (var user in userAll)
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                var workers = await _unitOfWork.Workers.GetWorkersUserId(user.Id);
-                string? departmentName = null;
-                string? warehouseName = null;
-
-                if (workers != null)
-                {
-                    if(workers.DepartmentId != null)
-                    {
-                        var department = await _unitOfWork.Department.GetByIdAsync(workers.DepartmentId.Value);
-                        departmentName = department.Name;
-                    }
-                                             
-                    if(workers.WarehouseId != null)
-                    {
-                        var warehouse = await _unitOfWork.Warehouse.GetByIdAsync(workers.WarehouseId.Value);
-                        warehouseName = warehouse.Name;
-                    }
-                      
-                }
+                var roles = await _userManager.GetRolesAsync(user);               
+                
                 userDto.Add(new UserDTO
-                {                   
+                {
                     UserName = user.UserName,
                     FirstName = user.FirstName,
                     MiddleName = user.MiddleName,
-                    LastName = user.LastName,
-                    DepartmentName = departmentName,
-                    WarehouseName = warehouseName,
+                    LastName = user.LastName,                   
                     Roles = roles
                 });
             }
-
-
             return userDto;
         }
 

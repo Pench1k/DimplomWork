@@ -8,6 +8,13 @@ namespace DAL.Models
         public string? MiddleName { get; set; }
         public string? LastName { get; set; }
 
-        public Workers? Worker { get; set; }
+        public int? DepartmentId { get; set; }
+        public Department? Department { get; set; }
+
+        public int? WarehouseId { get; set; }
+        public Warehouse? Warehouse { get; set; }
+
+        List<ArrivalFromTheWarehouse>? ArrivalFromTheWarehouse { get; set; }
+
     }
 }
