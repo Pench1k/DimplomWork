@@ -1,5 +1,6 @@
 ﻿using BLL.DTO;
 using BLL.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RestAPI.Controllers
@@ -48,9 +49,15 @@ namespace RestAPI.Controllers
                 SameSite = SameSiteMode.None,  // Разрешает межсайтовые запросы
                 Expires = DateTime.UtcNow.AddHours(1)
             });
-
-
             return Ok(token);
+        }
+
+        [HttpGet("users")]
+        [Authorize(Roles = "admin")] // Добавляем аттрибут, чтобы только авторизованные пользователи могли вызвать этот метод
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var userAll = await _userService.GetAllAsync();
+            return Ok(userAll);
         }
     }
 }

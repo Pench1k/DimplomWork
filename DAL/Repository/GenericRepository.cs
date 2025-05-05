@@ -13,21 +13,24 @@ namespace DAL.Repository
         {
             _context = context;
             _dbSet = _context.Set<T>();
-        }     
+        } 
+        
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
-        }        
+        }  
+        
         public async Task<T> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
-        }     
+        }  
+        
         public async Task<bool> AddAsync(T entity)
         {
             try
             {
                 await _dbSet.AddAsync(entity);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
                 return true;
             }
             catch
@@ -36,6 +39,7 @@ namespace DAL.Repository
                 return false;
             }
         }      
+
         public async Task<bool> UpdateAsync(T entity)
         {
             try
@@ -53,6 +57,7 @@ namespace DAL.Repository
                 return false;
             }
         }
+
         public async Task<bool> DeleteAsync(int id)
         {
             try

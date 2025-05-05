@@ -1,8 +1,7 @@
-﻿
-
-using DAL.Context;
+﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -14,29 +13,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(Department entity)
+        public async Task<bool> AddAsync(Department entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Departments.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.Departments.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.Departments.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<Department> Get(int id)
+        public async Task<IEnumerable<Department>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Departments.ToListAsync();
         }
 
-        public Task<ICollection<Department>> GetAll()
+        public async Task<Department> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Departments.FindAsync(id);
         }
 
-        public Task Update(Department entity)
+        public async Task<bool> UpdateAsync(Department entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.Departments.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

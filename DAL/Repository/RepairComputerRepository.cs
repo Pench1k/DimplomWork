@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Reporitory
 {
@@ -13,29 +14,65 @@ namespace DAL.Reporitory
             _context = context; 
         }
 
-        public Task Create(RepairComputer entity)
+        public async Task<bool> AddAsync(RepairComputer entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.RepairComputers.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.RepairComputers.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.RepairComputers.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<RepairComputer> Get(int id)
+        public async Task<IEnumerable<RepairComputer>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.RepairComputers.ToListAsync();
         }
 
-        public Task<ICollection<RepairComputer>> GetAll()
+        public async Task<RepairComputer> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.RepairComputers.FindAsync(id);
         }
 
-        public Task Update(RepairComputer entity)
+        public async Task<bool> UpdateAsync(RepairComputer entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.RepairComputers.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

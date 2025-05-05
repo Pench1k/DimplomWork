@@ -13,7 +13,7 @@ namespace BLL.Interface
         Task<string> LoginAsync(LoginUserDto dto);
 
         Task LogoutAsync();      
-        Task<IEnumerable<ApplicationUser>> GetAllAsync();
+        Task<IEnumerable<UserDTO>> GetAllAsync();
 
         Task<IEnumerable<string>> GetRolesAsync(ApplicationUser user);
 

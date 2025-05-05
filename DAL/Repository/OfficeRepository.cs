@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -13,29 +14,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(Office entity)
+        public async Task<bool> AddAsync(Office entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Offices.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.Offices.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.Offices.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<Office> Get(int id)
+        public async Task<IEnumerable<Office>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Offices.ToListAsync();
         }
 
-        public Task<ICollection<Office>> GetAll()
+        public async Task<Office> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Offices.FindAsync(id);
         }
 
-        public Task Update(Office entity)
+        public async Task<bool> UpdateAsync(Office entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.Offices.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

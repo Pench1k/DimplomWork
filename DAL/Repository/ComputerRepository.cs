@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -13,29 +14,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(Computer entity)
+        public async Task<bool> AddAsync(Computer entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Computers.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.Computers.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.Computers.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<Computer> Get(int id)
+        public async Task<IEnumerable<Computer>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Computers.ToListAsync();
         }
 
-        public Task<ICollection<Computer>> GetAll()
+        public async Task<Computer> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Computers.FindAsync(id);
         }
 
-        public Task Update(Computer entity)
+        public async Task<bool> UpdateAsync(Computer entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.Computers.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -12,29 +13,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(Coming entity)
+        public async Task<bool> AddAsync(Coming entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Comings.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.Comings.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.Comings.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<Coming> Get(int id)
+        public async Task<IEnumerable<Coming>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Comings.ToListAsync();
         }
 
-        public Task<ICollection<Coming>> GetAll()
+        public async Task<Coming> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Comings.FindAsync(id);
         }
 
-        public Task Update(Coming entity)
+        public async Task<bool> UpdateAsync(Coming entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.Comings.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

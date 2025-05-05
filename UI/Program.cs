@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace UI
 {
     public class Program
@@ -9,7 +11,8 @@ namespace UI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAuthentication("Cookies").AddCookie("Cookies", options =>
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
             {
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";

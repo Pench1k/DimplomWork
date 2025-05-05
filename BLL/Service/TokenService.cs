@@ -21,10 +21,12 @@ namespace BLL.Service
 
         public string CreateToken(ApplicationUser user, IList<string> roles)
         {
+           
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),  
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                
             };
 
             foreach (var role in roles)

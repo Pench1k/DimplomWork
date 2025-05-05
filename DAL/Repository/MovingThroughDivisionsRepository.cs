@@ -3,6 +3,7 @@
 using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -15,29 +16,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(MovingThroughDivisions entity)
+        public async Task<bool> AddAsync(MovingThroughDivisions entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.MovingThroughDivisions.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.MovingThroughDivisions.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.MovingThroughDivisions.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<MovingThroughDivisions> Get(int id)
+        public async Task<IEnumerable<MovingThroughDivisions>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.MovingThroughDivisions.ToListAsync();
         }
 
-        public Task<ICollection<MovingThroughDivisions>> GetAll()
+        public async Task<MovingThroughDivisions> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.MovingThroughDivisions.FindAsync(id);
         }
 
-        public Task Update(MovingThroughDivisions entity)
+        public async Task<bool> UpdateAsync(MovingThroughDivisions entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.MovingThroughDivisions.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

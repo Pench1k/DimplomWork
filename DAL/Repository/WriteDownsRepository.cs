@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -14,29 +15,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(WriteDowns entity)
+        public async Task<bool> AddAsync(WriteDowns entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.WriteDowns.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.WriteDowns.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.WriteDowns.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<WriteDowns> Get(int id)
+        public async Task<IEnumerable<WriteDowns>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.WriteDowns.ToListAsync();
         }
 
-        public Task<ICollection<WriteDowns>> GetAll()
+        public async Task<WriteDowns> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.WriteDowns.FindAsync(id);
         }
 
-        public Task Update(WriteDowns entity)
+        public async Task<bool> UpdateAsync(WriteDowns entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.WriteDowns.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

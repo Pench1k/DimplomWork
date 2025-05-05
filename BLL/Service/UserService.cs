@@ -24,43 +24,93 @@ namespace BLL.Service
 
         public async Task<bool> Add(RegisterUserDto dto)
         {
-            var user = new ApplicationUser
+            try
             {
-                UserName = dto.UserName,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                MiddleName = dto.MiddleName,
-            };
+                var user = new ApplicationUser
+                {
+                    UserName = dto.UserName,
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    MiddleName = dto.MiddleName,
+                };
 
-            var result = await _userManager.CreateAsync(user, dto.Password);
+                var result = await _userManager.CreateAsync(user, dto.Password);
 
 
-            if (!result.Succeeded)
+                if (!result.Succeeded)
+                    return false;
+                result = await _userManager.AddToRoleAsync(user, dto.Role);
+                if (!result.Succeeded) return false;
+
+
+                if (dto.WarehouseId != 0 || dto.DepartmentId != 0)
+                {
+                    user = await _userManager.FindByNameAsync(dto.UserName);
+                    var worker = new Workers
+                    {
+                        ApplicationUserId = user.Id,
+                        DepartmentId = dto.DepartmentId,
+                        WarehouseId = dto.WarehouseId,
+                    };
+
+                    await _unitOfWork.BeginTransactionAsync();
+                    await _unitOfWork.Workers.AddAsync(worker);
+                    await _unitOfWork.CommitAsync();
+                }
+                return true;
+            }
+            catch
+            {
                 return false;
-            result = await _userManager.AddToRoleAsync(user, dto.Role);
-            if (!result.Succeeded) return false;
-
-            var worker = new Workers
-            { 
-                ApplicationUserId = user.Id,
-                DepartmentId = dto.DepartmentId,    
-                WarehouseId = dto.WarehouseId,
-            };
-
-            _unitOfWork.Workers.Create(worker);
-            await _unitOfWork.CommitAsync();
-
-            return true;
+            }      
         }
 
-        public  Task Delete(ApplicationUser user)
+        public Task Delete(ApplicationUser user)
         {
-           return  _userManager.DeleteAsync(user);
+            return _userManager.DeleteAsync(user);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
+        public async Task<IEnumerable<UserDTO>> GetAllAsync()
         {
-            return await _userManager.Users.ToListAsync();
+            var userAll = await _userManager.Users.ToListAsync();
+            var userDto = new List<UserDTO>();
+
+            foreach (var user in userAll)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var workers = await _unitOfWork.Workers.GetWorkersUserId(user.Id);
+                string? departmentName = null;
+                string? warehouseName = null;
+
+                if (workers != null)
+                {
+                    if(workers.DepartmentId != null)
+                    {
+                        var department = await _unitOfWork.Department.GetByIdAsync(workers.DepartmentId.Value);
+                        departmentName = department.Name;
+                    }
+                                             
+                    if(workers.WarehouseId != null)
+                    {
+                        var warehouse = await _unitOfWork.Warehouse.GetByIdAsync(workers.WarehouseId.Value);
+                        warehouseName = warehouse.Name;
+                    }
+                      
+                }
+                userDto.Add(new UserDTO
+                {                   
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    MiddleName = user.MiddleName,
+                    LastName = user.LastName,
+                    DepartmentName = departmentName,
+                    WarehouseName = warehouseName,
+                    Roles = roles
+                });
+            }
+
+
+            return userDto;
         }
 
         public async Task<ApplicationUser?> GetByUserNameAsync(string userName)
@@ -76,16 +126,15 @@ namespace BLL.Service
         public async Task<string> LoginAsync(LoginUserDto dto)
         {
             var user = await GetByUserNameAsync(dto.UserName);
-            if(user != null)
+            if (user != null)
             {
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, dto.Password, false, false);
                 if (result.Succeeded)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
-                    
                     return _tokenService.CreateToken(user, roles);
                 }
-                    
+
             }
             throw new Exception("Failed to login");
         }

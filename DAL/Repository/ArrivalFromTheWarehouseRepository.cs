@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -14,29 +15,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(ArrivalFromTheWarehouse entity)
+        public async Task<bool> AddAsync(ArrivalFromTheWarehouse entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.ArrivalFromTheWarehouses.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.ArrivalFromTheWarehouses.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.ArrivalFromTheWarehouses.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<ArrivalFromTheWarehouse> Get(int id)
+        public async Task<IEnumerable<ArrivalFromTheWarehouse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ArrivalFromTheWarehouses.ToListAsync();
         }
 
-        public Task<ICollection<ArrivalFromTheWarehouse>> GetAll()
+        public async Task<ArrivalFromTheWarehouse> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.ArrivalFromTheWarehouses.FindAsync(id);
         }
 
-        public Task Update(ArrivalFromTheWarehouse entity)
+        public async Task<bool> UpdateAsync(ArrivalFromTheWarehouse entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.ArrivalFromTheWarehouses.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

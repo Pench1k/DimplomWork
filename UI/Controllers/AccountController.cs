@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace UI.Controllers
 {
@@ -24,12 +26,26 @@ namespace UI.Controllers
                 var jwtToken = handler.ReadJwtToken(token);
                 var claims = jwtToken.Claims.ToList();
 
-                // Извлекаем имя пользователя и роль из claims
-                var userNameClaim = claims.FirstOrDefault(c => c.Type == "username")?.Value;
-                var roleClaims = claims.Where(c => c.Type == "role").Select(c => c.Value).ToList();
+                var userName = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.GivenName)?.Value;
+                var userId = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
 
+                // Добавляем логин и ID пользователя в клеймы
+                if (userName != null)
+                {
+                    claims.Add(new Claim(ClaimTypes.Name, userName));
+                }
+                if (userId != null)
+                {
+                    claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
+                }
 
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var roles = claims.Where(c => c.Type == "role").Select(c => c.Value).ToList();
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role)); // Добавляем роль как ClaimTypes.Role
+                }
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
                 var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties

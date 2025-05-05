@@ -2,33 +2,40 @@
 using BLL.Interface;
 using DAL.Interface;
 using DAL.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BLL.Service
 {
-    public class ProccesorService : IProcessorService
+    public class WorkersService : IWorkersService
     {
         private readonly IUnitOfWork _unitOfWork;
 
 
-        public ProccesorService(IUnitOfWork unitOfWork)
+        public WorkersService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
 
         }
 
-        public async Task<bool> AddAsync(ProcessorDTO entity)
+        public async Task<bool> AddAsync(WorkersDTO entity)
         {
             try
             {
                 // Начинаем транзакцию
                 await _unitOfWork.BeginTransactionAsync();
 
-                var processor = new Processor()
+                var workers = new Workers()
                 {
-                    Name = entity.Name,
+                    ApplicationUserId = entity.ApplicationUserId,
+                    DepartmentId = entity.DepartmentId,
+                    WarehouseId = entity.WarehouseId
                 };
 
-                var result = await _unitOfWork.Processor.AddAsync(processor);
+                var result = await _unitOfWork.Workers.AddAsync(workers);
                 if (result)
                 {
                     await _unitOfWork.CommitAsync();
@@ -52,7 +59,7 @@ namespace BLL.Service
                 await _unitOfWork.BeginTransactionAsync();
 
 
-                var success = await _unitOfWork.Processor.DeleteAsync(id);
+                var success = await _unitOfWork.Workers.DeleteAsync(id);
                 if (!success)
                 {
                     await _unitOfWork.RollbackAsync();
@@ -66,49 +73,53 @@ namespace BLL.Service
             {
                 return false;
             }
-
         }
 
-        public async Task<IEnumerable<ProcessorDTO>> GetAllAsync()
+        public async Task<IEnumerable<WorkersDTO>> GetAllAsync()
         {
-            var entities = await _unitOfWork.Processor.GetAllAsync();
+            var entities = await _unitOfWork.Workers.GetAllAsync();
 
-            var dtoList = entities.Select(d => new ProcessorDTO
+            var dtoList = entities.Select(d => new WorkersDTO
             {
                 Id = d.Id,
-                Name = d.Name
+                ApplicationUserId = d.ApplicationUserId,
+                DepartmentId = d.DepartmentId,
+                WarehouseId = d.WarehouseId
             });
 
             return dtoList;
         }
 
-        public async Task<ProcessorDTO> GetByIdAsync(int id)
-        {
-            ProcessorDTO processorDTO = new();
-            var processor = await _unitOfWork.Processor.GetByIdAsync(id);
-            if (processor == null)
+        public async Task<WorkersDTO> GetByIdAsync(int id)
+        {            
+            var workers = await _unitOfWork.Workers.GetByIdAsync(id);
+            if (workers == null)
                 return null;
-            processorDTO = new()
+            WorkersDTO workersDTO = new()
             {
-                Id = processor.Id,
-                Name = processor.Name
+                Id = workers.Id,
+                ApplicationUserId = workers.ApplicationUserId,
+                DepartmentId = workers.DepartmentId,
+                WarehouseId = workers.WarehouseId
             };
-            return processorDTO;
+            return workersDTO;
         }
 
-        public async Task<bool> UpdateAsync(ProcessorDTO entity)
+        public async Task<bool> UpdateAsync(WorkersDTO entity)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
 
-                var processor = new Processor()
+                var workers = new Workers()
                 {
-                    Name = entity.Name,
-                    Id = entity.Id
+                    Id = entity.Id,
+                    ApplicationUserId = entity.ApplicationUserId,
+                    DepartmentId = entity.DepartmentId,
+                    WarehouseId = entity.WarehouseId
                 };
 
-                var success = await _unitOfWork.Processor.UpdateAsync(processor);
+                var success = await _unitOfWork.Workers.UpdateAsync(workers);
                 if (!success)
                 {
                     await _unitOfWork.RollbackAsync();
@@ -121,7 +132,6 @@ namespace BLL.Service
             {
                 return false;
             }
-
         }
     }
 }

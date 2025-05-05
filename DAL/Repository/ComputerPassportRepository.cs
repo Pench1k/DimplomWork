@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
@@ -13,29 +14,65 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public Task Create(ComputerPassport entity)
+        public async Task<bool> AddAsync(ComputerPassport entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.ComputerPassports.AddAsync(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entity = await _context.ComputerPassports.FindAsync(id);
+                if (entity == null)
+                {
+                    // Сущность не найдена
+                    return false;
+                }
+
+                _context.ComputerPassports.Remove(entity);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<ComputerPassport> Get(int id)
+        public async Task<IEnumerable<ComputerPassport>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ComputerPassports.ToListAsync();
         }
 
-        public Task<ICollection<ComputerPassport>> GetAll()
+        public async Task<ComputerPassport> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.ComputerPassports.FindAsync(id);
         }
 
-        public Task Update(ComputerPassport entity)
+        public async Task<bool> UpdateAsync(ComputerPassport entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException(nameof(entity), "Entity cannot be null");
+                }
+                _context.ComputerPassports.Update(entity);
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
     <ul>
         <li>User.Identity.IsAuthenticated: @User.Identity.IsAuthenticated</li>
         <li>Roles: @string.Join(", ", User.Claims.Where(c => c.Type == "role").Select(c => c.Value))</li>
+        <li>UserName: @User.Identity.Name</li>
     </ul>
 </div>
 

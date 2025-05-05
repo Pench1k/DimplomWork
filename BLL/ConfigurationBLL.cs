@@ -25,6 +25,7 @@ namespace BLL
             service.AddScoped<IKeyboardService, KeyboardService>();
             service.AddScoped<IScreenService, ScreenService>();
             service.AddScoped<IWareHouseService, WareHouseService>();
+            service.AddScoped<IWorkersService, WorkersService>();
 
             return service;
         }
