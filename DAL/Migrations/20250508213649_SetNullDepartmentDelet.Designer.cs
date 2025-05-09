@@ -4,6 +4,7 @@ using DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250508213649_SetNullDepartmentDelet")]
+    partial class SetNullDepartmentDelet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -653,38 +656,6 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "db11704c-0afc-4930-b0ee-371f40fb28a1",
-                            Name = "admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "8f45df51-3b0d-4abc-bd95-d06c0a10fbfd",
-                            Name = "Ответственный за склад",
-                            NormalizedName = "ОТВЕТСТВЕННЫЙ ЗА СКЛАД"
-                        },
-                        new
-                        {
-                            Id = "eb749a53-feac-48f6-b160-d9ca796b01c9",
-                            Name = "Методист",
-                            NormalizedName = "МЕТОДИСТ"
-                        },
-                        new
-                        {
-                            Id = "2ebccd46-7b56-454a-a1d9-a9fcc53d637d",
-                            Name = "Инженер коммуниционного  центра",
-                            NormalizedName = "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА"
-                        },
-                        new
-                        {
-                            Id = "dd423ab0-63ac-4f27-a0b9-9dd05cfcdf02",
-                            Name = "Проректор",
-                            NormalizedName = "ПРОРЕКТОР"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -8,7 +8,7 @@ namespace RestAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Ответственный за склад")]
     public class KeyboardController : Controller
     {
         private readonly IKeyboardService _keyboardService;
@@ -38,8 +38,7 @@ namespace RestAPI.Controllers
             }
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet]       
         public async Task<IActionResult> GetAll()
         {
             var result = await _keyboardService.GetAllAsync();

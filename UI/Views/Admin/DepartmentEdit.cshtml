@@ -1,0 +1,398 @@
+﻿<div id="loadingSpinner" class="text-center my-5 py-5">
+    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-3 text-muted">Загрузка отделов...</p>
+</div>
+
+<div id="alertContainer" class="container mt-3"></div>
+<div class="container-fluid py-4" id="mainContent" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-building-gear me-2"></i>Управление отделами
+        </h2>
+        <div>
+            <button id="buttonAdd" class="btn btn-success btn-lg rounded-pill px-4" onclick="addDepartment()">
+                <i class="bi bi-plus-circle me-2"></i>Добавить отдел
+            </button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-3">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-transparent border-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control border-0 ps-0" placeholder="Поиск по названию...">
+                <button id="resetSearch" class="btn btn-outline-secondary" type="button" title="Сбросить поиск">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="departmentTable" class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Название отдела</th>
+                            <th>Факультет</th>
+                            <th class="text-end pe-4">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="departmentTableBody">
+                        <!-- Данные будут вставлены с помощью JavaScript -->
+                    </tbody>
+                </table>
+                <div id="emptyDepartmentMessage" class="text-center py-5" style="display: none;">
+                    <i class="bi bi-building-gear" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3">Отделы не найдены</h5>
+                    <p class="text-muted">Нажмите "Добавить отдел" чтобы создать новый</p>
+                    <button class="btn btn-primary mt-3" onclick="addDepartment()">
+                        <i class="bi bi-plus-circle me-2"></i>Добавить первый отдел
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-muted mt-3 text-center small">
+        <i class="bi bi-info-circle me-1"></i> Всего отделов: <span id="departmentCount">0</span>
+    </div>
+</div>
+
+<!-- Модальное окно добавления отдела -->
+<div class="modal fade" id="addDepartmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-building-gear me-2"></i>Добавить отдел
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addDepartmentForm">
+                    <div class="mb-3">
+                        <label for="departmentName" class="form-label">Название отдела*</label>
+                        <input type="text" class="form-control" id="departmentName" required>
+                        <div class="invalid-feedback">Пожалуйста, укажите название</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="departmentDeanOffice" class="form-label">Деканат</label>
+                        <select class="form-select" id="departmentDeanOffice">
+                            <option value="">Не привязан к деканату</option>
+                            <!-- Опции будут заполнены через JS -->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="saveDepartmentBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="saveSpinner"></span>
+                    <span id="saveBtnText">Сохранить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования отдела -->
+<div class="modal fade" id="editDepartmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-building-gear me-2"></i>Редактировать отдел
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editDepartmentForm">
+                    <input type="hidden" id="editDepartmentId">
+                    <div class="mb-3">
+                        <label for="editDepartmentName" class="form-label">Название отдела*</label>
+                        <input type="text" class="form-control" id="editDepartmentName" required>
+                        <div class="invalid-feedback">Пожалуйста, укажите название</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDepartmentDeanOffice" class="form-label">Деканат</label>
+                        <select class="form-select" id="editDepartmentDeanOffice">
+                            <option value="">Не привязан к деканату</option>
+                            <!-- Опции будут заполнены через JS -->
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="updateDepartmentBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="updateSpinner"></span>
+                    <span id="updateBtnText">Сохранить изменения</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Глобальные переменные
+    let allDepartments = [];
+    let allDeanOffices = [];
+
+    $(document).ready(function () {
+        loadDeanOffices().then(loadDepartments);
+
+        // Обработчики событий
+        $('#saveDepartmentBtn').click(saveDepartment);
+        $('#updateDepartmentBtn').click(updateDepartment);
+        $('#searchInput').keyup(function() {
+            filterTable($(this).val().toLowerCase());
+        });
+        $('#resetSearch').click(function() {
+            $('#searchInput').val('');
+            filterTable('');
+        });
+    });
+
+    function loadDeanOffices() {
+        return $.ajax({
+            url: 'https://localhost:5001/api/DeanOffice',
+            xhrFields: { withCredentials: true },
+            method: 'GET',
+            success: function (data) {
+                allDeanOffices = data;
+            },
+            error: function (xhr) {
+                console.error('Ошибка получения деканатов:', xhr);
+                showAlert('Ошибка загрузки списка деканатов', 'danger');
+            }
+        });
+    }
+
+    function loadDepartments() {
+        $('#loadingSpinner').show();
+        $('#mainContent').hide();
+
+        $.ajax({
+            url: 'https://localhost:5001/api/Department',
+            xhrFields: { withCredentials: true },
+            method: 'GET',
+            success: function (data) {
+                allDepartments = data;
+                updateTable(data);
+            },
+            error: function (xhr) {
+                console.error('Ошибка получения данных:', xhr);
+                showAlert('Ошибка загрузки данных отделов. Пожалуйста, попробуйте позже.', 'danger');
+                $('#loadingSpinner').hide();
+            }
+        });
+    }
+
+    function updateTable(departments) {
+        const tableBody = $("#departmentTableBody");
+        tableBody.empty();
+
+        if (departments.length === 0) {
+            $("#departmentTable").hide();
+            $("#emptyDepartmentMessage").show();
+        } else {
+            $("#departmentTable").show();
+            $("#emptyDepartmentMessage").hide();
+
+            departments.forEach(function(department) {
+                const deanOffice = allDeanOffices.find(d => d.id === department.deanOfficeId);
+                const deanOfficeName = deanOffice ? deanOffice.name : '-';
+
+                const row = `
+                    <tr>
+                        <td class="ps-4">${department.name || 'Не указано'}</td>
+                        <td>${deanOfficeName}</td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-warning me-2 rounded-pill px-3" onclick="editDepartment(${department.id})">
+                                <i class="bi bi-pencil me-1"></i>Изменить
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="deleteDepartment(${department.id}, '${(department.name || '').replace("'", "\\'")}')">
+                                <i class="bi bi-trash me-1"></i>Удалить
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+        }
+
+        $("#departmentCount").text(departments.length);
+        $("#loadingSpinner").hide();
+        $("#mainContent").fadeIn(300);
+    }
+
+    function filterTable(searchText) {
+        if (!searchText) {
+            updateTable(allDepartments);
+            return;
+        }
+
+        const filtered = allDepartments.filter(department =>
+            department.name.toLowerCase().includes(searchText) ||
+            (department.deanOfficeId && allDeanOffices.find(d => d.id === department.deanOfficeId)?.name.toLowerCase().includes(searchText))
+        );
+        updateTable(filtered);
+    }
+
+    function addDepartment() {
+        $('#addDepartmentForm')[0].reset();
+        $('#departmentName').removeClass('is-invalid');
+
+        // Заполняем выпадающий список деканатов
+        const select = $('#departmentDeanOffice');
+        select.empty();
+        select.append('<option value="">Не привязан к деканату</option>');
+        allDeanOffices.forEach(deanOffice => {
+            select.append(`<option value="${deanOffice.id}">${deanOffice.name}</option>`);
+        });
+
+        $('#addDepartmentModal').modal('show');
+    }
+
+    function saveDepartment() {
+        const name = $('#departmentName').val().trim();
+        const deanOfficeId = $('#departmentDeanOffice').val() || null;
+
+        if (!name) {
+            $('#departmentName').addClass('is-invalid');
+            return;
+        }
+
+        const $btn = $('#saveDepartmentBtn');
+        $btn.prop('disabled', true);
+        $('#saveSpinner').removeClass('d-none');
+        $('#saveBtnText').text('Сохранение...');
+
+        $.ajax({
+            url: 'https://localhost:5001/api/Department',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                name: name,
+                deanOfficeId: deanOfficeId ? parseInt(deanOfficeId) : null
+            }),
+            xhrFields: { withCredentials: true },
+            success: function() {
+                $('#addDepartmentModal').modal('hide');
+                showAlert('Отдел успешно добавлен', 'success');
+                loadDepartments();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.message || xhr.statusText;
+                showAlert('Ошибка при сохранении: ' + errorMsg, 'danger');
+            },
+            complete: function() {
+                $('#saveSpinner').addClass('d-none');
+                $('#saveBtnText').text('Сохранить');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+
+    function editDepartment(id) {
+        const department = allDepartments.find(d => d.id === id);
+        if (!department) {
+            showAlert('Отдел не найден', 'danger');
+            return;
+        }
+
+        $('#editDepartmentForm')[0].reset();
+        $('#editDepartmentId').val(department.id);
+        $('#editDepartmentName').val(department.name);
+        $('#editDepartmentName').removeClass('is-invalid');
+
+        // Заполняем выпадающий список деканатов
+        const select = $('#editDepartmentDeanOffice');
+        select.empty();
+        select.append('<option value="">Не привязан к деканату</option>');
+        allDeanOffices.forEach(deanOffice => {
+            const selected = department.deanOfficeId === deanOffice.id ? 'selected' : '';
+            select.append(`<option value="${deanOffice.id}" ${selected}>${deanOffice.name}</option>`);
+        });
+
+        $('#editDepartmentModal').modal('show');
+    }
+
+    function updateDepartment() {
+        const id = $('#editDepartmentId').val();
+        const name = $('#editDepartmentName').val().trim();
+        const deanOfficeId = $('#editDepartmentDeanOffice').val() || null;
+
+        if (!name) {
+            $('#editDepartmentName').addClass('is-invalid');
+            return;
+        }
+
+        const $btn = $('#updateDepartmentBtn');
+        $btn.prop('disabled', true);
+        $('#updateSpinner').removeClass('d-none');
+        $('#updateBtnText').text('Сохранение...');
+
+        $.ajax({
+            url: `https://localhost:5001/api/Department/${id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: parseInt(id),
+                name: name,
+                deanOfficeId: deanOfficeId ? parseInt(deanOfficeId) : null
+            }),
+            xhrFields: { withCredentials: true },
+            success: function() {
+                $('#editDepartmentModal').modal('hide');
+                showAlert('Отдел успешно обновлен', 'success');
+                loadDepartments();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.message || 'Ошибка сервера';
+                showAlert('Ошибка обновления: ' + errorMsg, 'danger');
+            },
+            complete: function() {
+                $('#updateSpinner').addClass('d-none');
+                $('#updateBtnText').text('Сохранить изменения');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+
+    function deleteDepartment(id, name) {
+        if (!confirm(`Вы точно хотите удалить отдел "${name}"?`)) return;
+
+        $.ajax({
+            url: `https://localhost:5001/api/Department/${id}`,
+            type: 'DELETE',
+            xhrFields: { withCredentials: true },
+            success: function() {
+                showAlert('Отдел успешно удален', 'success');
+                loadDepartments();
+            },
+            error: function(xhr) {
+                showAlert('Ошибка при удалении: ' + (xhr.responseJSON?.message || xhr.statusText), 'danger');
+            }
+        });
+    }
+
+    function showAlert(message, type = 'success') {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+
+        $('#alertContainer').html(alertHtml);
+        setTimeout(() => $('.alert').alert('close'), 5000);
+    }
+</script>

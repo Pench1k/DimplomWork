@@ -57,6 +57,8 @@ namespace RestAPI.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var userAll = await _userService.GetAllAsync();
+
+
             return Ok(userAll);
         }
 
@@ -64,8 +66,18 @@ namespace RestAPI.Controllers
         [Authorize(Roles = "admin")] // Добавляем аттрибут, чтобы только авторизованные пользователи могли вызвать этот метод
         public async Task<IActionResult> GetUser(string userName)
         {
-            var userAll = await _userService.GetByUserNameAsync(userName);
-            return Ok(userAll);
+            var user = await _userService.GetByUserNameAsync(userName);
+            return Ok(user);
+        }
+
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeletUser(string userName)
+        {
+            var user = await _userService.GetByUserNameAsync(userName);
+            await _userService.Delete(user);
+
+            return Ok("Пользователь удален");
         }
     }
 }

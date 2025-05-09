@@ -80,7 +80,7 @@ namespace DAL.Context
 
         public async Task RollbackTransactionAsync()
         {
-            if(_currentTransaction != null)
+            if (_currentTransaction != null)
             {
                 try
                 {
@@ -132,6 +132,12 @@ namespace DAL.Context
 
             modelBuilder.Entity<IdentityRole>().HasData(roles);
 
+
+            modelBuilder.Entity<Department>()
+                .HasOne(d => d.DeanOffice)
+                .WithMany(d => d.Departments)
+                .HasForeignKey(d => d.DeanOfficeId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

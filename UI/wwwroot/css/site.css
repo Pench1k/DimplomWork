@@ -20,3 +20,158 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: #0d6efd; /* Bootstrap primary color */
+}
+
+.nav-link.active {
+     font-weight: bold;
+     color: #0d6efd;
+     border-bottom: 2px solid #0d6efd;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+    transition: background-color 0.2s ease;
+}
+
+.badge {
+    padding: 0.35em 0.65em;
+    font-weight: 500;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+}
+
+.animate__animated {
+    animation-duration: 0.3s;
+}
+
+.input-group-text {
+    background-color: transparent;
+}
+
+#searchInput:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+.navbar {
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    padding: 0.5rem 1rem;
+}
+
+/* Стили пунктов меню */
+.nav-link {
+    color: #4a5568;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    position: relative;
+    border-radius: 6px;
+}
+
+.nav-link-text {
+    position: relative;
+    z-index: 1;
+}
+
+/* Индикатор активной страницы */
+.active-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: #6366f1;
+    border-radius: 3px 3px 0 0;
+    transition: width 0.3s ease;
+}
+
+.nav-link.active .active-indicator,
+.nav-link:hover .active-indicator {
+    width: 70%;
+}
+
+.nav-link.active {
+    color: #6366f1;
+    font-weight: 600;
+}
+
+.nav-link:hover {
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.05);
+}
+
+/* Стили кнопки выхода */
+.btn-logout {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.05);
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+    .btn-logout:hover {
+        background: rgba(239, 68, 68, 0.1);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+    }
+
+    .btn-logout:active {
+        transform: translateY(0);
+    }
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nav-item {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* Для планшетов и мобильных */
+@media (max-width: 768px) {
+    .navbar-collapse {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-nav {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .ms-auto {
+        margin: 0.5rem 0;
+        width: 100%;
+    }
+
+    .btn-logout {
+        width: 100%;
+        justify-content: center;
+    }
+}

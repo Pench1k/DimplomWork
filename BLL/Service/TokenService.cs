@@ -25,8 +25,7 @@ namespace BLL.Service
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),  
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-                
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),              
             };
 
             foreach (var role in roles)

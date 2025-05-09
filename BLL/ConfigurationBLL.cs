@@ -12,7 +12,7 @@ namespace BLL
             service.AddDynamicLinkLibary();
             
             service.AddScoped<IUserService, UserService>();
-            service.AddScoped<IDepartmentService, DepatmentService>();
+            service.AddScoped<IDepartmentService, DepartmentService>();
             service.AddScoped<IDeanOfficeService, DeanOfficeService>();
             service.AddScoped<IProcessorService, ProccesorService>();
             service.AddScoped<IMotherboardService, MotherboardService>();

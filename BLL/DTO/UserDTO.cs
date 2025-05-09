@@ -10,12 +10,17 @@ namespace BLL.DTO
 {
     public class UserDTO 
     {
-        public string UserName { get; set; }      
+        public string? Id { get; set; }
+
+        public string? UserName { get; set; }      
 
         public IEnumerable<string> Roles { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string MiddleName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? MiddleName { get; set; }
+
+        public int? DepartmentId { get; set; }
+        public int? WarehouseId { get; set; }
 
         public string? DepartmentName { get; set; }
         public string? WarehouseName { get; set; }

@@ -29,17 +29,15 @@ namespace UI.Controllers
                 var userName = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.GivenName)?.Value;
                 var userId = claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
 
-                // Добавляем логин и ID пользователя в клеймы
+                
                 if (userName != null)
-                {
                     claims.Add(new Claim(ClaimTypes.Name, userName));
-                }
-                if (userId != null)
-                {
+                if (userId != null)             
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
-                }
+                
 
                 var roles = claims.Where(c => c.Type == "role").Select(c => c.Value).ToList();
+
                 foreach (var role in roles)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role)); // Добавляем роль как ClaimTypes.Role
@@ -53,6 +51,16 @@ namespace UI.Controllers
                     IsPersistent = true,
                     ExpiresUtc = DateTime.UtcNow.AddHours(12)
                 });
+
+                var riderectUrl = roles.FirstOrDefault() switch
+                {
+                    "admin" => Url.Action("Index", "Admin"),
+                    "Методист" => Url.Action("Dashboard", "Methodist"),
+                    "Проректор" => Url.Action("Dashboard", "Rector"),
+                    "Инженер коммуникационного центра" => Url.Action("Dashboard", "Engineer"),
+                    "Ответственный за склад" => Url.Action("Index", "ResponWarehouseOnly"),
+                };
+                return Json(new { riderectUrl });
             }
             return Ok();
         }

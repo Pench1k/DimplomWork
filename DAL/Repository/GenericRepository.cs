@@ -1,6 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DAL.Repository
 {
@@ -76,6 +77,11 @@ namespace DAL.Repository
             {                            
                return false;
             }
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, object>> include)
+        {
+            return await _dbSet.Include(include).ToListAsync();
         }
     }
 }

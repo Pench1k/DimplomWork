@@ -32,6 +32,9 @@ namespace BLL.Service
                     FirstName = dto.FirstName,
                     LastName = dto.LastName,
                     MiddleName = dto.MiddleName,
+
+                    DepartmentId = dto.DepartmentId,
+                    WarehouseId = dto.WarehouseId
                 };
 
                 var result = await _userManager.CreateAsync(user, dto.Password);
@@ -65,7 +68,7 @@ namespace BLL.Service
             }      
         }
 
-        public Task Delete(ApplicationUser user)
+        public Task Delete(ApplicationUser user) //???
         {
             return _userManager.DeleteAsync(user);
         }
@@ -77,14 +80,28 @@ namespace BLL.Service
 
             foreach (var user in userAll)
             {
-                var roles = await _userManager.GetRolesAsync(user);               
-                
+                var roles = await _userManager.GetRolesAsync(user);
+
+                var departmentId = user.DepartmentId;
+                var warehouseId = user.WarehouseId;
+
+                var department = departmentId.HasValue ? await _unitOfWork.Department.GetByIdAsync(departmentId.Value) : null;
+                var warehouse = warehouseId.HasValue ? await _unitOfWork.Warehouse.GetByIdAsync(warehouseId.Value) : null;
+
                 userDto.Add(new UserDTO
                 {
+                    Id = user.Id,
+
                     UserName = user.UserName,
                     FirstName = user.FirstName,
                     MiddleName = user.MiddleName,
-                    LastName = user.LastName,                   
+                    LastName = user.LastName,
+
+                    DepartmentId = departmentId,
+                    WarehouseId = warehouseId,
+
+                    WarehouseName = warehouse?.Name ?? "-",
+                    DepartmentName = department?.Name ?? "-",
                     Roles = roles
                 });
             }

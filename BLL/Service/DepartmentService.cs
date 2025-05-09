@@ -4,34 +4,31 @@ using DAL.Interface;
 using DAL.Models;
 using DAL.Repository;
 
-
 namespace BLL.Service
 {
-
-    public class DeanOfficeService : IDeanOfficeService
+    public class DepartmentService : IDepartmentService
     {
         private readonly IUnitOfWork _unitOfWork;
-        
 
-        public DeanOfficeService(IUnitOfWork unitOfWork)
+        public DepartmentService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            
         }
 
-        public async Task<bool> AddAsync(DeanOfficeDTO entity)
+        public async Task<bool> AddAsync(DepartmentDTO entity)
         {
             try
             {
                 // Начинаем транзакцию
                 await _unitOfWork.BeginTransactionAsync();
 
-                var deanOffice = new DeanOffice()
+                var department = new Department()
                 {
                     Name = entity.Name,
+                    DeanOfficeId = entity.DeanOfficeId,
                 };
 
-                var result = await _unitOfWork.DeanOffice.AddAsync(deanOffice);
+                var result = await _unitOfWork.Department.AddAsync(department);
                 if (result)
                 {
                     await _unitOfWork.CommitAsync();
@@ -46,6 +43,7 @@ namespace BLL.Service
                 await _unitOfWork.RollbackAsync();
                 return false;
             }
+
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -55,7 +53,7 @@ namespace BLL.Service
                 await _unitOfWork.BeginTransactionAsync();
 
 
-                var success = await _unitOfWork.DeanOffice.DeleteAsync(id);
+                var success = await _unitOfWork.Department.DeleteAsync(id);
                 if (!success)
                 {
                     await _unitOfWork.RollbackAsync();
@@ -68,62 +66,71 @@ namespace BLL.Service
             catch
             {
                 return false;
-            }          
+            }
         }
 
-        public async Task<IEnumerable<DeanOfficeDTO>> GetAllAsync()
+        public async Task<IEnumerable<DepartmentDTO>> GetAllAsync()
         {
-            var entities = await _unitOfWork.DeanOffice.GetAllAsync();
+            var departments = await _unitOfWork.Department.GetAllWithDeanOfficeAsync();
 
-            var dtoList = entities.Select(d => new DeanOfficeDTO
+            return departments.Select(d => new DepartmentDTO
             {
                 Id = d.Id,
                 Name = d.Name,
-
+                DeanOfficeId = d.DeanOfficeId,
+                DeanOfficeName = d.DeanOffice?.Name
             });
-
-            return dtoList;
         }
 
-        public async Task<DeanOfficeDTO> GetByIdAsync(int id)
+        public async Task<DepartmentDTO> GetByIdAsync(int id)
         {
-            DeanOfficeDTO deanOfficeDTO = new();
-            var deanOffice = await _unitOfWork.DeanOffice.GetByIdAsync(id);
-            if (deanOffice == null)
+            var department = await _unitOfWork.Department.GetByIdAsync(id);
+
+            if (department == null)
                 return null;
-            deanOfficeDTO = new()
+
+            string deanOfficeName = null;
+            if (department.DeanOfficeId.HasValue)
             {
-                Id = deanOffice.Id,
-                Name = deanOffice.Name
+                var deanOffice = await _unitOfWork.DeanOffice.GetByIdAsync(department.DeanOfficeId.Value);
+                deanOfficeName = deanOffice?.Name;
+            }
+
+            return new DepartmentDTO
+            {
+                Id = department.Id,
+                Name = department.Name,
+                DeanOfficeId = department.DeanOfficeId,
+                DeanOfficeName = deanOfficeName
             };
-            return deanOfficeDTO;
         }
 
-        public async Task<bool> UpdateAsync(DeanOfficeDTO entity)
+        public async Task<bool> UpdateAsync(DepartmentDTO entity)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
 
-                var deanOffice = new DeanOffice()
+                var department = new Department()
                 {
+                    Id = entity.Id,
                     Name = entity.Name,
-                    Id = entity.Id
+                    DeanOfficeId = entity.DeanOfficeId,
                 };
 
-                var success = await _unitOfWork.DeanOffice.UpdateAsync(deanOffice);
-                if(!success)
+                var success = await _unitOfWork.Department.UpdateAsync(department);
+                if (!success)
                 {
                     await _unitOfWork.RollbackAsync();
                     return false;
-                }  
+                }
                 await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch {
+            catch
+            {
                 return false;
             }
-           
         }
     }
 }

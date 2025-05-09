@@ -1,0 +1,336 @@
+﻿<div id="loadingSpinner" class="text-center my-5 py-5">
+    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-3 text-muted">Загрузка операционных систем...</p>
+</div>
+
+<div id="alertContainer" class="container mt-3"></div>
+<div class="container-fluid py-4" id="mainContent" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-windows me-2"></i>Управление операционными системами
+        </h2>
+        <div>
+            <button id="buttonAdd" class="btn btn-success btn-lg rounded-pill px-4" onclick="addOS()">
+                <i class="bi bi-plus-circle me-2"></i>Добавить ОС
+            </button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-3">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-transparent border-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control border-0 ps-0" placeholder="Поиск по названию...">
+                <button id="resetSearch" class="btn btn-outline-secondary" type="button" title="Сбросить поиск">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="osTable" class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            
+                            <th class="ps-4">Название ОС</th>
+                            <th class="text-end pe-4">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="osTableBody">
+                        <!-- Данные будут вставлены с помощью JavaScript -->
+                    </tbody>
+                </table>
+                <!-- Блок для отображения когда ОС нет -->
+                <div id="emptyOSMessage" class="text-center py-5" style="display: none;">
+                    <i class="bi bi-windows" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3">Операционные системы не найдены</h5>
+                    <p class="text-muted">Нажмите "Добавить ОС" чтобы создать новую</p>
+                    <button class="btn btn-primary mt-3" onclick="addOS()">
+                        <i class="bi bi-plus-circle me-2"></i>Добавить первую ОС
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-muted mt-3 text-center small">
+        <i class="bi bi-info-circle me-1"></i> Всего ОС: <span id="osCount">0</span>
+    </div>
+</div>
+
+<!-- Модальное окно добавления ОС -->
+<div class="modal fade" id="addOSModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-windows me-2"></i>Добавить операционную систему
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addOSForm">
+                    <div class="mb-3">
+                        <label for="osName" class="form-label">Название ОС*</label>
+                        <input type="text" class="form-control" id="osName" required>
+                        <div class="invalid-feedback">Пожалуйста, укажите название</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="saveOSBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="saveSpinner"></span>
+                    <span id="saveBtnText">Сохранить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования ОС -->
+<div class="modal fade" id="editOSModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-windows me-2"></i>Редактировать операционную систему
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editOSForm">
+                    <input type="hidden" id="editOSId">
+                    <div class="mb-3">
+                        <label for="editOSName" class="form-label">Название ОС*</label>
+                        <input type="text" class="form-control" id="editOSName" required>
+                        <div class="invalid-feedback">Пожалуйста, укажите название</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="updateOSBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="updateSpinner"></span>
+                    <span id="updateBtnText">Сохранить изменения</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Глобальная переменная для хранения всех ОС
+    let allOS = [];
+
+    $(document).ready(function () {
+        loadOS();
+
+        // Обработчики событий
+        $('#saveOSBtn').click(saveOS);
+        $('#updateOSBtn').click(updateOS);
+        $('#searchInput').keyup(function() {
+            filterTable($(this).val().toLowerCase());
+        });
+        $('#resetSearch').click(function() {
+            $('#searchInput').val('');
+            filterTable('');
+        });
+    });
+
+    function loadOS() {
+        $('#loadingSpinner').show();
+        $('#mainContent').hide();
+
+        $.ajax({
+            url: 'https://localhost:5001/api/oc',
+            xhrFields: { withCredentials: true },
+            method: 'GET',
+            success: function (data) {
+                allOS = data;
+                updateTable(data);
+            },
+            error: function (xhr) {
+                console.error('Ошибка получения данных:', xhr);
+                showAlert('Ошибка загрузки данных. Пожалуйста, попробуйте позже.', 'danger');
+                $('#loadingSpinner').hide();
+            }
+        });
+    }
+
+    function updateTable(osList) {
+        const tableBody = $("#osTableBody");
+        tableBody.empty();
+
+        if (osList.length === 0) {
+            $("#osTable").hide();
+            $("#emptyOSMessage").show();
+        } else {
+            $("#osTable").show();
+            $("#emptyOSMessage").hide();
+
+            osList.forEach(function(os) {
+                const row = `
+                    <tr>                       
+                        <td class="ps-4">${os.name || 'Не указано'}</td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-warning me-2 rounded-pill px-3" onclick="editOS(${os.id})">
+                                <i class="bi bi-pencil me-1"></i>Изменить
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="deleteOS(${os.id}, '${os.name.replace("'", "\\'")}')">
+                                <i class="bi bi-trash me-1"></i>Удалить
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+        }
+
+        $("#osCount").text(osList.length);
+        $("#loadingSpinner").hide();
+        $("#mainContent").fadeIn(300);
+    }
+
+    function filterTable(searchText) {
+        if (!searchText) {
+            updateTable(allOS);
+            return;
+        }
+
+        const filtered = allOS.filter(os =>
+            os.name.toLowerCase().includes(searchText)
+        );
+        updateTable(filtered);
+    }
+
+    function addOS() {
+        $('#addOSForm')[0].reset();
+        $('#osName').removeClass('is-invalid');
+        $('#addOSModal').modal('show');
+    }
+
+    function saveOS() {
+        const name = $('#osName').val().trim();
+
+        if (!name) {
+            $('#osName').addClass('is-invalid');
+            return;
+        }
+
+        const $btn = $('#saveOSBtn');
+        $btn.prop('disabled', true);
+        $('#saveSpinner').removeClass('d-none');
+        $('#saveBtnText').text('Сохранение...');
+
+        $.ajax({
+            url: 'https://localhost:5001/api/oc',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ name: name }),
+            xhrFields: { withCredentials: true },
+            success: function() {
+                $('#addOSModal').modal('hide');
+                showAlert('ОС успешно добавлена', 'success');
+                loadOS();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.message || xhr.statusText;
+                showAlert('Ошибка при сохранении: ' + errorMsg, 'danger');
+            },
+            complete: function() {
+                $('#saveSpinner').addClass('d-none');
+                $('#saveBtnText').text('Сохранить');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+
+    function editOS(id) {
+        const os = allOS.find(o => o.id === id);
+        if (!os) {
+            showAlert('ОС не найдена', 'danger');
+            return;
+        }
+
+        $('#editOSForm')[0].reset();
+        $('#editOSId').val(os.id);
+        $('#editOSName').val(os.name);
+        $('#editOSName').removeClass('is-invalid');
+        $('#editOSModal').modal('show');
+    }
+
+    function updateOS() {
+        const id = $('#editOSId').val();
+        const name = $('#editOSName').val().trim();
+
+        if (!name) {
+            $('#editOSName').addClass('is-invalid');
+            return;
+        }
+
+        const $btn = $('#updateOSBtn');
+        $btn.prop('disabled', true);
+        $('#updateSpinner').removeClass('d-none');
+        $('#updateBtnText').text('Сохранение...');
+
+        $.ajax({
+            url: `https://localhost:5001/api/oc/${id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ id: id, name: name }),
+            xhrFields: { withCredentials: true },
+            success: function() {
+                $('#editOSModal').modal('hide');
+                showAlert('ОС успешно обновлена', 'success');
+                loadOS();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.message || 'Ошибка сервера';
+                showAlert('Ошибка обновления: ' + errorMsg, 'danger');
+            },
+            complete: function() {
+                $('#updateSpinner').addClass('d-none');
+                $('#updateBtnText').text('Сохранить изменения');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+
+    function deleteOS(id, name) {
+        if (!confirm(`Вы точно хотите удалить операционную систему "${name}"?`)) return;
+
+        $.ajax({
+            url: `https://localhost:5001/api/oc/${id}`,
+            type: 'DELETE',
+            xhrFields: { withCredentials: true },
+            success: function() {
+                showAlert('ОС успешно удалена', 'success');
+                loadOS();
+            },
+            error: function(xhr) {
+                showAlert('Ошибка при удалении: ' + (xhr.responseJSON?.message || xhr.statusText), 'danger');
+            }
+        });
+    }
+
+    function showAlert(message, type = 'success') {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+
+        $('#alertContainer').html(alertHtml);
+        setTimeout(() => $('.alert').alert('close'), 5000);
+    }
+</script>

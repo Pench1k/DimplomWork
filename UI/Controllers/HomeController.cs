@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using UI.Filtres;
-using UI.Models;
+
 
 namespace UI.Controllers
 {
-    [JwtAuthorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,6 +16,9 @@ namespace UI.Controllers
 
         public IActionResult Index()
         {
+            if (User.IsInRole("admin"))
+                return RedirectToAction("Index", "Admin");
+
             return View();
         }    
     }

@@ -2,6 +2,7 @@
 using DAL.Interface;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DAL.Repository
 {
@@ -72,6 +73,13 @@ namespace DAL.Repository
 
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<Department>> GetAllWithDeanOfficeAsync()
+        {
+            return await _context.Departments
+                .Include(d => d.DeanOffice)
+                .ToListAsync();
         }
     }
 }
