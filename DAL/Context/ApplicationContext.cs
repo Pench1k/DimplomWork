@@ -138,6 +138,12 @@ namespace DAL.Context
                 .WithMany(d => d.Departments)
                 .HasForeignKey(d => d.DeanOfficeId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Coming>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comings)
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

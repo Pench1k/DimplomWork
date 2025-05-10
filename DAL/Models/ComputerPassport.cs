@@ -20,5 +20,8 @@
 
         public int? WarehouseId {  get; set; }
         public Warehouse? Warehouse { get; set; }
+
+        public int ComingId {  get; set; }
+        public Coming? Coming { get; set; }
     }
 }

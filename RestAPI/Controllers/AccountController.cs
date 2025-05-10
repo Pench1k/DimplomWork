@@ -1,6 +1,8 @@
 ﻿using BLL.DTO;
 using BLL.Interface;
+using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RestAPI.Controllers
@@ -23,6 +25,14 @@ namespace RestAPI.Controllers
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
+                if (!await _userService.UserExistAsync(registerUserDto.UserName))
+                {
+                    return Conflict(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Пользователь с таким логином уже существует"
+                    });
+                }
                 var result = await _userService.Add(registerUserDto);
                 if (!result)
                     return BadRequest("Не удалось зарегистрировать пользователя.");
@@ -53,31 +63,84 @@ namespace RestAPI.Controllers
         }
 
         [HttpGet("Users")]
-        [Authorize(Roles = "admin")] // Добавляем аттрибут, чтобы только авторизованные пользователи могли вызвать этот метод
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             var userAll = await _userService.GetAllAsync();
-
-
             return Ok(userAll);
         }
 
         [HttpGet("User")]
-        [Authorize(Roles = "admin")] // Добавляем аттрибут, чтобы только авторизованные пользователи могли вызвать этот метод
+        [Authorize(Roles = "admin")] 
         public async Task<IActionResult> GetUser(string userName)
         {
             var user = await _userService.GetByUserNameAsync(userName);
             return Ok(user);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeletUser(string userName)
+        public async Task<IActionResult> DeletUser(string id)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-            await _userService.Delete(user);
+            try
+            {
+                var currentUser = await _userService.GetUserAsync(User);
+                if (currentUser == null)
+                    return Unauthorized();
 
-            return Ok("Пользователь удален");
+                var userToDelete = await _userService.GetByIdAsync(id);
+                if(userToDelete == null)
+                    return NotFound("Пользователь не найден");
+
+                if (userToDelete.Id == currentUser.Id)
+                    return BadRequest(new { Message = "Нельзя удалить самого себя" });
+
+                var result = await _userService.Delete(userToDelete);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(string.Join(", ", result.Errors.Select(e => e.Description)));
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Пользователь успешно удален",
+                    UserId = id
+                });
+            }
+            catch 
+            {
+                return StatusCode(500, "Произошла ошибка при удалении");
+            }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<UserEditDTO?> GetUserByEdit(string id)
+        {
+            return await _userService.GetUserByEdit(id);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDTO dto)
+        {
+            if (id != dto.Id)
+                return BadRequest("ID в URL и теле запроса не совпадают");
+
+            var result = await _userService.UpdateUserAsync(dto);
+
+            if (result.Succeeded)
+                return NoContent();
+
+            // Специфичная обработка ошибок
+            if (result.Errors.Any(e => e.Code == "UserNotFound"))
+                return NotFound(new { message = result.Errors.First().Description });
+
+            if (result.Errors.Any(e => e.Code == "DuplicateUserName"))
+                return Conflict(new { message = result.Errors.First().Description });
+
+            return BadRequest(result.Errors);
         }
     }
 }

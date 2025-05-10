@@ -4,6 +4,7 @@ using DAL.Interface;
 using DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BLL.Service
 {
@@ -38,28 +39,11 @@ namespace BLL.Service
                 };
 
                 var result = await _userManager.CreateAsync(user, dto.Password);
-
-
                 if (!result.Succeeded)
                     return false;
                 result = await _userManager.AddToRoleAsync(user, dto.Role);
-                if (!result.Succeeded) return false;
-
-
-                //if (dto.WarehouseId != 0 || dto.DepartmentId != 0)
-                //{
-                //    user = await _userManager.FindByNameAsync(dto.UserName);
-                //    var worker = new Workers
-                //    {
-                //        ApplicationUserId = user.Id,
-                //        DepartmentId = dto.DepartmentId,
-                //        WarehouseId = dto.WarehouseId,
-                //    };
-
-                //    await _unitOfWork.BeginTransactionAsync();
-                //    await _unitOfWork.Workers.AddAsync(worker);
-                //    await _unitOfWork.CommitAsync();
-                //}
+                if (!result.Succeeded) 
+                    return false;
                 return true;
             }
             catch
@@ -68,9 +52,12 @@ namespace BLL.Service
             }      
         }
 
-        public Task Delete(ApplicationUser user) //???
+        public async Task<IdentityResult> Delete(ApplicationUser user) //???
         {
-            return _userManager.DeleteAsync(user);
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            return await _userManager.DeleteAsync(user);
         }
 
         public async Task<IEnumerable<UserDTO>> GetAllAsync()
@@ -108,6 +95,11 @@ namespace BLL.Service
             return userDto;
         }
 
+        public async Task<ApplicationUser?> GetByIdAsync(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
+
         public async Task<ApplicationUser?> GetByUserNameAsync(string userName)
         {
             return await _userManager.FindByNameAsync(userName);
@@ -118,6 +110,30 @@ namespace BLL.Service
             return await _userManager.GetRolesAsync(user);
         }
 
+        public async Task<ApplicationUser?> GetUserAsync(ClaimsPrincipal user)
+        {
+            return await _userManager.GetUserAsync(user);
+        }
+
+        public async Task<UserEditDTO?> GetUserByEdit(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return new UserEditDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                MiddleName = user.MiddleName,
+                Roles = roles.ToList()
+            };
+        }
+            
         public async Task<string> LoginAsync(LoginUserDto dto)
         {
             var user = await GetByUserNameAsync(dto.UserName);
@@ -139,14 +155,57 @@ namespace BLL.Service
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<bool> Update(ApplicationUser user)
+        public async Task<IdentityResult> UpdateUserAsync(UpdateUserDTO dto)
         {
+            var user = await _userManager.FindByIdAsync(dto.Id);
             if (user == null)
-                throw new ArgumentNullException(nameof(user));
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "UserNotFound",
+                    Description = "Пользователь не найден"
+                });
 
-            var result = await _userManager.UpdateAsync(user);
+           
+            if (!string.Equals(user.UserName, dto.UserName, StringComparison.OrdinalIgnoreCase))
+            {
+                var existingUser = await _userManager.FindByNameAsync(dto.UserName);
+                if (existingUser != null && existingUser.Id != user.Id)
+                {
+                    return IdentityResult.Failed(new IdentityError
+                    {
+                        Code = "DuplicateUserName",
+                        Description = $"Логин '{dto.UserName}' уже занят другим пользователем"
+                    });
+                }
 
-            return result.Succeeded;
+                user.UserName = dto.UserName;
+                user.NormalizedUserName = _userManager.NormalizeName(dto.UserName);
+            }
+
+
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.MiddleName = dto.MiddleName;
+
+          
+            if (!string.IsNullOrEmpty(dto.NewPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var passwordResult = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
+                if (!passwordResult.Succeeded)
+                    return passwordResult;
+            }
+
+          
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<bool> UserExistAsync(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user != null)
+                return false;
+            return true;
         }
     }
 }

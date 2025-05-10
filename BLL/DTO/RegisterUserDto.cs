@@ -10,14 +10,24 @@ namespace BLL.DTO
 {
     public class RegisterUserDto
     {
+        [Required(ErrorMessage = "Логин обязателен")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Логин должен быть от 3 до 50 символов")]
+        public string UserName { get; set; }
 
-        [Required] public string UserName { get; set; }
-        [Required][PasswordPropertyText] public string Password { get; set; }
-
+        [Required(ErrorMessage = "Пароль обязателен")]
+        [DataType(DataType.Password)]
+        [MinLength(8, ErrorMessage = "Пароль должен содержать минимум 8 символов")]
+        public string Password { get; set; }
         [Required] public string Role {  get; set; }
-        [Required] public string FirstName { get; set; }
-        [Required] public string LastName { get; set; }
-        [Required] public string MiddleName { get; set; }
+
+        [Required(ErrorMessage = "Имя обязательно")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Фамилия обязательно")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Отчество обязательно")]
+        public string MiddleName { get; set; }
 
         public int? DepartmentId { get; set; }
         public int? WarehouseId { get; set; }

@@ -6,8 +6,12 @@
         public string? Provider {  get; set; }
         public DateOnly? DateOfComing { get; set; }
 
-        public int? WarehouseId {  get; set; }
-        public Warehouse? Warehouse { get; set; }
+        public string? DocumentNumber { get; set; }
+
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
+
+        public List<ComputerPassport>? ComputerPassports { get; set; }
         //???
     }
 }

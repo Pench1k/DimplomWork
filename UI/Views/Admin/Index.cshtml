@@ -20,17 +20,17 @@
         </div>
     </div>
 
-  
+    
     <div class="card shadow-sm mb-4">
         <div class="card-body py-3">
             <div class="input-group input-group-lg">
                 <span class="input-group-text bg-transparent border-0">
                     <i class="bi bi-search text-muted"></i>
                 </span>
-                <input type="text" id="searchInput" class="form-control border-0 ps-0" placeholder="Поиск по имени, логину или отделу...">
-                <button class="btn btn-outline-secondary rounded-pill px-4" type="button">
-                    <i class="bi bi-funnel me-2"></i>Фильтры
-                </button>
+                <input type="text" 
+                    id="searchInput" 
+                    class="form-control border-0 ps-0" 
+                    placeholder="Поиск по фамилии...">
             </div>
         </div>
     </div>
@@ -43,9 +43,9 @@
                     <thead class="table-light">
                         <tr>
                             <th class="ps-4">Логин</th>
-                            <th>Имя</th>
-                            <th>Отчество</th>
                             <th>Фамилия</th>
+                            <th>Имя</th>
+                            <th>Отчество</th>                           
                             <th>Отдел</th>
                             <th>Склад</th>
                             <th>Роли</th>
@@ -65,110 +65,280 @@
     </div>
 </div>
 
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+<div
+	class="modal fade"
+	id="addUserModal"
+	tabindex="-1"
+	aria-labelledby="addUserModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="addUserModalLabel">
+					<i class="bi bi-person-plus me-2"></i>Добавить нового пользователя
+				</h5>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+					aria-label="Close"
+				></button>
+			</div>
+			<div class="modal-body">
+				<form id="addUserForm">
+					<div class="row g-3">
+						<div class="col-md-6">
+							<label for="addUserName" class="form-label">Логин*</label>
+							<input
+								type="text"
+								class="form-control"
+								id="addUserName"
+								required
+							/>
+						</div>
+                        <div class="col-md-6">
+                            <label for="addPassword" class="form-label">Пароль*</label>
+                            <div class="input-group">
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    id="addPassword"
+                                    required
+                                />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+						<div class="col-md-4">
+							<label for="addLastName" class="form-label">Фамилия*</label>
+							<input type="text" class="form-control" id="addLastName" />
+						</div>
+						<div class="col-md-4">
+							<label for="addFirstName" class="form-label">Имя*</label>
+							<input
+								type="text"
+								class="form-control"
+								id="addFirstName"
+								required
+							/>
+						</div>
+						<div class="col-md-4">
+							<label for="addMiddleName" class="form-label">Отчество*</label>
+							<input type="text" class="form-control" id="addMiddleName" />
+						</div>
+
+						<!-- Роли с radio button вместо checkbox -->
+						<div class="col-12">
+							<label class="form-label">Роли*</label>
+							<div class="card p-3">
+								<div class="row g-3">
+									<div class="col-md-6">
+										<div class="form-check">
+											<input
+												class="form-check-input role-radio"
+												type="radio"
+												name="userRole"
+												id="roleAdmin"
+												value="admin"
+											/>
+											<label class="form-check-label" for="roleAdmin">
+												Администратор
+											</label>
+										</div>
+										<div class="form-check">
+											<input
+												class="form-check-input role-radio"
+												type="radio"
+												name="userRole"
+												id="roleMethodist"
+												value="Методист"
+											/>
+											<label class="form-check-label" for="roleMethodist">
+												Методист
+											</label>
+										</div>
+										<div class="form-check">
+											<input
+												class="form-check-input role-radio"
+												type="radio"
+												name="userRole"
+												id="roleProrector"
+												value="Проректор"
+											/>
+											<label class="form-check-label" for="roleProrector">
+												Проректор
+											</label>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-check">
+											<input
+												class="form-check-input role-radio"
+												type="radio"
+												name="userRole"
+												id="roleWarehouse"
+												value="Ответственный за склад"
+											/>
+											<label class="form-check-label" for="roleWarehouse">
+												Ответственный за склад
+											</label>
+										</div>
+										<div class="form-check">
+											<input
+												class="form-check-input role-radio"
+												type="radio"
+												name="userRole"
+												id="roleEngineer"
+												value="Инженер коммуниционного центра"
+											/>
+											<label class="form-check-label" for="roleEngineer">
+												Инженер КЦ
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Дополнительные поля для методиста -->
+						<div
+							class="col-md-6"
+							id="methodistDepartmentContainer"
+							style="display: none"
+						>
+							<label for="methodistDepartment" class="form-label"
+								>Подразделение методиста*</label
+							>
+							<select class="form-select" id="methodistDepartment">
+								<option value="" selected disabled>
+									Выберите подразделение
+								</option>
+								<!-- Опции будут загружены динамически -->
+							</select>
+						</div>
+
+						<!-- Дополнительные поля для ответственного за склад -->
+						<div class="col-md-6" id="warehouseContainer" style="display: none">
+							<label for="userWarehouse" class="form-label">Склад*</label>
+							<select class="form-select" id="userWarehouse">
+								<option value="" selected disabled>Выберите склад</option>
+								<!-- Опции будут загружены динамически -->
+							</select>
+						</div>					
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+					<i class="bi bi-x-lg me-1"></i>Отмена
+				</button>
+				<button type="button" class="btn btn-primary" id="saveUserBtn">
+					<i class="bi bi-save me-1"></i>Сохранить
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Подтверждение удаления</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Вы уверены, что хотите удалить этого пользователя?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Удалить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">
-                    <i class="bi bi-person-plus me-2"></i>Добавить нового пользователя
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-gear me-2"></i>Редактировать пользователя
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addUserForm">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
                     <div class="row g-3">
-                       
+                        <!-- Основная информация -->
                         <div class="col-md-6">
-                            <label for="addUserName" class="form-label">Логин*</label>
-                            <input type="text" class="form-control" id="addUserName" required>
+                            <label for="editUserName" class="form-label">Логин <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editUserName" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="addPassword" class="form-label">Пароль*</label>
-                            <input type="password" class="form-control" id="addPassword" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="addLastName" class="form-label">Фамилия</label>
-                            <input type="text" class="form-control" id="addLastName">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="addFirstName" class="form-label">Имя*</label>
-                            <input type="text" class="form-control" id="addFirstName" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="addMiddleName" class="form-label">Отчество</label>
-                            <input type="text" class="form-control" id="addMiddleName">
-                        </div>
-
                         
+                        <!-- Смена пароля (опционально) -->
                         <div class="col-12">
-                            <label class="form-label">Роли*</label>
-                            <div class="card p-3">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="roleAdmin" value="admin">
-                                            <label class="form-check-label" for="roleAdmin">
-                                                Администратор
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="roleMethodist" value="Методист">
-                                            <label class="form-check-label" for="roleMethodist">
-                                                Методист
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="roleProrector" value="Проректор">
-                                            <label class="form-check-label" for="roleProrector">
-                                                Проректор
-                                            </label>
-                                        </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="editChangePasswordCheckbox">
+                                <label class="form-check-label" for="editChangePasswordCheckbox">
+                                    Изменить пароль
+                                </label>
+                            </div>
+                            
+                            <div id="editPasswordFields" class="row g-3" style="display: none;">
+                                <div class="col-md-6">
+                                    <label for="editPassword" class="form-label">Новый пароль</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="editPassword" 
+                                               placeholder="Введите новый пароль">
+                                        <button class="btn btn-outline-secondary" type="button" id="toggleEditPassword">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="roleWarehouse" value="Ответственный за склад">
-                                            <label class="form-check-label" for="roleWarehouse">
-                                                Ответственный за склад
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="roleEngineer" value="Инженер коммуникационного центра">
-                                            <label class="form-check-label" for="roleEngineer">
-                                                Инженер КЦ
-                                            </label>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="editPasswordConfirm" class="form-label">Подтверждение пароля</label>
+                                    <input type="password" class="form-control" id="editPasswordConfirm" 
+                                           placeholder="Повторите новый пароль">
                                 </div>
                             </div>
                         </div>
 
-                        
-                        <div class="col-md-6">
-                            <label for="addDepartment" class="form-label">Отдел</label>
-                            <select class="form-select" id="addDepartment">
-                                <option value="" selected>Не выбран</option>
-                                <option value="IT">IT отдел</option>
-                                <option value="Education">Учебный отдел</option>
-                                <option value="Logistics">Логистика</option>
-                            </select>
+                        <!-- Поля для имени -->
+                        <div class="col-md-4">
+                            <label for="editLastName" class="form-label">Фамилия <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editLastName" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="addWarehouse" class="form-label">Склад</label>
-                            <select class="form-select" id="addWarehouse">
-                                <option value="" selected>Не выбран</option>
-                                <option value="Main">Основной склад</option>
-                                <option value="Archive">Архив</option>
-                            </select>
+                        <div class="col-md-4">
+                            <label for="editFirstName" class="form-label">Имя <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editFirstName" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="editMiddleName" class="form-label">Отчество<span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="editMiddleName">
+                        </div>
+                        
+                        <!-- Отображение текущей роли (только для информации) -->
+                        <div class="col-12">
+                            <div class="card p-3 bg-light">
+                                <div class="d-flex align-items-center">
+                                    <span class="fw-bold me-2">Текущая роль:</span>
+                                    <span id="editUserCurrentRole" class="badge bg-primary bg-opacity-10 text-primary"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg me-1"></i>Отмена
+                    <i class="bi bi-x-lg me-1"></i> Отмена
                 </button>
-                <button type="button" class="btn btn-primary" id="saveUserBtn">
-                    <i class="bi bi-save me-1"></i>Сохранить
+                <button type="button" class="btn btn-primary" id="updateUserBtn">
+                    <i class="bi bi-check-lg me-1"></i> Сохранить изменения
                 </button>
             </div>
         </div>
@@ -176,10 +346,195 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        
-        setTimeout(function () {
+    $(document).ready(function() {
+        setTimeout(function() {
+            loadUsers();
+        }, 1500);
+    });
+
+     function updateTable(users) {
+            var tableBody = $('#userTable tbody');
+            tableBody.empty();
+
+            users.forEach(function (user) {
+                var rolesBadges = user.roles.map(role =>
+                    `<span class="badge bg-primary bg-opacity-10 text-primary me-1">${role}</span>`
+                ).join('');
+
+                var row = `<tr class="animate__animated animate__fadeIn">
+                        <td class="ps-4 fw-semibold">${user.userName}</td>
+                        <td>${user.lastName || '-'}</td>
+                        <td>${user.firstName || '-'}</td>
+                        <td>${user.middleName || '-'}</td>                     
+                        <td><span class="badge bg-info bg-opacity-10 text-info">${user.departmentName || 'Не указан'}</span></td>
+                        <td>${user.warehouseName || '-'}</td>
+                        <td>${rolesBadges}</td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-warning me-2 rounded-pill px-3" onclick="editUser('${user.id}')">
+                                <i class="bi bi-pencil me-1"></i>Изменить
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="showDeleteConfirmation('${user.id}')">
+                                <i class="bi bi-trash me-1"></i>Удалить
+                            </button>
+                        </td>
+                    </tr>`;
+                tableBody.append(row);
+            });
+
+            $('#userCount').text(users.length);
+            $('#loadingSpinner').hide();
+            $('#mainContent').fadeIn(300);          
+        }
+    
+    $('.role-radio').change(function () {
+			var selectedRole = $(this).val()
+
+			// Скрываем все дополнительные поля
+			$('#methodistDepartmentContainer').hide()
+			$('#warehouseContainer').hide()
+
+			// Показываем нужные поля в зависимости от роли
+			if (selectedRole === 'Методист') {
+				$('#methodistDepartmentContainer').show()
+				loadMethodistDepartments()
+			} else if (selectedRole === 'Ответственный за склад') {
+				$('#warehouseContainer').show()
+				loadWarehouses()
+			}
+		})
+
+    function loadMethodistDepartments() {
+			$.ajax({
+				url: 'https://localhost:5001/api/department',
+				xhrFields: {
+					withCredentials: true,
+				},
+				method: 'GET',
+				success: function (data) {
+					var select = $('#methodistDepartment')
+					select.empty()
+					select.append(
+						'<option value="" selected disabled>Выберите подразделение</option>'
+					)
+
+					data.forEach(function (department) {
+						select.append(
+							`<option value="${department.id}">${department.name}</option>`
+						)
+					})
+				},
+				error: function (error) {
+					console.log('Ошибка загрузки подразделений:', error)
+					alert('Не удалось загрузить список подразделений')
+				},
+			})
+		}
+
+    	function loadWarehouses() {
+			$.ajax({
+				url: 'https://localhost:5001/api/warehouse',
+				xhrFields: {
+					withCredentials: true,
+				},
+				method: 'GET',
+				success: function (data) {
+					var select = $('#userWarehouse')
+					select.empty()
+					select.append(
+						'<option value="" selected disabled>Выберите склад</option>'
+					)
+
+					data.forEach(function (warehouse) {
+						select.append(
+							`<option value="${warehouse.id}">${warehouse.name}</option>`
+						)
+					})
+				},
+				error: function (error) {
+					console.log('Ошибка загрузки складов:', error)
+					alert('Не удалось загрузить список складов')
+				},
+			})
+		}
+
+        $('#saveUserBtn').click(function() {
+            // Собираем данные формы
+            var formData = {
+                userName: $('#addUserName').val(),
+                password: $('#addPassword').val(),
+                firstName: $('#addFirstName').val(),
+                lastName: $('#addLastName').val(),
+                middleName: $('#addMiddleName').val(),
+                role: $('input[name="userRole"]:checked').val()
+            };
+
+            // Получаем выбранную роль
+            var selectedRole = $('input[name="userRole"]:checked').val();
+
+            // Добавляем departmentId или warehouseId в зависимости от роли
+            if (selectedRole === 'Методист') {
+                formData.departmentId = $('#methodistDepartment').val();
+            } 
+            else if (selectedRole === 'Ответственный за склад') {
+                formData.warehouseId = $('#userWarehouse').val();
+            }
+
+            // Валидация обязательных полей
+            if (!formData.userName || !formData.password || !formData.firstName || 
+                !formData.lastName || !formData.middleName || !formData.role) {
+                alert('Пожалуйста, заполните все обязательные поля (помеченные *)');
+                return;
+            }
+
+            // Проверка для методиста
+            if (selectedRole === 'Методист' && !formData.departmentId) {
+                alert('Пожалуйста, выберите подразделение для методиста');
+                return;
+            }
+
+            // Проверка для ответственного за склад
+            if (selectedRole === 'Ответственный за склад' && !formData.warehouseId) {
+                alert('Пожалуйста, выберите склад');
+                return;
+            }
+
+            // Логирование данных перед отправкой (для отладки)
+            console.log("Отправляемые данные:", formData);
+
+            // Отправка данных на сервер
             $.ajax({
+                url: 'https://localhost:5001/api/account',
+                xhrFields: {
+                    withCredentials: true
+                },
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    showAlert('Пользователь успешно добавлен', 'success');
+                    
+                    
+                    $('#addUserForm')[0].reset();
+                    $('#methodistDepartment').val(''); 
+                    $('#userWarehouse').val(''); 
+
+                    $('#addUserModal').modal('hide');
+                    loadUsers();
+                },
+                error: function(error) {
+                    console.error('Ошибка добавления пользователя:', error);
+                    
+                    let errorMessage = 'Ошибка при добавлении пользователя';
+                    if (error.responseJSON && error.responseJSON.message) {
+                        errorMessage = error.responseJSON.message;
+                    }   
+                    showAlert(errorMessage, 'danger');                   
+                }
+            });
+        });
+    
+        function loadUsers() {
+         $.ajax({
                 url: 'https://localhost:5001/api/account/users',
                 xhrFields: {
                     withCredentials: true
@@ -198,65 +553,247 @@
                     );
                 }
             });
-        }, 1500);
+        }
 
-        // Рендер таблицы
-        function updateTable(users) {
-            var tableBody = $('#userTable tbody');
-            tableBody.empty();
-
-            users.forEach(function (user) {
-                var rolesBadges = user.roles.map(role =>
-                    `<span class="badge bg-primary bg-opacity-10 text-primary me-1">${role}</span>`
-                ).join('');
-
-                var row = `<tr class="animate__animated animate__fadeIn">
-                        <td class="ps-4 fw-semibold">${user.userName}</td>
-                        <td>${user.firstName || '-'}</td>
-                        <td>${user.middleName || '-'}</td>
-                        <td>${user.lastName || '-'}</td>
-                        <td><span class="badge bg-info bg-opacity-10 text-info">${user.departmentName || 'Не указан'}</span></td>
-                        <td>${user.warehouseName || '-'}</td>
-                        <td>${rolesBadges}</td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-outline-warning me-2 rounded-pill px-3" onclick="editUser('${user.id}')">
-                                <i class="bi bi-pencil me-1"></i>Изменить
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="deleteUser('${user.id}')">
-                                <i class="bi bi-trash me-1"></i>Удалить
-                            </button>
-                        </td>
-                    </tr>`;
-                tableBody.append(row);
+        function showDeleteConfirmation(id) {
+            const modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            $('#confirmDeleteBtn').off('click').on('click', function() {
+                deleteUser(id);
+                modal.hide();
             });
+            modal.show();
+        }
 
-            $('#userCount').text(users.length);
-            $('#loadingSpinner').hide();
-            $('#mainContent').fadeIn(300);
-
-            // Инициализация поиска
-            $("#searchInput").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#userTable tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
+        function deleteUser(id) {
+             $('#loadingSpinner').show();
+             $('#mainContent').hide();
+    
+            $.ajax({
+                url: `https://localhost:5001/api/account/${id}`,
+                xhrFields: { withCredentials: true },
+                method: 'DELETE',
+                success: function(response) {
+                    showAlert('Пользователь успешно удален', 'success');
+                    loadUsers(); // Обновляем таблицу после удаления
+                },
+                error: function(error) {
+                    console.error('Ошибка удаления:', error);
+                    $('#loadingSpinner').hide();
+                    $('#mainContent').show();
+                    
+                    let errorMessage = 'Ошибка при удалении пользователя';
+                    if (error.responseJSON && error.responseJSON.message) {
+                        errorMessage = error.responseJSON.message;
+                    }
+                    
+                    showAlert(errorMessage, 'danger');
+                }
             });
         }
+
+        function showAlert(message, type) {
+            // Удаляем предыдущие уведомления
+            $('.alert-notification').remove();
+    
+            const alertHtml = `
+                <div class="alert-notification alert alert-${type} alert-dismissible fade show position-fixed bottom-0 end-0 m-3">
+                    <i class="bi ${type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+    
+            $('body').append(alertHtml);
+    
+            // Автоматическое закрытие через 5 секунд
+            setTimeout(() => {
+                $('.alert-notification').alert('close');
+            }, 5000);
+        }
+
+        document.getElementById('togglePassword').addEventListener('click', function() {
+                    const passwordInput = document.getElementById('addPassword');
+                    const icon = this.querySelector('i');
+
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    icon.classList.toggle('bi-eye');
+                    icon.classList.toggle('bi-eye-slash');
+        });
+
+        // Заглушки функций (реализуйте их по необходимости)
+        function addUser() {
+             $('#addUserForm')[0].reset();
+    
+            // Сбрасываем дополнительные поля
+            $('#methodistDepartment').val('').trigger('change');
+            $('#userWarehouse').val('').trigger('change');
+            
+            // Скрываем дополнительные контейнеры
+            $('#methodistDepartmentContainer').hide();
+            $('#warehouseContainer').hide();
+            
+            // Сбрасываем выбор роли
+            $('.role-radio').prop('checked', false);
+
+
+            var modal = new bootstrap.Modal(document.getElementById('addUserModal'));
+            modal.show();
+        }
+
+        function editUser(id) {
+        // Показываем спиннер загрузки
+        $('#loadingSpinner').show();
+        $('#mainContent').hide();
+
+        // Загрузка данных пользователя
+        $.ajax({
+            url: `https://localhost:5001/api/account/${id}`,
+            xhrFields: { withCredentials: true },
+            method: 'GET',
+            success: function(user) {
+                // Заполняем форму данными пользователя
+                $('#editUserId').val(user.id);
+                $('#editUserName').val(user.userName);
+                $('#editFirstName').val(user.firstName);
+                $('#editLastName').val(user.lastName);
+                $('#editMiddleName').val(user.middleName || '');
+                
+                // Отображаем текущую роль (только информация)
+                if (user.roles && user.roles.length > 0) {
+                    $('#editUserCurrentRole').text(user.roles[0]);
+                }
+
+                // Показываем модальное окно
+                $('#loadingSpinner').hide();
+                $('#mainContent').show();
+                new bootstrap.Modal(document.getElementById('editUserModal')).show();
+            },
+            error: function(error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+                $('#loadingSpinner').hide();
+                $('#mainContent').show();
+                showAlert('Не удалось загрузить данные пользователя', 'danger');
+            }
+        });
+    }
+
+    // Обработчик сохранения изменений
+    $('#updateUserBtn').click(function() {
+        const userId = $('#editUserId').val();
+        const formData = {
+            id: userId,
+            userName: $('#editUserName').val(),
+            firstName: $('#editFirstName').val(),
+            lastName: $('#editLastName').val(),
+            middleName: $('#editMiddleName').val()
+        };
+
+        // Если выбрано изменение пароля
+        if ($('#editChangePasswordCheckbox').is(':checked')) {
+            const newPassword = $('#editPassword').val();
+            const confirmPassword = $('#editPasswordConfirm').val();
+            
+            if (newPassword !== confirmPassword) {
+                showAlert('Пароли не совпадают', 'danger');
+                return;
+            }
+            
+            if (newPassword) {
+                formData.password = newPassword;
+            }
+        }
+
+        // Валидация
+        if (!formData.userName || !formData.firstName || !formData.lastName) {
+            showAlert('Пожалуйста, заполните все обязательные поля', 'warning');
+            return;
+        }
+
+        // Показываем спиннер
+        $('#editUserModal').modal('hide');
+        $('#loadingSpinner').show();
+        $('#mainContent').hide();
+
+        // Отправка данных на сервер
+        $.ajax({
+            url: `https://localhost:5001/api/account/${userId}`,
+            xhrFields: { withCredentials: true },
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function() {
+                showAlert('Изменения пользователя сохранены', 'success');
+                loadUsers(); // Обновляем таблицу
+            },
+            error: function(error) {
+                
+                console.error('Ошибка обновления:', error);
+                $('#loadingSpinner').hide();
+                $('#mainContent').show();
+                
+                let errorMessage = 'Ошибка при сохранении изменений';
+                
+                // Обрабатываем разные форматы ошибок
+                if (error.responseJSON) {
+                    if (error.responseJSON.message) {
+                        errorMessage = error.responseJSON.message;
+                    } else if (Array.isArray(error.responseJSON)) {
+                        // Если пришел массив ошибок (старый формат)
+                        errorMessage = error.responseJSON.join(', ');
+                    } else if (error.responseJSON.errors) {
+                        // Если ошибки в подполе errors
+                        errorMessage = error.responseJSON.errors.join(', ');
+                    } else if (typeof error.responseJSON === 'string') {
+                        // Если ошибка пришла как строка
+                        errorMessage = error.responseJSON;
+                    }
+                }
+                
+                showAlert(errorMessage, 'danger');
+                editUser(formData.userId)
+                new bootstrap.Modal(document.getElementById('editUserModal')).show();
+            }
+        });
     });
 
-    // Заглушки функций (реализуйте их по необходимости)
-    function addUser() {
-        var modal = new bootstrap.Modal(document.getElementById('addUserModal'));
-        modal.show();
-    }
+    // Управление отображением полей пароля
+    $('#editChangePasswordCheckbox').change(function() {
+        const isChecked = $(this).is(':checked');
+        $('#editPasswordFields').toggle(isChecked);
+        $('#editPassword').prop('required', isChecked);
+        $('#editPasswordConfirm').prop('required', isChecked);
+    });
 
-    function editUser(id) {
-        alert('Редактирование пользователя с ID: ' + id);
-    }
+    // Переключение видимости пароля
+    $('#toggleEditPassword').click(function() {
+        const input = $('#editPassword');
+        const icon = $(this).find('i');
+        const type = input.attr('type') === 'password' ? 'text' : 'password';
+        input.attr('type', type);
+        icon.toggleClass('bi-eye bi-eye-slash');
+    });
 
-    function deleteUser(id) {
-        if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-            alert('Удаление пользователя с ID: ' + id);
-        }
-    }
+    // Очистка формы при закрытии модального окна
+    $('#editUserModal').on('hidden.bs.modal', function() {
+        $('#editUserForm')[0].reset();
+        $('#editPasswordFields').hide();
+        $('#editChangePasswordCheckbox').prop('checked', false);
+    });
+
+    $(document).ready(function() {
+    // Обработчик поля поиска
+        $('#searchInput').on('input', function() {
+            const searchText = $(this).val().toLowerCase().trim();
+            
+            $("#userTable tbody tr").each(function() {
+                // Берем текст из столбца с фамилией (2-й столбец, индекс 1)
+                const lastName = $(this).find('td:eq(1)').text().toLowerCase();
+                
+                // Показываем/скрываем строку в зависимости от совпадения
+                $(this).toggle(searchText === '' || lastName.includes(searchText));
+            });
+        });
+    });
 </script>

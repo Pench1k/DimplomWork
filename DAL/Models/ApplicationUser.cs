@@ -14,7 +14,10 @@ namespace DAL.Models
         public int? WarehouseId { get; set; }
         public Warehouse? Warehouse { get; set; }
 
-        List<ArrivalFromTheWarehouse>? ArrivalFromTheWarehouse { get; set; }
+
+        public List<ArrivalFromTheWarehouse>? ArrivalFromTheWarehouse { get; set; }
+        public List<Coming>? Comings { get; set; }
+        public List<ComputerPassport>? ComputerPassport { get; set; }
 
     }
 }
