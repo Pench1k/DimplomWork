@@ -18,17 +18,11 @@ namespace DAL
             service.AddScoped<IComing, ComingRepository>();
             service.AddScoped<IComputer, ComputerRepository>();
             service.AddScoped<IComputerPassport, ComputerPassportRepository>();          
-            service.AddScoped<IDepartment, DepartmentRepository>();
-                    
+            service.AddScoped<IDepartment, DepartmentRepository>();                   
             service.AddScoped<IMovingThroughDivisions, MovingThroughDivisionsRepository>();          
-            service.AddScoped<IOffice, OfficeRepository>();                                  
-            service.AddScoped<IRepairComputer, RepairComputerRepository>();
-                        
-            
-            //service.AddScoped<IWorkers, WorkersRepository>();
+            service.AddScoped<IOfficeRepository, OfficeRepository>();                                  
+            service.AddScoped<IRepairComputer, RepairComputerRepository>();                   
             service.AddScoped<IWriteDowns, WriteDownsRepository>();
-
-
             service.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             service.AddScoped<IUnitOfWork, UnitOfWork>();
 

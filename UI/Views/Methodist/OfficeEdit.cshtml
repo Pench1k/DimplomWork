@@ -1,0 +1,431 @@
+﻿<div id="loadingSpinner" class="text-center my-5 py-5">
+    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-3 text-muted">Загрузка кабинетов...</p>
+</div>
+
+<div id="alertContainer" class="container mt-3"></div>
+<div class="container-fluid py-4" id="mainContent" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="bi bi-door-open me-2"></i>Управление кабинетами
+        </h2>
+        <div>
+            <button id="buttonAdd" class="btn btn-success btn-lg rounded-pill px-4" onclick="showAddOfficeModal()">
+                <i class="bi bi-plus-circle me-2"></i>Добавить кабинет
+            </button>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body py-3">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent border-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" id="searchInput" class="form-control border-0 ps-0" placeholder="Поиск по номеру...">
+                        <button id="resetSearch" class="btn btn-outline-secondary" type="button" title="Сбросить поиск">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent border-0">
+                            <i class="bi bi-building text-muted"></i>
+                        </span>
+                        <input type="number" id="buildingFilter" class="form-control border-0 ps-0" placeholder="Фильтр по корпусу...">
+                        <button id="resetBuilding" class="btn btn-outline-secondary" type="button" title="Сбросить фильтр">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="officeTable" class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Номер</th>
+                            <th>Корпус</th>
+                            <th>Мест</th>
+                            <th class="text-end pe-4">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="officeTableBody">
+                        <!-- Данные будут вставлены с помощью JavaScript -->
+                    </tbody>
+                </table>
+                <!-- Блок для отображения когда кабинетов нет -->
+                <div id="emptyOfficeMessage" class="text-center py-5" style="display: none;">
+                    <i class="bi bi-door-closed" style="font-size: 2rem;"></i>
+                    <h5 class="mt-3">Кабинеты не найдены</h5>
+                    <p class="text-muted">Нажмите "Добавить кабинет" чтобы создать новый</p>
+                    <button class="btn btn-primary mt-3" onclick="showAddOfficeModal()">
+                        <i class="bi bi-plus-circle me-2"></i>Добавить первый кабинет
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-muted mt-3 text-center small">
+        <i class="bi bi-info-circle me-1"></i> Всего кабинетов: <span id="officeCount">0</span>
+    </div>
+</div>
+
+<!-- Модальное окно добавления кабинета -->
+<div class="modal fade" id="addOfficeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-door-open me-2"></i>Добавить кабинет
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addOfficeForm">
+                    <div class="mb-3">
+                        <label for="officeNumber" class="form-label">Номер кабинета*</label>
+                        <input type="number" class="form-control" id="officeNumber" required min="1">
+                        <div class="invalid-feedback">Пожалуйста, укажите номер кабинета</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="officeBuilding" class="form-label">Корпус*</label>
+                        <input type="number" class="form-control" id="officeBuilding" required min="1">
+                        <div class="invalid-feedback">Пожалуйста, укажите номер корпуса</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="officeSeats" class="form-label">Количество мест*</label>
+                        <input type="number" class="form-control" id="officeSeats" required min="0">
+                        <div class="invalid-feedback">Пожалуйста, укажите количество мест</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="saveOfficeBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="saveSpinner"></span>
+                    <span id="saveBtnText">Сохранить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования кабинета -->
+<div class="modal fade" id="editOfficeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-door-open me-2"></i>Редактировать кабинет
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editOfficeForm">
+                    <input type="hidden" id="editOfficeId">
+                    <div class="mb-3">
+                        <label for="editOfficeNumber" class="form-label">Номер кабинета*</label>
+                        <input type="number" class="form-control" id="editOfficeNumber" required min="1">
+                        <div class="invalid-feedback">Пожалуйста, укажите номер кабинета</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOfficeBuilding" class="form-label">Корпус*</label>
+                        <input type="number" class="form-control" id="editOfficeBuilding" required min="1">
+                        <div class="invalid-feedback">Пожалуйста, укажите номер корпуса</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOfficeSeats" class="form-label">Количество мест*</label>
+                        <input type="number" class="form-control" id="editOfficeSeats" required min="0">
+                        <div class="invalid-feedback">Пожалуйста, укажите количество мест</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="updateOfficeBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="updateSpinner"></span>
+                    <span id="updateBtnText">Сохранить изменения</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let allOffices = [];
+
+    $(document).ready(function () {
+        loadOffices();
+        setupEventListeners();
+    });
+
+    function setupEventListeners() {
+        $('#saveOfficeBtn').click(saveOffice);
+        $('#updateOfficeBtn').click(updateOffice);
+        $('#searchInput').keyup(function() {
+            filterTable();
+        });
+        $('#resetSearch').click(function() {
+            $('#searchInput').val('');
+            filterTable();
+        });
+        $('#buildingFilter').change(function() {
+            filterTable();
+        });
+        $('#resetBuilding').click(function() {
+            $('#buildingFilter').val('');
+            filterTable();
+        });
+    }
+
+    function loadOffices() {
+        $('#loadingSpinner').show();
+        $('#mainContent').hide();
+
+        $.ajax({
+            url: 'https://localhost:5001/api/Office',
+            method: 'GET',
+            xhrFields: { withCredentials: true },
+            success: function (data) {
+                allOffices = data;
+                updateTable(data);
+            },
+            error: function (xhr) {
+                console.error('Ошибка получения данных:', xhr);
+                showAlert('Ошибка загрузки кабинетов. Пожалуйста, попробуйте позже.', 'danger');
+                $('#loadingSpinner').hide();
+            }
+        });
+    }
+
+    function updateTable(offices) {
+        const tableBody = $("#officeTableBody");
+        tableBody.empty();
+
+        if (offices.length === 0) {
+            $("#officeTable").hide();
+            $("#emptyOfficeMessage").show();
+        } else {
+            $("#officeTable").show();
+            $("#emptyOfficeMessage").hide();
+
+            offices.forEach(function(office) {
+                const row = `
+                    <tr>
+                        <td class="ps-4">${office.number || 'Не указан'}</td>
+                        <td>${office.body || 'Не указан'}</td>
+                        <td>${office.numberOfAvailableSeats || '0'}</td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-warning me-2 rounded-pill px-3" onclick="editOffice(${office.id})">
+                                <i class="bi bi-pencil me-1"></i>Изменить
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="deleteOffice(${office.id}, '${office.number}')">
+                                <i class="bi bi-trash me-1"></i>Удалить
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+        }
+
+        $("#officeCount").text(offices.length);
+        $("#loadingSpinner").hide();
+        $("#mainContent").fadeIn(300);
+    }
+
+    function filterTable() {
+        const searchText = $('#searchInput').val().toLowerCase();
+        const buildingFilter = $('#buildingFilter').val();
+        
+        let filtered = allOffices;
+        
+        if (searchText) {
+            filtered = filtered.filter(office => 
+                office.number && office.number.toString().includes(searchText)
+            );
+        }
+        
+        if (buildingFilter) {
+            filtered = filtered.filter(office => 
+                office.body && office.body.toString() === buildingFilter
+            );
+        }
+        
+        updateTable(filtered);
+    }
+
+    function showAddOfficeModal() {
+        $('#addOfficeForm')[0].reset();
+        $('#officeNumber, #officeBuilding, #officeSeats').removeClass('is-invalid');
+        $('#addOfficeModal').modal('show');
+    }
+
+    function saveOffice() {
+        const number = $('#officeNumber').val();
+        const body = $('#officeBuilding').val();
+        const seats = $('#officeSeats').val();
+
+        // Валидация
+        let isValid = true;
+        if (!number || number <= 0) {
+            $('#officeNumber').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!body || body <= 0) {
+            $('#officeBuilding').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!seats || seats < 0) {
+            $('#officeSeats').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!isValid) return;
+
+        const $btn = $('#saveOfficeBtn');
+        $btn.prop('disabled', true);
+        $('#saveSpinner').removeClass('d-none');
+        $('#saveBtnText').text('Сохранение...');
+
+        const officeData = {
+            number: parseInt(number),
+            body: parseInt(body),
+            numberOfAvailableSeats: parseInt(seats)
+        };
+
+        $.ajax({
+            url: 'https://localhost:5001/api/Office',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(officeData),
+            xhrFields: { withCredentials: true },
+            success: function() {
+                $('#addOfficeModal').modal('hide');
+                showAlert('Кабинет успешно добавлен', 'success');
+                loadOffices();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.message || xhr.statusText;
+                showAlert('Ошибка при сохранении: ' + errorMsg, 'danger');
+            },
+            complete: function() {
+                $('#saveSpinner').addClass('d-none');
+                $('#saveBtnText').text('Сохранить');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+
+    function editOffice(id) {
+        const office = allOffices.find(o => o.id === id);
+        if (!office) {
+            showAlert('Кабинет не найден', 'danger');
+            return;
+        }
+
+        $('#editOfficeForm')[0].reset();
+        $('#editOfficeId').val(office.id);
+        $('#editOfficeNumber').val(office.number);
+        $('#editOfficeBuilding').val(office.body);
+        $('#editOfficeSeats').val(office.numberOfAvailableSeats);
+        $('#editOfficeNumber, #editOfficeBuilding, #editOfficeSeats').removeClass('is-invalid');
+        $('#editOfficeModal').modal('show');
+    }
+
+    function updateOffice() {
+        const id = $('#editOfficeId').val();
+        const number = $('#editOfficeNumber').val();
+        const body = $('#editOfficeBuilding').val();
+        const seats = $('#editOfficeSeats').val();
+
+        // Валидация
+        let isValid = true;
+        if (!number || number <= 0) {
+            $('#editOfficeNumber').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!body || body <= 0) {
+            $('#editOfficeBuilding').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!seats || seats < 0) {
+            $('#editOfficeSeats').addClass('is-invalid');
+            isValid = false;
+        }
+        if (!isValid) return;
+
+        const $btn = $('#updateOfficeBtn');
+        $btn.prop('disabled', true);
+        $('#updateSpinner').removeClass('d-none');
+        $('#updateBtnText').text('Сохранение...');
+
+        const officeData = {
+            id: parseInt(id),
+            number: parseInt(number),
+            body: parseInt(body),
+            numberOfAvailableSeats: parseInt(seats)
+        };
+
+        $.ajax({
+            url: `https://localhost:5001/api/Office/${id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(officeData),
+            xhrFields: { withCredentials: true },
+            success: function() {
+                $('#editOfficeModal').modal('hide');
+                showAlert('Кабинет успешно обновлен', 'success');
+                loadOffices();
+            },
+            error: function(xhr) {
+                const errorMsg = xhr.responseJSON?.message || 'Ошибка сервера';
+                showAlert('Ошибка обновления: ' + errorMsg, 'danger');
+            },
+            complete: function() {
+                $('#updateSpinner').addClass('d-none');
+                $('#updateBtnText').text('Сохранить изменения');
+                $btn.prop('disabled', false);
+            }
+        });
+    }
+
+    function deleteOffice(id, number) {
+        if (!confirm(`Вы точно хотите удалить кабинет №${number}?`)) return;
+
+        $.ajax({
+            url: `https://localhost:5001/api/Office/${id}`,
+            type: 'DELETE',
+            xhrFields: { withCredentials: true },
+            success: function() {
+                showAlert('Кабинет успешно удален', 'success');
+                loadOffices();
+            },
+            error: function(xhr) {
+                showAlert('Ошибка при удалении: ' + (xhr.responseJSON?.message || xhr.statusText), 'danger');
+            }
+        });
+    }
+
+    function showAlert(message, type = 'success') {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+
+        $('#alertContainer').html(alertHtml);
+        setTimeout(() => $('.alert').alert('close'), 5000);
+    }
+</script>

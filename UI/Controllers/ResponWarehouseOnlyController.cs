@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UI.Controllers
 {
+    [Authorize(Roles = "Ответственный за склад")]
     public class ResponWarehouseOnlyController : Controller
     {
         public IActionResult Index()
@@ -55,6 +57,11 @@ namespace UI.Controllers
         }
 
         public IActionResult MotherboardEdit()
+        {
+            return View();
+        }
+
+        public IActionResult ComingEdit()
         {
             return View();
         }

@@ -20,7 +20,7 @@ namespace DAL.Interface
         IGenericRepository<Mouse> Mouse { get; }
         IMovingThroughDivisions MovingThroughDivisions { get;}
         IGenericRepository<OC> OC { get; }
-        IOffice Office { get; }
+        IOfficeRepository Office { get; }
         IGenericRepository<PowerUnit> PowerUnit { get; }
         IGenericRepository<Processor> Processor { get; }
         IGenericRepository<RAM> RAM { get; }

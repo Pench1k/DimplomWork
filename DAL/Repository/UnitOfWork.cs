@@ -25,7 +25,7 @@ namespace DAL.Repository
         public IGenericRepository<Mouse> Mouse { get; }
         public IMovingThroughDivisions MovingThroughDivisions { get; }
         public IGenericRepository<OC> OC { get; }
-        public IOffice Office { get; }
+        public IOfficeRepository Office { get; }
         public IGenericRepository<PowerUnit> PowerUnit { get; }
         public IGenericRepository<Processor> Processor { get; }
         public IGenericRepository<RAM> RAM { get; }
@@ -49,7 +49,7 @@ namespace DAL.Repository
             IGenericRepository<Mouse> Mouse,
             IMovingThroughDivisions MovingThroughDivisions,
             IGenericRepository<OC> OC,
-            IOffice Office,
+            IOfficeRepository Office,
             IGenericRepository<PowerUnit> PowerUnit,
             IGenericRepository<Processor> Processor,
             IGenericRepository<RAM> RAM,

@@ -55,10 +55,10 @@ namespace UI.Controllers
                 var riderectUrl = roles.FirstOrDefault() switch
                 {
                     "admin" => Url.Action("Index", "Admin"),
-                    "Методист" => Url.Action("Dashboard", "Methodist"),
+                    "Методист" => Url.Action("OfficeEdit", "Methodist"),
                     "Проректор" => Url.Action("Dashboard", "Rector"),
                     "Инженер коммуникационного центра" => Url.Action("Dashboard", "Engineer"),
-                    "Ответственный за склад" => Url.Action("Index", "ResponWarehouseOnly"),
+                    "Ответственный за склад" => Url.Action("MouseEdit", "ResponWarehouseOnly"),
                 };
                 return Json(new { riderectUrl });
             }

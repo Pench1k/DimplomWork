@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository
 {
-    public class OfficeRepository : IOffice
+    public class OfficeRepository : IOfficeRepository
     {
         private readonly ApplicationContext _context;
 
@@ -47,9 +47,23 @@ namespace DAL.Repository
             }
         }
 
+        public async Task<bool> ExistsAsync(int number, int body)
+        {
+            return await _context.Offices
+           .AnyAsync(o => o.Number == number && o.Body == body);
+        }
+
         public async Task<IEnumerable<Office>> GetAllAsync()
         {
             return await _context.Offices.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Office>> GetByDepartmentAsync(int departmentId)
+        {
+            return await _context.Offices
+            .Where(o => o.DepartmentId == departmentId)
+            .Include(o => o.Department)
+            .ToListAsync();
         }
 
         public async Task<Office> GetByIdAsync(int id)
