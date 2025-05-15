@@ -1,0 +1,468 @@
+﻿<div class="container py-4">
+    <div id="alertsContainer">
+
+    </div>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="bi bi-pc"></i> Конфигуратор ПК</h2>
+        </div>
+
+        <div class="card-body">
+            <form id="pcConfigForm" class="needs-validation" novalidate>
+                <!-- Основные компоненты -->
+                <div class="row">
+                    <!-- Все поля сделаны обязательными -->
+                    <!-- Процессор -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Процессор <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="processor">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="processorContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите процессор</div>
+                        </div>
+                    </div>
+
+                    <!-- Материнская плата -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Материнская плата <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="motherboard">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="motherboardContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите материнскую плату</div>
+                        </div>
+                    </div>
+
+                    <!-- Оперативная память -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Оперативная память <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="ram">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="ramContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите оперативную память</div>
+                        </div>
+                    </div>
+
+                    <!-- Видеокарта -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Видеокарта <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="videocard">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="videocardContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите видеокарту</div>
+                        </div>
+                    </div>
+
+                    <!-- Блок питания -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Блок питания <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="powerunit">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="powerunitContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите блок питания</div>
+                        </div>
+                    </div>
+
+                    <!-- Операционная система -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Операционная система <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="os">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="osContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите операционную систему</div>
+                        </div>
+                    </div>
+
+                    <!-- Накопитель -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Накопитель <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="memory">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="memoryContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите накопитель</div>
+                        </div>
+                    </div>
+
+                    <!-- Клавиатура -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Клавиатура <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="keyboard">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="keyboardContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите клавиатуру</div>
+                        </div>
+                    </div>
+
+                    <!-- Мышь -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Мышь <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="mouse">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="mouseContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите мышь</div>
+                        </div>
+                    </div>
+
+                    <!-- Монитор -->
+                    <div class="col-md-6 mb-3">
+                        <div class="config-section p-3 border required-section">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="mb-0">Монитор <span class="text-danger">*</span></h5>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#componentsModal" data-component-type="monitor">
+                                    <i class="bi bi-plus-lg"></i> Выбрать
+                                </button>
+                            </div>
+                            <div id="monitorContainer" class="mt-2" data-required="true"></div>
+                            <div class="invalid-feedback">Пожалуйста, выберите монитор</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки управления -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="reset" class="btn btn-outline-secondary me-md-2">
+                        <i class="bi bi-arrow-counterclockwise"></i> Сбросить
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Сохранить конфигурацию
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно выбора компонентов -->
+<div class="modal fade" id="componentsModal" tabindex="-1" aria-labelledby="componentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="componentsModalLabel">Выбор компонента</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" placeholder="Поиск компонентов..." id="componentSearch">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="componentsList">
+                    <!-- Компоненты будут загружаться здесь -->
+                    <div class="col-12 text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Загрузка...</span>
+                        </div>
+                        <p class="mt-2">Загрузка компонентов...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Глобальный объект для хранения всех компонентов
+    let allComponents = {
+        processors: [],
+        motherboards: [],
+        rams: [],
+        videocards: [],
+        powerunits: [],
+        cases: [],
+        oss: [],
+        memories: [],
+        keyboards: [],
+        mice: [],
+        monitors: []
+    };
+
+    // Функция загрузки компонентов
+    function loadComponents(componentType) {
+        showLoading(true);
+
+        // Определяем endpoint в зависимости от типа компонента
+        const endpoints = {
+            'processor': 'https://localhost:5001/api/processor',
+            'motherboard': 'https://localhost:5001/api/Motherboard',
+            'ram': 'https://localhost:5001/api/RAM',
+            'videocard': 'https://localhost:5001/api/VideoCard',
+            'powerunit': 'https://localhost:5001/api/PowerUnit',
+            'os': 'https://localhost:5001/api/oc',
+            'memory': 'https://localhost:5001/api/MemoryDisk',
+            'keyboard': 'https://localhost:5001/api/keyboard',
+            'mouse': 'https://localhost:5001/api/Mouse',
+            'monitor': 'https://localhost:5001/api/Screen'
+        };
+
+        $.ajax({
+            url: endpoints[componentType],
+            xhrFields: { withCredentials: true },
+            method: 'GET',
+            success: function (data) {
+                allComponents[componentType + 's'] = data;
+                showComponentsInModal(data, componentType);
+                showLoading(false);
+            },
+            error: function (xhr) {
+                console.error('Ошибка загрузки:', xhr);
+                showAlert('Не удалось загрузить компоненты', 'danger');
+                showLoading(false);
+            }
+        });
+    }
+
+    // Показать/скрыть индикатор загрузки
+    function showLoading(show) {
+        if (show) {
+            $('#componentsList').html(`
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Загрузка...</p>
+                </div>
+            `);
+        }
+    }
+
+    // Отображение компонентов в модальном окне
+    function showComponentsInModal(components, componentType) {
+        const $list = $('#componentsList');
+        $list.empty();
+        const searchText = $('#componentSearch').val().toLowerCase();
+
+        if (components.length === 0) {
+            const message = searchText 
+                ? 'Ничего не найдено по запросу: "' + searchText + '"'
+                : 'Нет доступных компонентов';
+            
+            $list.html(`
+                <div class="col-12 text-center py-4 text-muted">
+                    ${message}
+                </div>
+            `);
+            return;
+        }
+
+        components.forEach(component => {
+            $list.append(`
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title">${component.name}</h6>
+                            <button class="btn btn-sm btn-primary mt-auto select-component"
+                                    data-id="${component.id}"
+                                    data-name="${component.name}"
+                                    data-type="${componentType}">
+                                Выбрать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+    }
+
+    // Функция валидации формы
+    function validateForm() {
+        let isValid = true;
+        $('[data-required="true"]').each(function() {
+            if ($(this).is(':empty')) {
+                $(this).addClass('is-invalid');
+                isValid = false;
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+        return isValid;
+    }
+
+    // Инициализация при загрузке страницы
+    $(document).ready(function () {
+        // Обработчик открытия модального окна
+        $('#componentsModal').on('show.bs.modal', function (e) {
+            const componentType = $(e.relatedTarget).data('component-type');
+            $('#componentsModalLabel').text(`Выбор ${getComponentName(componentType)}`);
+            loadComponents(componentType);
+        });
+
+        // Обработчик выбора компонента
+        $(document).on('click', '.select-component', function () {
+            const componentId = $(this).data('id');
+            const componentName = $(this).data('name');
+            const componentType = $(this).data('type');
+
+            // Добавляем выбранный компонент в соответствующий контейнер
+            $(`#${componentType}Container`).html(`
+                <div class="selected-component alert alert-light d-flex justify-content-between align-items-center">
+                    <span>${componentName}</span>
+                    <button class="btn btn-sm btn-outline-danger remove-component"
+                            data-type="${componentType}">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `).data('componentId', componentId);
+
+            // Закрываем модальное окно
+            $('#componentsModal').modal('hide');
+        });
+
+        // Обработчик удаления компонента
+        $(document).on('click', '.remove-component', function () {
+            const componentType = $(this).data('type');
+            $(`#${componentType}Container`).empty().removeData('componentId');
+        });
+
+        // Обработчик отправки формы
+        $('#pcConfigForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                $(this).addClass('was-validated');
+                showAlert('Пожалуйста, заполните все обязательные поля', 'danger');
+                return;
+            }
+            
+            // Сбор данных формы
+            const formData = {
+                processorId: $('#processorContainer').data('componentId'),
+                motherboardId: $('#motherboardContainer').data('componentId'),
+                ramId: $('#ramContainer').data('componentId'),
+                videocardId: $('#videocardContainer').data('componentId'),
+                powerunitId: $('#powerunitContainer').data('componentId'),
+                ocId: $('#osContainer').data('componentId'),
+                memoryDiskId: $('#memoryContainer').data('componentId'),
+                keyboardId: $('#keyboardContainer').data('componentId'),
+                mouseId: $('#mouseContainer').data('componentId'),
+                screenId: $('#monitorContainer').data('componentId')
+            };
+            
+            // Отправка данных
+            $.ajax({
+                url: 'https://localhost:5001/api/computer',
+                xhrFields: { withCredentials: true },
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    $('#pcConfigForm')[0].reset();
+                    $('[id$="Container"]').empty().removeData('componentId');
+                    showAlert('Конфигурация успешно сохранена!', 'success');
+                },
+                error: function(xhr) {
+                    showAlert('Ошибка при сохранении: ' + xhr.responseText, 'danger');
+                }
+            });
+        });
+    });
+
+    // Вспомогательная функция для получения названий компонентов
+    function getComponentName(type) {
+        const names = {
+            'processor': 'процессора',
+            'motherboard': 'материнской платы',
+            'ram': 'оперативной памяти',
+            'videocard': 'видеокарты',
+            'powerunit': 'блока питания',
+            'os': 'операционной системы',
+            'memory': 'накопителя',
+            'keyboard': 'клавиатуры',
+            'mouse': 'мыши',
+            'monitor': 'монитора'
+        };
+        return names[type] || type;
+    }
+
+    // Функция показа уведомлений
+    function showAlert(message, type) {
+        const alert = `
+            <div class="alert alert-${type} alert-dismissible fade show mt-3">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        $('#alertsContainer').append(alert);
+        setTimeout(() => $('.alert').alert('close'), 3000);
+    }
+
+    // Обработчик сброса формы
+    $('#pcConfigForm').on('reset', function() {
+        $('[id$="Container"]').empty().removeData('componentId');
+        $(this).removeClass('was-validated');
+    });    
+
+    // Обработчик поиска компонентов
+    $('#componentSearch').on('input', function() {
+        const searchText = $(this).val().toLowerCase();
+        const modalTitle = $('#componentsModalLabel').text();
+        
+        // Получаем тип компонента из заголовка модального окна
+        let componentType = '';
+        if (modalTitle.includes('процессора')) componentType = 'processor';
+        else if (modalTitle.includes('материнской платы')) componentType = 'motherboard';
+        else if (modalTitle.includes('оперативной памяти')) componentType = 'ram';
+        else if (modalTitle.includes('видеокарты')) componentType = 'videocard';
+        else if (modalTitle.includes('блока питания')) componentType = 'powerunit';
+        else if (modalTitle.includes('операционной системы')) componentType = 'os';
+        else if (modalTitle.includes('накопителя')) componentType = 'memory';
+        else if (modalTitle.includes('клавиатуры')) componentType = 'keyboard';
+        else if (modalTitle.includes('мыши')) componentType = 'mouse';
+        else if (modalTitle.includes('монитора')) componentType = 'monitor';
+        
+        // Получаем компоненты из глобального хранилища
+        const components = allComponents[componentType + 's'];
+        
+        if (!components) {
+            showComponentsInModal([], componentType);
+            return;
+        }
+        
+        // Фильтрация компонентов
+        const filteredComponents = components.filter(component => 
+            component.name.toLowerCase().includes(searchText)
+        );
+        
+        // Обновляем отображение
+        showComponentsInModal(filteredComponents, componentType);
+    });
+</script>

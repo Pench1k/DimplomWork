@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250509215557_EditComings")]
-    partial class EditComings
+    [Migration("20250514210713_Create")]
+    partial class Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,11 +153,11 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Models.Coming", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<DateOnly?>("DateOfComing")
                         .HasColumnType("date");
@@ -185,6 +185,9 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ComputerStatus")
+                        .HasColumnType("int");
 
                     b.Property<int?>("KeyboardId")
                         .HasColumnType("int");
@@ -216,12 +219,6 @@ namespace DAL.Migrations
                     b.Property<int?>("VideoCardId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("VideoСardId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WarehouseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("KeyboardId");
@@ -242,9 +239,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("ScreenId");
 
-                    b.HasIndex("VideoСardId");
-
-                    b.HasIndex("WarehouseId");
+                    b.HasIndex("VideoCardId");
 
                     b.ToTable("Computers");
                 });
@@ -668,31 +663,31 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6cc7c550-3562-4478-8190-dd702fb321a4",
+                            Id = "7e2b98de-196d-4ef1-a0a9-b51e9a139516",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c6447222-f8bb-4bf6-ab36-7c94bcb7b18a",
+                            Id = "e9934578-a62e-4f67-a0e4-bfb028e28fda",
                             Name = "Ответственный за склад",
                             NormalizedName = "ОТВЕТСТВЕННЫЙ ЗА СКЛАД"
                         },
                         new
                         {
-                            Id = "f650f7b5-3df0-49d8-a8d7-f8fefdd134c5",
+                            Id = "45929e37-6f44-4f50-a85a-afb8d8f5c552",
                             Name = "Методист",
                             NormalizedName = "МЕТОДИСТ"
                         },
                         new
                         {
-                            Id = "48e53767-cc1f-4661-b850-ebe8864bd824",
+                            Id = "bf44d108-9584-4971-add9-1d4fa963bf55",
                             Name = "Инженер коммуниционного  центра",
                             NormalizedName = "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА"
                         },
                         new
                         {
-                            Id = "c7079657-b582-4803-aa63-2eea7fef4f84",
+                            Id = "9c481956-a254-4129-835b-72eb31675eff",
                             Name = "Проректор",
                             NormalizedName = "ПРОРЕКТОР"
                         });
@@ -894,13 +889,9 @@ namespace DAL.Migrations
                         .WithMany("Computers")
                         .HasForeignKey("ScreenId");
 
-                    b.HasOne("DAL.Models.VideoСard", "VideoСard")
+                    b.HasOne("DAL.Models.VideoСard", "VideoCard")
                         .WithMany("Computers")
-                        .HasForeignKey("VideoСardId");
-
-                    b.HasOne("DAL.Models.Warehouse", null)
-                        .WithMany("Computers")
-                        .HasForeignKey("WarehouseId");
+                        .HasForeignKey("VideoCardId");
 
                     b.Navigation("Keyboard");
 
@@ -920,7 +911,7 @@ namespace DAL.Migrations
 
                     b.Navigation("Screen");
 
-                    b.Navigation("VideoСard");
+                    b.Navigation("VideoCard");
                 });
 
             modelBuilder.Entity("DAL.Models.ComputerPassport", b =>
@@ -944,7 +935,7 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId");
 
                     b.HasOne("DAL.Models.Warehouse", "Warehouse")
-                        .WithMany()
+                        .WithMany("Computers")
                         .HasForeignKey("WarehouseId");
 
                     b.Navigation("Coming");

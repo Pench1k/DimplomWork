@@ -175,3 +175,11 @@ body {
         justify-content: center;
     }
 }
+
+/* Основной фикс для выпадающего меню */
+.navbar {
+    position: relative;
+    z-index: 1030;
+}
+
+

@@ -27,6 +27,8 @@ namespace BLL
             service.AddScoped<IWareHouseService, WareHouseService>();
             service.AddScoped<IComingService, ComingService>();
             service.AddScoped<IOfficeService, OfficeService>();
+            service.AddScoped<IComputerService, ComputerService>();
+
 
             return service;
         }

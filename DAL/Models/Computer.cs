@@ -1,4 +1,6 @@
-﻿namespace DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
 {
     public class Computer
     {
@@ -23,7 +25,7 @@
         public PowerUnit? PowerUnit { get; set; }
 
         public int? VideoCardId {  get; set; } // Видеокарта
-        public VideoСard? VideoСard { get; set; }
+        public VideoСard? VideoCard { get; set; }
 
 
         public int? MouseId { get; set; } // Мышка
@@ -35,5 +37,16 @@
 
         public int? ScreenId {  get; set; } // Монитор
         public Screen? Screen { get; set; }
+
+        public ComputerStatus ComputerStatus { get; set; }
+    }
+
+    public enum ComputerStatus
+    {
+        [Display(Name = "Ожидает подтверждения")]
+        PendingConfirmation,
+
+        [Display(Name = "Подтвержден")]
+        Confirmed
     }
 }

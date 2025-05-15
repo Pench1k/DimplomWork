@@ -62,78 +62,90 @@
                             }
                             @if (User.IsInRole("Ответственный за склад"))
                             {
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="MouseEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Мышки</span>
+                                <li class="nav-item dropdown mx-2">
+                                    <a class="nav-link dropdown-toggle position-relative" href="#" id="componentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="nav-link-text">Комплектующие</span>
                                         <span class="active-indicator"></span>
                                     </a>
-                                </li>
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="KeyboardEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Клавиатуры</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-lg-start" aria-labelledby="componentsDropdown">
+                                        <li><h6 class="dropdown-header">Основные компоненты</h6></li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="ProcessorEdit" class="dropdown-item">
+                                                <span>Процессоры</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="MotherboardEdit" class="dropdown-item">
+                                                <span>Материнские платы</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="RamEdit" class="dropdown-item">
+                                                <span>Оперативная память</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="VideoCardEdit" class="dropdown-item">
+                                                <span>Видеокарты</span>
+                                            </a>
+                                        </li>
+
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><h6 class="dropdown-header">Накопители</h6></li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="MemoryDiskEdit" class="dropdown-item">
+                                                <span>Диски памяти</span>
+                                            </a>
+                                        </li>
+
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><h6 class="dropdown-header">Периферия</h6></li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="MouseEdit" class="dropdown-item">
+                                                <span>Мышки</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="KeyboardEdit" class="dropdown-item">
+                                                <span>Клавиатуры</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="ScreenEdit" class="dropdown-item">
+                                                <span>Мониторы</span>
+                                            </a>
+                                        </li>
+
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="OCEdit" class="dropdown-item">
+                                                <span>Операционные системы</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="ResponWarehouseOnly" asp-action="PowerUnitEdit" class="dropdown-item">
+                                                <span>Блоки питания</span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
 
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="MemoryDiskEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Диски памяти</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="OCEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">ОС</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="ProcessorEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Процессоры</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="RamEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Оперативная память</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="ScreenEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Мониторы</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="VideoCardEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Видеокарты</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="PowerUnitEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Блок питания</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item mx-2">
-                                    <a asp-controller="ResponWarehouseOnly" asp-action="MotherboardEdit" class="nav-link position-relative px-3">
-                                        <span class="nav-link-text">Материнская плата</span>
-                                        <span class="active-indicator"></span>
-                                    </a>
-                                </li>
-
+                                <!-- Остальные важные пункты меню -->
                                 <li class="nav-item mx-2">
                                     <a asp-controller="ResponWarehouseOnly" asp-action="ComingEdit" class="nav-link position-relative px-3">
                                         <span class="nav-link-text">Регистрация прихода</span>
+                                        <span class="active-indicator"></span>
+                                    </a>
+                                </li>
+                                <li class="nav-item mx-2">
+                                    <a asp-controller="ResponWarehouseOnly" asp-action="ConfiguratorPC" class="nav-link position-relative px-3">
+                                        <span class="nav-link-text">Конфигуратор ПК</span>
+                                        <span class="active-indicator"></span>
+                                    </a>
+                                </li>
+                                <li class="nav-item mx-2">
+                                    <a asp-controller="ResponWarehouseOnly" asp-action="ComputerEdit" class="nav-link position-relative px-3">
+                                        <span class="nav-link-text">Регистрация ПК</span>
                                         <span class="active-indicator"></span>
                                     </a>
                                 </li>
@@ -160,7 +172,9 @@
             @RenderBody()
         </main>
     </div>
+    
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@    
     @await RenderSectionAsync("Scripts", required: false)

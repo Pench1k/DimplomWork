@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDatabase : Migration
+    public partial class Create : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -220,27 +220,8 @@ namespace DAL.Migrations
                         name: "FK_Departments_DeanOffices_DeanOfficeId",
                         column: x => x.DeanOfficeId,
                         principalTable: "DeanOffices",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Comings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateOfComing = table.Column<DateOnly>(type: "date", nullable: false),
-                    WarehouseId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comings_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,11 +237,10 @@ namespace DAL.Migrations
                     MemoryDiskId = table.Column<int>(type: "int", nullable: true),
                     PowerUnitId = table.Column<int>(type: "int", nullable: true),
                     VideoCardId = table.Column<int>(type: "int", nullable: true),
-                    VideoСardId = table.Column<int>(type: "int", nullable: true),
                     MouseId = table.Column<int>(type: "int", nullable: true),
                     KeyboardId = table.Column<int>(type: "int", nullable: true),
                     ScreenId = table.Column<int>(type: "int", nullable: true),
-                    WarehouseId = table.Column<int>(type: "int", nullable: true)
+                    ComputerStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -311,14 +291,9 @@ namespace DAL.Migrations
                         principalTable: "Screens",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Computers_VideoCards_VideoСardId",
-                        column: x => x.VideoСardId,
+                        name: "FK_Computers_VideoCards_VideoCardId",
+                        column: x => x.VideoCardId,
                         principalTable: "VideoCards",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Computers_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
                         principalColumn: "Id");
                 });
 
@@ -469,6 +444,28 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Provider = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateOfComing = table.Column<DateOnly>(type: "date", nullable: true),
+                    DocumentNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ComputerPassports",
                 columns: table => new
                 {
@@ -480,7 +477,8 @@ namespace DAL.Migrations
                     DateOfDebit = table.Column<DateOnly>(type: "date", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     OfficeId = table.Column<int>(type: "int", nullable: true),
-                    WarehouseId = table.Column<int>(type: "int", nullable: true)
+                    WarehouseId = table.Column<int>(type: "int", nullable: true),
+                    ComingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -490,6 +488,12 @@ namespace DAL.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ComputerPassports_Comings_ComingId",
+                        column: x => x.ComingId,
+                        principalTable: "Comings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ComputerPassports_Computers_ComputerId",
                         column: x => x.ComputerId,
@@ -643,11 +647,11 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "5aa07e78-2424-437a-b75a-8f283e8f1caa", null, "Методист", "МЕТОДИСТ" },
-                    { "856f353e-39bd-416c-a4c0-f38ecb4d1976", null, "Инженер коммуниционного  центра", "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА" },
-                    { "ecd7d9d7-2f51-4a86-90a6-ce9be95969b0", null, "Проректор", "ПРОРЕКТОР" },
-                    { "f5f9a869-adc3-4f84-9b53-3864d00daac5", null, "admin", "ADMIN" },
-                    { "f6d85ae4-f6bf-4bb9-97e6-42fb9405892b", null, "Ответственный за склад", "ОТВЕТСТВЕННЫЙ ЗА СКЛАД" }
+                    { "45929e37-6f44-4f50-a85a-afb8d8f5c552", null, "Методист", "МЕТОДИСТ" },
+                    { "7e2b98de-196d-4ef1-a0a9-b51e9a139516", null, "admin", "ADMIN" },
+                    { "9c481956-a254-4129-835b-72eb31675eff", null, "Проректор", "ПРОРЕКТОР" },
+                    { "bf44d108-9584-4971-add9-1d4fa963bf55", null, "Инженер коммуниционного  центра", "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА" },
+                    { "e9934578-a62e-4f67-a0e4-bfb028e28fda", null, "Ответственный за склад", "ОТВЕТСТВЕННЫЙ ЗА СКЛАД" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -720,9 +724,14 @@ namespace DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comings_WarehouseId",
+                name: "IX_Comings_UserId",
                 table: "Comings",
-                column: "WarehouseId");
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComputerPassports_ComingId",
+                table: "ComputerPassports",
+                column: "ComingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComputerPassports_ComputerId",
@@ -790,14 +799,9 @@ namespace DAL.Migrations
                 column: "ScreenId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Computers_VideoСardId",
+                name: "IX_Computers_VideoCardId",
                 table: "Computers",
-                column: "VideoСardId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Computers_WarehouseId",
-                table: "Computers",
-                column: "WarehouseId");
+                column: "VideoCardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departments_DeanOfficeId",
@@ -872,9 +876,6 @@ namespace DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comings");
-
-            migrationBuilder.DropTable(
                 name: "MovingThroughDivisions");
 
             migrationBuilder.DropTable(
@@ -890,13 +891,16 @@ namespace DAL.Migrations
                 name: "ComputerPassports");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Comings");
 
             migrationBuilder.DropTable(
                 name: "Computers");
 
             migrationBuilder.DropTable(
                 name: "Offices");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Keyboards");
@@ -929,10 +933,10 @@ namespace DAL.Migrations
                 name: "VideoCards");
 
             migrationBuilder.DropTable(
-                name: "Warehouses");
+                name: "Departments");
 
             migrationBuilder.DropTable(
-                name: "Departments");
+                name: "Warehouses");
 
             migrationBuilder.DropTable(
                 name: "DeanOffices");

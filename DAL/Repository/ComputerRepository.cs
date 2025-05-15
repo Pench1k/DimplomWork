@@ -52,7 +52,7 @@ namespace DAL.Repository
             return await _context.Computers.ToListAsync();
         }
 
-        public async Task<Computer> GetByIdAsync(int id)
+        public async Task<Computer?> GetByIdAsync(int id)
         {
             return await _context.Computers.FindAsync(id);
         }
@@ -74,5 +74,51 @@ namespace DAL.Repository
                 return false;
             }
         }
+
+        public async Task<Computer?> GetByIdWithComponentsAsync(int id)
+        {
+            return await _context.Computers
+                .Include(c => c.Processor)
+                .Include(c => c.Motherboard)
+                .Include(c => c.Ram)
+                .Include(c => c.VideoCard)
+                .Include(c => c.PowerUnit)
+                .Include(c => c.MemoryDisk)
+                .Include(c => c.Oc)
+                .Include(c => c.Keyboard)
+                .Include(c => c.Mouse)
+                .Include(c => c.Screen)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<IEnumerable<Computer>> GetAllWithComponentsAsync()
+        {
+            return await _context.Computers
+                .Where(c => c.ComputerStatus == ComputerStatus.PendingConfirmation)
+                .Include(c => c.Processor)
+                .Include(c => c.Motherboard)
+                .Include(c => c.Ram)
+                .Include(c => c.VideoCard)
+                .Include(c => c.PowerUnit)
+                .Include(c => c.MemoryDisk)
+                .Include(c => c.Oc)
+                .Include(c => c.Keyboard)
+                .Include(c => c.Mouse)
+                .Include(c => c.Screen)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ConfirmComputer(int id)
+        {
+            var computers = await GetByIdAsync(id);
+
+            if (computers != null)
+            {
+                computers.ComputerStatus = ComputerStatus.Confirmed;
+                return true;
+            }
+            return false;
+        }
+
     }
 }

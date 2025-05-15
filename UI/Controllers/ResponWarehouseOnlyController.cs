@@ -65,5 +65,15 @@ namespace UI.Controllers
         {
             return View();
         }
+
+        public IActionResult ConfiguratorPC()
+        {
+            return View();
+        }
+
+        public IActionResult ComputerEdit()
+        {
+            return View();
+        }
     }
 }

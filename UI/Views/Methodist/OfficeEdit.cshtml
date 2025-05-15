@@ -53,8 +53,8 @@
                 <table id="officeTable" class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Номер</th>
                             <th>Корпус</th>
+                            <th class="ps-4">Номер</th>                           
                             <th>Мест</th>
                             <th class="text-end pe-4">Действия</th>
                         </tr>
@@ -223,8 +223,8 @@
             offices.forEach(function(office) {
                 const row = `
                     <tr>
-                        <td class="ps-4">${office.number || 'Не указан'}</td>
                         <td>${office.body || 'Не указан'}</td>
+                        <td class="ps-4">${office.number || 'Не указан'}</td>          
                         <td>${office.numberOfAvailableSeats || '0'}</td>
                         <td class="text-end pe-4">
                             <button class="btn btn-sm btn-outline-warning me-2 rounded-pill px-3" onclick="editOffice(${office.id})">

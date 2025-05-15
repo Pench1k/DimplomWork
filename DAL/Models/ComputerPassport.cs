@@ -1,4 +1,6 @@
-﻿namespace DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
 {
     public class ComputerPassport
     {
@@ -22,6 +24,7 @@
         public Warehouse? Warehouse { get; set; }
 
         public int ComingId {  get; set; }
-        public Coming? Coming { get; set; }
+        public Coming? Coming { get; set; }      
     }
 }
+
