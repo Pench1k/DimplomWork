@@ -74,5 +74,14 @@ namespace DAL.Repository
                 return false;
             }
         }
+
+        public async Task<bool> ExistInventoryNumber(string inventoryNumber)
+        {
+            var exists = await _context.ComputerPassports
+                .AsNoTracking()
+                .AnyAsync(c => c.InventoryNumber.Trim() == inventoryNumber.Trim());
+
+            return exists;
+        }
     }
 }

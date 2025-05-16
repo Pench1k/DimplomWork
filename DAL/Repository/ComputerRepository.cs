@@ -91,7 +91,7 @@ namespace DAL.Repository
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<Computer>> GetAllWithComponentsAsync()
+        public async Task<IEnumerable<Computer>> GetAllWithComponentsStatusPendingAsync()
         {
             return await _context.Computers
                 .Where(c => c.ComputerStatus == ComputerStatus.PendingConfirmation)
@@ -108,17 +108,35 @@ namespace DAL.Repository
                 .ToListAsync();
         }
 
-        public async Task<bool> ConfirmComputer(int id)
+        public async Task<bool> ConfirmComputer(int id, int comingId)
         {
             var computers = await GetByIdAsync(id);
 
             if (computers != null)
             {
                 computers.ComputerStatus = ComputerStatus.Confirmed;
+                computers.ComingId = comingId;
                 return true;
             }
             return false;
         }
 
+        public async Task<IEnumerable<Computer>> GetAllWithComponentsStatusConfirmedAsync()
+        {
+            return await _context.Computers
+                .Where(c => c.ComputerStatus == ComputerStatus.Confirmed)
+                .Include(c => c.Processor)
+                .Include(c => c.Motherboard)
+                .Include(c => c.Ram)
+                .Include(c => c.VideoCard)
+                .Include(c => c.PowerUnit)
+                .Include(c => c.MemoryDisk)
+                .Include(c => c.Oc)
+                .Include(c => c.Keyboard)
+                .Include(c => c.Mouse)
+                .Include(c => c.Screen)
+                .ToListAsync();
+        }
     }
 }
+

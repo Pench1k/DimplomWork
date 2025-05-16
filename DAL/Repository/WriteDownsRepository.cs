@@ -53,7 +53,7 @@ namespace DAL.Repository
             return await _context.WriteDowns.ToListAsync();
         }
 
-        public async Task<WriteDowns> GetByIdAsync(int id)
+        public async Task<WriteDowns> GetByIdAsync(int? id)
         {
             return await _context.WriteDowns.FindAsync(id);
         }

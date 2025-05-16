@@ -150,6 +150,16 @@
                                     </a>
                                 </li>
                             }
+
+                            @if (User.IsInRole("Инженер коммуниционного  центра"))
+                            {
+                                <li class="nav-item mx-2">
+                                    <a asp-controller="Engineer" asp-action="ComputerPassportAccept" class="nav-link position-relative px-3">
+                                        <span class="nav-link-text">Выдача паспортов</span>
+                                        <span class="active-indicator"></span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
 
                         

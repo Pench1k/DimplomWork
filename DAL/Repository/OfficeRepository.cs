@@ -66,7 +66,7 @@ namespace DAL.Repository
             .ToListAsync();
         }
 
-        public async Task<Office> GetByIdAsync(int id)
+        public async Task<Office> GetByIdAsync(int? id)
         {
             return await _context.Offices.FindAsync(id);
         }

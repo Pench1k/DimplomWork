@@ -47,7 +47,7 @@ namespace DAL.Repository
             return await _context.Comings.Include(c => c.User).ToListAsync();
         }
 
-        public async Task<Coming?> GetByIdAsync(int id)
+        public async Task<Coming?> GetByIdAsync(int? id)
         {
             return await _context.Comings
                 .Include(c => c.User)

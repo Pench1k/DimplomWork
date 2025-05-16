@@ -12,7 +12,7 @@ namespace RestAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Ответственный за склад")]
+
     public class ComputerController : ControllerBase
     {
         private readonly IComputerService _computerService;
@@ -40,15 +40,29 @@ namespace RestAPI.Controllers
         {
             try
             {
-                var computers = await _computerService.GetAllWithComponentsAsync();
+                var computers = await _computerService.GetAllWithComponentsStatusPendingAsync();
                 return Ok(computers);
             }
-            catch (Exception ex)
-            {
-
+            catch
+            { 
                 return StatusCode(500, "Внутренняя ошибка сервера");
             }
         }
+
+        [HttpGet("confirmed")]
+        public async Task<IActionResult> GetAllWithStatusConfirmed()
+        {
+            try
+            {
+                var computers = await _computerService.GetAllWithComponentsStatusConfirmedAsync();
+                return Ok(computers);
+            }
+            catch
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+        }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -68,21 +82,27 @@ namespace RestAPI.Controllers
         }
 
         [HttpPut("{id}/confirm")]
-        public async Task<IActionResult> ConfirmComputer(int id)
+        public async Task<IActionResult> ConfirmComputer(int id, [FromBody] ConfirmComputerRequest request)
         {
             try
             {
-                var result = await _computerService.ConfirmComputer(id);
+                if (request == null || request.ComingId <= 0)
+                {
+                    return BadRequest("Необходимо указать корректный ID прихода");
+                }
+
+                var result = await _computerService.ConfirmComputer(id, request.ComingId);
 
                 if (!result)
                 {
-                    return BadRequest("Ошибка!");
-                }    
-                return Ok("Компьютер успешно подтвержден");
+                    return BadRequest("Ошибка подтверждения компьютера");
+                }
+
+                return Ok("Компьютер успешно подтвержден и привязан к приходу");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Внутренняя ошибка сервера" });
+                return StatusCode(500, new { Message = "Внутренняя ошибка сервера", Details = ex.Message });
             }
         }
     }

@@ -6,13 +6,13 @@ namespace DAL.Models
     {
         public int Id { get; set; }
 
-        public int InventoryNumber { get; set; }
+        public string? InventoryNumber { get; set; }
 
         public int? ComputerId { get; set; }
         public Computer? Computer { get; set; }
 
-        public DateOnly DateOfReceipt {  get; set; }
-        public DateOnly DateOfDebit { get; set; }
+        public DateOnly? DateOfReceipt {  get; set; }
+        public DateOnly? DateOfDebit { get; set; }
 
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
@@ -21,10 +21,16 @@ namespace DAL.Models
         public Office? Office { get; set; }
 
         public int? WarehouseId {  get; set; }
-        public Warehouse? Warehouse { get; set; }
+        public Warehouse? Warehouse { get; set; }    
 
-        public int ComingId {  get; set; }
-        public Coming? Coming { get; set; }      
+        public ComputerPassportStatus computerPassportStatus { get; set; }
+
+    }
+
+    public enum ComputerPassportStatus
+    {
+        [Display(Name = "Готов к распределению")]
+        ReadyForDistribution
     }
 }
 

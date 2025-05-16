@@ -8,10 +8,12 @@ namespace BLL.Interface
     {
         Task<bool> AddAsync(ComputerDTO entity);
 
-        Task<IEnumerable<ComputerWithComponents>> GetAllWithComponentsAsync();
+        Task<IEnumerable<ComputerWithComponents>> GetAllWithComponentsStatusPendingAsync();
 
         Task<bool> DeleteAsync(int id);
 
-        Task<bool> ConfirmComputer(int id);
+        Task<bool> ConfirmComputer(int id, int comingId);
+
+        Task<IEnumerable<ComputerWithComponents>> GetAllWithComponentsStatusConfirmedAsync();
     }
 }

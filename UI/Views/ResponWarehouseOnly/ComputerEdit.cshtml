@@ -60,22 +60,56 @@
     </div>
 </div>
 
+<!-- Модальное окно выбора прихода -->
+<div class="modal fade" id="selectComingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-box-seam me-2"></i>Выбор прихода
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Выберите приход, к которому принадлежит этот компьютер:</p>
+                <select class="form-select" id="comingSelect">
+                    <option value="" selected disabled>Выберите приход</option>
+                    <!-- Опции будут загружены динамически -->
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="confirmComingBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="comingSpinner"></span>
+                    <span id="comingBtnText">Подтвердить</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     // Глобальные переменные
     let computers = [];
+    let allComings = [];
     let currentDeleteId = null;
+    let currentComputerId = null;
     let deleteModal = null;
+    let selectComingModal = null;
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Инициализация модального окна удаления
+        // Инициализация модальных окон
         deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+        selectComingModal = new bootstrap.Modal(document.getElementById('selectComingModal'));
         
         // Загрузка данных
         loadComputers();
+        loadComings();
         
-        // Обработчик кнопки подтверждения удаления
+        // Обработчики кнопок
         document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+        document.getElementById('confirmComingBtn').addEventListener('click', confirmComputerWithComing);
     });
 
     // Загрузка списка компьютеров
@@ -95,6 +129,22 @@
             showError('Не удалось загрузить компьютеры: ' + error.message);
         } finally {
             showLoading(false);
+        }
+    }
+
+    // Загрузка списка приходов
+    async function loadComings() {
+        try {
+            const response = await fetch('https://localhost:5001/api/Coming', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) throw new Error(`Ошибка загрузки приходов: ${response.status}`);
+            
+            allComings = await response.json();
+        } catch (error) {
+            console.error('Ошибка загрузки приходов:', error);
+            showError('Не удалось загрузить приходы: ' + error.message);
         }
     }
 
@@ -135,7 +185,7 @@
             <td class="text-end pe-4">
                 <div class="btn-group btn-group-sm" onclick="event.stopPropagation()">
                     <button class="btn btn-outline-success" title="Подтвердить" 
-                        onclick="confirmComputer(${computer.id})">
+                        onclick="showComingSelectionModal(${computer.id})">
                         <i class="bi bi-check-circle"></i>
                     </button>
                     <button class="btn btn-outline-danger" title="Удалить" 
@@ -176,6 +226,108 @@
         fragment.appendChild(mainRow);
         fragment.appendChild(detailsRow);
         return fragment;
+    }
+
+    // Показать модальное окно выбора прихода
+    async function showComingSelectionModal(computerId) {
+        currentComputerId = computerId;
+        
+        // Заполняем выпадающий список приходами
+        const comingSelect = document.getElementById('comingSelect');
+        comingSelect.innerHTML = '<option value="" selected disabled>Выберите приход</option>';
+        
+        if (allComings.length === 0) {
+            await loadComings(); // Если приходы еще не загружены, загружаем их
+        }
+        
+        // Фильтруем только активные приходы (если нужно)
+        const activeComings = allComings; // Здесь можно добавить фильтрацию
+        
+        if (activeComings.length === 0) {
+            comingSelect.innerHTML = '<option value="" disabled>Нет доступных приходов</option>';
+            showAlert('Нет доступных приходов для подтверждения', 'warning');
+            return;
+        }
+        
+        activeComings.forEach(coming => {
+            const option = document.createElement('option');
+            option.value = coming.id;
+            
+            // Формируем строку для отображения на основе ComingDTO
+            let comingText = `Приход #${coming.id}`;
+            
+            // Добавляем дату, если она есть
+            if (coming.dateOfComing) {
+                const date = new Date(coming.dateOfComing);
+                const formattedDate = date.toLocaleDateString('ru-RU', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                comingText += ` (${formattedDate})`;
+            }
+            
+            // Добавляем поставщика, если он есть
+            if (coming.provider) {
+                comingText += ` - ${coming.provider}`;
+            }
+            
+            // Добавляем номер документа, если он есть
+            if (coming.documentNumber) {
+                comingText += ` - Док: ${coming.documentNumber}`;
+            }
+                     
+            option.textContent = comingText;
+            comingSelect.appendChild(option);
+        });
+        
+        selectComingModal.show();
+    }
+
+    // Подтверждение компьютера с выбранным приходом
+    async function confirmComputerWithComing() {
+        const comingSelect = document.getElementById('comingSelect');
+        const comingId = comingSelect.value;
+        const confirmBtn = document.getElementById('confirmComingBtn');
+        const spinner = document.getElementById('comingSpinner');
+        const btnText = document.getElementById('comingBtnText');
+        
+        if (!comingId) {
+            showAlert('Пожалуйста, выберите приход', 'warning');
+            return;
+        }
+        
+        try {
+            confirmBtn.disabled = true;
+            spinner.classList.remove('d-none');
+            btnText.textContent = 'Подтверждение...';
+            
+            const response = await fetch(`https://localhost:5001/api/computer/${currentComputerId}/confirm`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    comingId: parseInt(comingId)
+                }),
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка при подтверждении');
+            }
+            
+            showAlert('Компьютер успешно подтвержден и привязан к приходу', 'success');
+            selectComingModal.hide();
+            await loadComputers();
+        } catch (error) {
+            showError(`Ошибка при подтверждении: ${error.message}`);
+        } finally {
+            confirmBtn.disabled = false;
+            spinner.classList.add('d-none');
+            btnText.textContent = 'Подтвердить';
+        }
     }
 
     // Показать модальное окно удаления
@@ -283,27 +435,5 @@
 
     function showError(message) {
         showAlert(message, 'danger');
-    }
-
-    // Другие функции
-    async function confirmComputer(id) {
-        try {
-            const response = await fetch(`https://localhost:5001/api/computer/${id}/confirm`, {
-                method: 'PUT',
-                credentials: 'include'
-            });
-            
-            if (!response.ok) throw new Error('Ошибка подтверждения');
-            
-            showAlert('Компьютер успешно подтвержден');
-            await loadComputers();
-        } catch (error) {
-            showError(error.message);
-        }
-    }
-
-    function editComputer(id) {
-        console.log('Редактирование компьютера', id);
-        // window.location.href = `/computers/edit/${id}`;
     }
 </script>

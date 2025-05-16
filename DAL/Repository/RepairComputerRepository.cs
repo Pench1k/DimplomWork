@@ -52,7 +52,7 @@ namespace DAL.Reporitory
             return await _context.RepairComputers.ToListAsync();
         }
 
-        public async Task<RepairComputer> GetByIdAsync(int id)
+        public async Task<RepairComputer> GetByIdAsync(int? id)
         {
             return await _context.RepairComputers.FindAsync(id);
         }

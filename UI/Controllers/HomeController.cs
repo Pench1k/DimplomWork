@@ -18,7 +18,7 @@ namespace UI.Controllers
         {
             if (User.IsInRole("admin"))
                 return RedirectToAction("Index", "Admin");
-
+           
             return View();
         }    
     }

@@ -1,0 +1,303 @@
+﻿<div id="loadingSpinner" class="text-center my-5 py-5">
+    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-3 text-muted">Загрузка компьютеров...</p>
+</div>
+
+<div id="alertContainer" class="container mt-3"></div>
+
+<div class="container-fluid py-4" id="mainContent" style="display: none;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">
+            <i class="bi bi-pc-display me-2"></i>Выдача паспорта
+        </h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="computerTable" class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Основные компоненты</th>
+                            <th>Статус</th>
+                            <th class="text-end pe-4">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="computerTableBody">
+                        <!-- Данные будут загружаться динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="computerPassportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Создание паспорта компьютера</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="passportForm">
+                    <input type="hidden" id="computerIdInput">
+                    <div class="mb-3">
+                        <label for="inventoryNumber" class="form-label">Инвентарный номер</label>
+                            <input type="text" 
+                                    class="form-control" 
+                                    id="inventoryNumber" 
+                                    pattern="^ИНВ\d{6}$" 
+                                    title="Формат: ИНВ123456 (3 буквы ИНВ и 6 цифр)" 
+                                    required>
+                    </div>                    
+                    <div class="mb-3">
+                        <label for="dateOfDebit" class="form-label">Дата списания</label>
+                        <input type="date" class="form-control" id="dateOfDebit" min="" required>
+                    </div>                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="createPassportBtn">Создать паспорт</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let computers = [];
+    let currentComputerId = null;
+    let passportModal = null;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Инициализация модального окна
+        passportModal = new bootstrap.Modal(document.getElementById('computerPassportModal'));
+        
+        // Обработчик кнопки создания паспорта
+        document.getElementById('createPassportBtn').addEventListener('click', createComputerPassport);
+        
+        // Загрузка данных
+        loadComputers();
+    });
+
+    function showPassportModal(computerId) {
+        currentComputerId = computerId;
+        document.getElementById('computerIdInput').value = computerId;
+        
+        // Очистка формы
+        document.getElementById('passportForm').reset();
+        
+        // Установка минимальной даты (сегодня)
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dateOfDebit').min = today;
+        
+        passportModal.show();
+    }
+
+    function createComputerPassport() {
+        const form = $('#passportForm');
+        const createBtn = $('#createPassportBtn');
+        
+        if (form[0].checkValidity() === false) {
+            form[0].reportValidity();
+            return;
+        }
+
+        // Блокируем кнопку
+        createBtn.prop('disabled', true).html(
+            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Создание...'
+        );
+
+        const passportData = {
+            inventoryNumber: $('#inventoryNumber').val().trim(),
+            computerId: parseInt(currentComputerId),
+            dateOfDebit: $('#dateOfDebit').val()
+        };
+
+        $.ajax({
+            url: 'https://localhost:5001/api/ComputerPassport',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(passportData),
+            success: function(response) {
+                showAlert('Паспорт успешно создан!', 'success');
+                $('#computerPassportModal').modal('hide');
+                loadComputers();
+            },
+            error: function(xhr) {
+                // Обработка HTTP ошибок (400, 500 и т.д.)
+                let msg = "Ошибка сервера";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    msg = xhr.responseJSON.message;
+                }
+                showAlert(msg, 'danger');
+            },
+            complete: function() {
+                createBtn.prop('disabled', false).text('Создать паспорт');
+            }
+        });
+    }
+
+    // Загрузка списка компьютеров
+    async function loadComputers() {
+        try {
+            showLoading(true);
+            const response = await fetch('https://localhost:5001/api/computer/confirmed', {
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error(`Ошибка загрузки: ${response.status}`);
+
+            computers = await response.json();
+            renderComputers(computers);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            showError('Не удалось загрузить компьютеры: ' + error.message);
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function renderComputers(computersToRender) {
+        const tableBody = document.getElementById('computerTableBody');
+        tableBody.innerHTML = '';
+
+        if (computersToRender.length === 0) {
+            tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="bi bi-pc display-4 opacity-50"></i>
+                                <p class="mt-3">Компьютеры не найдены</p>
+                            </td>
+                        </tr>`;
+            return;
+        }
+
+        computersToRender.forEach(computer => {
+            tableBody.appendChild(createComputerRow(computer));
+        });
+    }
+
+    function createComputerRow(computer) {
+        const mainRow = document.createElement('tr');
+        mainRow.className = 'cursor-pointer';
+        mainRow.setAttribute('data-bs-toggle', 'collapse');
+        mainRow.setAttribute('data-bs-target', `#details-${computer.id}`);
+        mainRow.innerHTML = `
+                    <td class="ps-4">${computer.id}</td>
+                    <td>
+                        <div>${escapeHtml(getMainComponentsText(computer))}</div>
+                        <small class="text-muted">+${getAdditionalComponentsCount(computer)} компонентов</small>
+                    </td>
+                    <td>${getStatusBadge(computer.computerStatus)}</td>
+                    <td class="text-end pe-4">
+                    <div class="btn-group btn-group-sm" onclick="event.stopPropagation()">
+                        <button class="btn btn-outline-success" title="Создать паспорт"
+                            onclick="showPassportModal(${computer.id})">
+                            <i class="bi bi-file-earmark-plus"></i>
+                        </button>
+                    </div>
+            </td>`;
+
+        const detailsRow = document.createElement('tr');
+        detailsRow.className = 'collapse details-row';
+        detailsRow.id = `details-${computer.id}`;
+        detailsRow.innerHTML = `
+                    <td colspan="4" class="bg-light">
+                        <div class="p-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><strong>Процессор:</strong> ${escapeHtml(computer.processorName || 'Не указан')}</p>
+                                    <p><strong>Материнская плата:</strong> ${escapeHtml(computer.motherboardName || 'Не указана')}</p>
+                                    <p><strong>ОЗУ:</strong> ${escapeHtml(computer.ramName || 'Не указана')}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>ОС:</strong> ${escapeHtml(computer.ocName || 'Не указана')}</p>
+                                    <p><strong>Накопитель:</strong> ${escapeHtml(computer.memoryDiskName || 'Не указан')}</p>
+                                    <p><strong>Блок питания:</strong> ${escapeHtml(computer.powerUnitName || 'Не указан')}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Видеокарта:</strong> ${escapeHtml(computer.videoCardName || 'Не указана')}</p>
+                                    <p><strong>Мышь:</strong> ${escapeHtml(computer.mouseName || 'Не указана')}</p>
+                                    <p><strong>Клавиатура:</strong> ${escapeHtml(computer.keyboardName || 'Не указана')}</p>
+                                    <p><strong>Монитор:</strong> ${escapeHtml(computer.screenName || 'Не указан')}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </td>`;
+
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(mainRow);
+        fragment.appendChild(detailsRow);
+        return fragment;
+    }
+
+    function getMainComponentsText(computer) {
+        const components = [
+            computer.processorName,
+            computer.videoCardName,
+            computer.ramName
+        ].filter(c => c);
+        return components.join(', ') || 'Компоненты не указаны';
+    }
+
+    function getAdditionalComponentsCount(computer) {
+        const components = [
+            computer.motherboardName,
+            computer.ocName,
+            computer.memoryDiskName,
+            computer.powerUnitName,
+            computer.mouseName,
+            computer.keyboardName,
+            computer.screenName
+        ].filter(c => c);
+        return components.length;
+    }
+
+    function getStatusBadge(status) {
+        const statusMap = {
+            0: { class: 'bg-warning text-dark', text: 'Ожидает подтверждения' },
+            1: { class: 'bg-success text-white', text: 'Подтвержден складом' }
+        };
+        const statusInfo = statusMap[status] || statusMap[0];
+        return `<span class="badge ${statusInfo.class}">${statusInfo.text}</span>`;
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function showLoading(show) {
+        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+        document.getElementById('mainContent').style.display = show ? 'none' : 'block';
+    }
+
+    function showAlert(message, type = 'success') {
+        const alertContainer = document.getElementById('alertContainer');
+        alertContainer.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        <i class="bi ${type === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'} me-2"></i>
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+
+        setTimeout(() => {
+            const alert = bootstrap.Alert.getOrCreateInstance(alertContainer.querySelector('.alert'));
+            alert.close();
+        }, 5000);
+    }
+
+    function showError(message) {
+        showAlert(message, 'danger');
+    }
+</script>

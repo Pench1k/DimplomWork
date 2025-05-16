@@ -4,6 +4,7 @@ using DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250515214830_ComingOnComputer")]
+    partial class ComingOnComputer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,15 +260,14 @@ namespace DAL.Migrations
                     b.Property<int?>("ComputerId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("DateOfDebit")
+                    b.Property<DateOnly>("DateOfDebit")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("DateOfReceipt")
+                    b.Property<DateOnly>("DateOfReceipt")
                         .HasColumnType("date");
 
-                    b.Property<string>("InventoryNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("InventoryNumber")
+                        .HasColumnType("int");
 
                     b.Property<int?>("OfficeId")
                         .HasColumnType("int");
@@ -274,9 +276,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("WarehouseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("computerPassportStatus")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -664,31 +663,31 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "de4b5914-7735-41de-bd39-632559514a23",
+                            Id = "db82fd1a-33ec-4d78-b387-3f9ecb77c46f",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "749d7462-ff8e-4419-8322-19a2cf31f19b",
+                            Id = "2ae80733-31a8-4370-90ee-d0fc8d9ae7a9",
                             Name = "Ответственный за склад",
                             NormalizedName = "ОТВЕТСТВЕННЫЙ ЗА СКЛАД"
                         },
                         new
                         {
-                            Id = "9690c570-b7ca-442e-8f66-dce6aa2bfe41",
+                            Id = "75795b9d-0b7a-4647-95b0-b5db39fcb9f5",
                             Name = "Методист",
                             NormalizedName = "МЕТОДИСТ"
                         },
                         new
                         {
-                            Id = "bece27f8-c04b-4409-ae50-9753a154dd81",
+                            Id = "3ef49c21-0104-4898-ac38-d6aa2eee9dac",
                             Name = "Инженер коммуниционного  центра",
                             NormalizedName = "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА"
                         },
                         new
                         {
-                            Id = "fd797b31-9e85-40ea-b65d-d767476eebf6",
+                            Id = "a0735395-0d65-466f-beb3-f1315705b644",
                             Name = "Проректор",
                             NormalizedName = "ПРОРЕКТОР"
                         });

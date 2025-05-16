@@ -54,7 +54,7 @@ namespace DAL.Repository
             return await _context.MovingThroughDivisions.ToListAsync();
         }
 
-        public async Task<MovingThroughDivisions> GetByIdAsync(int id)
+        public async Task<MovingThroughDivisions> GetByIdAsync(int? id)
         {
             return await _context.MovingThroughDivisions.FindAsync(id);
         }

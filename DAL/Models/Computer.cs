@@ -38,6 +38,9 @@ namespace DAL.Models
         public int? ScreenId {  get; set; } // Монитор
         public Screen? Screen { get; set; }
 
+        public int? ComingId { get; set; }
+        public Coming? Coming { get; set; }
+
         public ComputerStatus ComputerStatus { get; set; }
     }
 
@@ -46,7 +49,10 @@ namespace DAL.Models
         [Display(Name = "Ожидает подтверждения")]
         PendingConfirmation,
 
-        [Display(Name = "Подтвержден")]
-        Confirmed
+        [Display(Name = "Подтвержден складом")]
+        Confirmed,
+
+        [Display(Name = "Готов к работе")]
+        HavePassport
     }
 }

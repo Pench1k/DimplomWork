@@ -53,7 +53,7 @@ namespace DAL.Repository
             return await _context.ArrivalFromTheWarehouses.ToListAsync();
         }
 
-        public async Task<ArrivalFromTheWarehouse> GetByIdAsync(int id)
+        public async Task<ArrivalFromTheWarehouse> GetByIdAsync(int? id)
         {
             return await _context.ArrivalFromTheWarehouses.FindAsync(id);
         }

@@ -28,7 +28,7 @@ namespace BLL
             service.AddScoped<IComingService, ComingService>();
             service.AddScoped<IOfficeService, OfficeService>();
             service.AddScoped<IComputerService, ComputerService>();
-
+            service.AddScoped<IComputerPassportService, ComputerPassportService>();
 
             return service;
         }

@@ -4,6 +4,7 @@ using DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250516014441_addStatusComputerPassport")]
+    partial class addStatusComputerPassport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,15 +260,14 @@ namespace DAL.Migrations
                     b.Property<int?>("ComputerId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly?>("DateOfDebit")
+                    b.Property<DateOnly>("DateOfDebit")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("DateOfReceipt")
+                    b.Property<DateOnly>("DateOfReceipt")
                         .HasColumnType("date");
 
-                    b.Property<string>("InventoryNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("InventoryNumber")
+                        .HasColumnType("int");
 
                     b.Property<int?>("OfficeId")
                         .HasColumnType("int");
@@ -664,31 +666,31 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "de4b5914-7735-41de-bd39-632559514a23",
+                            Id = "ab64afd0-a139-4712-991e-df202b3c9d49",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "749d7462-ff8e-4419-8322-19a2cf31f19b",
+                            Id = "1063d45a-d145-42f5-93fc-3e1c20af80f2",
                             Name = "Ответственный за склад",
                             NormalizedName = "ОТВЕТСТВЕННЫЙ ЗА СКЛАД"
                         },
                         new
                         {
-                            Id = "9690c570-b7ca-442e-8f66-dce6aa2bfe41",
+                            Id = "b66ad62d-fd6e-4c56-8e03-d54fda8e1ad1",
                             Name = "Методист",
                             NormalizedName = "МЕТОДИСТ"
                         },
                         new
                         {
-                            Id = "bece27f8-c04b-4409-ae50-9753a154dd81",
+                            Id = "31469bd9-4746-4a19-baa3-c626268b95cc",
                             Name = "Инженер коммуниционного  центра",
                             NormalizedName = "ИНЖЕНЕР КОММУНИЦИОННОГО ЦЕНТРА"
                         },
                         new
                         {
-                            Id = "fd797b31-9e85-40ea-b65d-d767476eebf6",
+                            Id = "708dedbd-491c-4b81-bd9d-88ed0473f5f3",
                             Name = "Проректор",
                             NormalizedName = "ПРОРЕКТОР"
                         });

@@ -7,7 +7,7 @@ namespace BLL.DTO
 
         public int Id { get; set; }
 
-        public int InventoryNumber { get; set; }
+        public string InventoryNumber { get; set; }
 
         public int? ComputerId { get; set; }
        

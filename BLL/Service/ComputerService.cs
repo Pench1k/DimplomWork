@@ -17,10 +17,6 @@ namespace BLL.Service
         public async Task<bool> AddAsync(ComputerDTO entity)
         {
 
-            if (!entity.ProcessorId.HasValue)
-                throw new ArgumentException("Не указан процессор");
-
-
             var computer = new Computer
             {
                 ProcessorId = entity.ProcessorId,
@@ -47,9 +43,51 @@ namespace BLL.Service
             return false;
         }
 
-        public async Task<IEnumerable<ComputerWithComponents>> GetAllWithComponentsAsync()
+        public async Task<IEnumerable<ComputerWithComponents>> GetAllWithComponentsStatusPendingAsync()
         {
-            var computer = await _unitOfWork.Computer.GetAllWithComponentsAsync();
+            var computer = await _unitOfWork.Computer.GetAllWithComponentsStatusPendingAsync();
+            return computer.Select(c => new ComputerWithComponents
+            {
+                Id = c.Id,
+
+                ProcessorId = c.ProcessorId,
+                ProcessorName = c.Processor?.Name,
+
+                MotherboardId = c.MotherboardId,
+                MotherboardName = c.Motherboard?.Name,
+
+                RamId = c.RamId,
+                RamName = c.Ram?.Name,
+
+                OcId = c.OcId,
+                OcName = c.Oc?.Name,
+
+                MemoryDiskId = c.MemoryDiskId,
+                MemoryDiskName = c.MemoryDisk?.Name,
+
+                PowerUnitId = c.PowerUnitId,
+                PowerUnitName = c.PowerUnit?.Name,
+
+                VideoCardId = c.VideoCardId,
+                VideoCardName = c.VideoCard?.Name,
+
+                MouseId = c.MouseId,
+                MouseName = c.Mouse?.Name,
+
+                KeyboardId = c.KeyboardId,
+                KeyboardName = c.Keyboard?.Name,
+
+                ScreenId = c.ScreenId,
+                ScreenName = c.Screen?.Name,
+
+                ComputerStatus = c.ComputerStatus,
+            });
+        }
+
+
+        public async Task<IEnumerable<ComputerWithComponents>> GetAllWithComponentsStatusConfirmedAsync()
+        {
+            var computer = await _unitOfWork.Computer.GetAllWithComponentsStatusConfirmedAsync();
             return computer.Select(c => new ComputerWithComponents
             {
                 Id = c.Id,
@@ -111,14 +149,14 @@ namespace BLL.Service
             }
         }
 
-        public async Task<bool> ConfirmComputer(int id)
+        public async Task<bool> ConfirmComputer(int id, int comingId)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
 
 
-                var success = await _unitOfWork.Computer.ConfirmComputer(id);
+                var success = await _unitOfWork.Computer.ConfirmComputer(id, comingId);
                 if (!success)
                 {
                     await _unitOfWork.RollbackAsync();

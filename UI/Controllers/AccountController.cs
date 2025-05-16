@@ -57,7 +57,7 @@ namespace UI.Controllers
                     "admin" => Url.Action("Index", "Admin"),
                     "Методист" => Url.Action("OfficeEdit", "Methodist"),
                     "Проректор" => Url.Action("Dashboard", "Rector"),
-                    "Инженер коммуникационного центра" => Url.Action("Dashboard", "Engineer"),
+                    "Инженер коммуниционного  центра" => Url.Action("ComputerPassportAccept", "Engineer"),
                     "Ответственный за склад" => Url.Action("MouseEdit", "ResponWarehouseOnly"),
                 };
                 return Json(new { riderectUrl });
