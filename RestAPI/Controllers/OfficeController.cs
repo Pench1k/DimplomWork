@@ -44,6 +44,19 @@ namespace RestAPI.Controllers
             }
         }
 
+        [HttpGet("ByDepartment/{departmentId}")]
+        public async Task<IActionResult> GetByDepartment(int departmentId)
+        {
+            try
+            {        
+                var offices = await _officeService.GetByDepartmentAsync(departmentId);
+                return Ok(offices);
+            }
+            catch
+            {               
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] OfficeDTO officeDto)

@@ -3,6 +3,7 @@ using BLL.Interface;
 using BLL.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace RestAPI.Controllers
 {
@@ -31,6 +32,42 @@ namespace RestAPI.Controllers
                 error = true,
                 message = "Не удалось создать паспорт. Проверьте данные."
             });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllWarehouse()
+        {
+            try
+            {
+                var warehouseIdClaim = User.FindFirst("WarehouseId")?.Value;
+                if (string.IsNullOrEmpty(warehouseIdClaim))
+                    return Forbid(); // 403 - нет доступа
+
+                if (!int.TryParse(warehouseIdClaim, out int warehouseId))
+                    return BadRequest("Неверный формат идентификатора склада");
+
+                var result = await _computerPassportService.ComputerPassportWithComputerWarehouse(warehouseId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            { 
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+        }
+
+        [HttpGet("Rector")]
+        public async Task<IActionResult> GetAllRector()
+        {
+            try
+            {              
+                var result = await _computerPassportService.ComputerPassportWithComputerRector();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
         }
     }
 }

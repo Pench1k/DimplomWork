@@ -149,6 +149,13 @@
                                         <span class="active-indicator"></span>
                                     </a>
                                 </li>
+
+                                <li class="nav-item mx-2">
+                                    <a asp-controller="ResponWarehouseOnly" asp-action="ComputerPassportSee" class="nav-link position-relative px-3">
+                                        <span class="nav-link-text">Склад</span>
+                                        <span class="active-indicator"></span>
+                                    </a>
+                                </li>
                             }
 
                             @if (User.IsInRole("Инженер коммуниционного  центра"))
@@ -160,9 +167,18 @@
                                     </a>
                                 </li>
                             }
-                        </ul>
 
-                        
+                            @if (User.IsInRole("Проректор"))
+                            {
+                                <li class="nav-item mx-2">
+                                    <a asp-controller="Rector" asp-action="Distribution" class="nav-link position-relative px-3">
+                                        <span class="nav-link-text">Распределение</span>
+                                        <span class="active-indicator"></span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                       
                         <div class="ms-auto">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 <button type="submit" class="btn btn-logout">

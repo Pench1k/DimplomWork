@@ -2,6 +2,7 @@
 using BLL.Interface;
 using DAL.Interface;
 using DAL.Models;
+using System.Xml.Linq;
 
 namespace BLL.Service
 {
@@ -74,6 +75,61 @@ namespace BLL.Service
                 await _unitOfWork.RollbackAsync();
                 return false;
             }
+        }
+
+        
+        public async Task<IEnumerable<ComputerPassportWithComputerWarehouse>> ComputerPassportWithComputerWarehouse(int warehouseId)
+        {
+            var computer = await _unitOfWork.Passport.GetAllComputerPassportWithComputerWarehouse(warehouseId);
+
+            return computer.Select(c => new ComputerPassportWithComputerWarehouse
+            {
+                Id = c.Id,
+                InventoryNumber = c.InventoryNumber,
+                DateOfReceipt = c.DateOfReceipt,
+                DateOfDebit = c.DateOfDebit,
+                computerPassportStatus = c.computerPassportStatus,
+                ComputerId = c.ComputerId,
+                ProcessorName = c.Computer?.Processor?.Name,
+                MotherboardName = c.Computer?.Motherboard?.Name,
+                RamName = c.Computer?.Ram?.Name,
+                OcName = c.Computer?.Oc?.Name,
+                MemoryDiskName = c.Computer?.MemoryDisk?.Name,
+                PowerUnitName = c.Computer?.PowerUnit?.Name,
+                VideoCardName = c.Computer?.VideoCard?.Name,
+                MouseName = c.Computer?.Mouse?.Name,
+                KeyboardName = c.Computer?.Keyboard?.Name,
+                ScreenName = c.Computer?.Screen?.Name,
+                UserName = c.User?.UserName
+            });
+        }
+
+        public async Task<IEnumerable<ComputerPassportWithComputerRector>> ComputerPassportWithComputerRector()
+        {
+            var computer = await _unitOfWork.Passport.GetAllComputerPassportWithComputerRector();
+
+            return computer.Select(c => new ComputerPassportWithComputerRector
+            {
+                Id = c.Id,
+                InventoryNumber = c.InventoryNumber,
+                DateOfReceipt = c.DateOfReceipt,
+                DateOfDebit = c.DateOfDebit,
+                computerPassportStatus = c.computerPassportStatus,
+                WarehouseId = c.WarehouseId,
+                WarehouseName = c.Warehouse?.Name,
+                ComputerId = c.ComputerId,
+                ProcessorName = c.Computer?.Processor?.Name,
+                MotherboardName = c.Computer?.Motherboard?.Name,
+                RamName = c.Computer?.Ram?.Name,
+                OcName = c.Computer?.Oc?.Name,
+                MemoryDiskName = c.Computer?.MemoryDisk?.Name,
+                PowerUnitName = c.Computer?.PowerUnit?.Name,
+                VideoCardName = c.Computer?.VideoCard?.Name,
+                MouseName = c.Computer?.Mouse?.Name,
+                KeyboardName = c.Computer?.Keyboard?.Name,
+                ScreenName = c.Computer?.Screen?.Name,
+                UserName = c.User?.UserName
+            });
         }
 
         public Task<bool> DeleteAsync(int id)

@@ -95,6 +95,19 @@ namespace BLL.Service
             return userDto;
         }
 
+        public async Task<IEnumerable<UserByDepartment>> GetByDepartmentId(int departmentId)
+        {
+            return await _userManager.Users
+                .Where(u => u.DepartmentId == departmentId)
+                .Select(u => new UserByDepartment
+                {
+                    Id = u.Id,
+                    FullName = u.LastName + ' ' + u.FirstName + ' ' + u.MiddleName,                
+                })
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<ApplicationUser?> GetByIdAsync(string id)
         {
             return await _userManager.FindByIdAsync(id);

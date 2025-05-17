@@ -26,7 +26,8 @@ namespace BLL.Service
             {
                 new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),  
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-                new Claim("DepartmentId", user.DepartmentId?.ToString() ?? "")
+                new Claim("DepartmentId", user.DepartmentId?.ToString() ?? ""),
+                new Claim("WarehouseId", user.WarehouseId?.ToString() ?? "")
             };
 
             foreach (var role in roles)

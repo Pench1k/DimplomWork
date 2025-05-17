@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+
 
 namespace UI.Controllers
 {
@@ -56,7 +55,7 @@ namespace UI.Controllers
                 {
                     "admin" => Url.Action("Index", "Admin"),
                     "Методист" => Url.Action("OfficeEdit", "Methodist"),
-                    "Проректор" => Url.Action("Dashboard", "Rector"),
+                    "Проректор" => Url.Action("Distribution", "Rector"),
                     "Инженер коммуниционного  центра" => Url.Action("ComputerPassportAccept", "Engineer"),
                     "Ответственный за склад" => Url.Action("MouseEdit", "ResponWarehouseOnly"),
                 };

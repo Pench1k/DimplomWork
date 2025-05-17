@@ -10,6 +10,10 @@ namespace DAL.Interface
         Task<bool> UpdateAsync(ComputerPassport entity);
         Task<bool> DeleteAsync(int id);
 
+        Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerWarehouse(int warehouseId);
+
         Task<bool> ExistInventoryNumber(string inventoryNumber);
+
+        Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerRector();
     }
 }

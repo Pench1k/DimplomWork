@@ -75,5 +75,10 @@ namespace UI.Controllers
         {
             return View();
         }
+
+        public IActionResult ComputerPassportSee()
+        {
+            return View();
+        }
     }
 }

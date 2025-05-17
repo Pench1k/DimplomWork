@@ -9,5 +9,8 @@ namespace BLL.Interface
         Task<bool> AddAsync(ComputerPassportCreateDTO entity);
         Task<bool> UpdateAsync(ComputerPassportDTO entity);
         Task<bool> DeleteAsync(int id);
+
+        Task<IEnumerable<ComputerPassportWithComputerWarehouse>> ComputerPassportWithComputerWarehouse(int warehouseId);
+        Task<IEnumerable<ComputerPassportWithComputerRector>> ComputerPassportWithComputerRector();
     }
 }

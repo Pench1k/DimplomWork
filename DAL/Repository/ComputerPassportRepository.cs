@@ -2,6 +2,7 @@
 using DAL.Interface;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace DAL.Repository
 {
@@ -75,6 +76,8 @@ namespace DAL.Repository
             }
         }
 
+        
+
         public async Task<bool> ExistInventoryNumber(string inventoryNumber)
         {
             var exists = await _context.ComputerPassports
@@ -82,6 +85,65 @@ namespace DAL.Repository
                 .AnyAsync(c => c.InventoryNumber.Trim() == inventoryNumber.Trim());
 
             return exists;
+        }
+
+        public async Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerWarehouse(int warehouseId)
+        {
+            return await _context.ComputerPassports.Where(cp => cp.WarehouseId == warehouseId).AsNoTracking()
+                    .Include(cp => cp.User)                   
+                    .Include(cp => cp.Computer) 
+                        .ThenInclude(c => c.Processor) 
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Motherboard) 
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Ram) 
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Oc) 
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.MemoryDisk)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.PowerUnit)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.VideoCard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Mouse)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Keyboard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Screen)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Coming)
+                    .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerRector()
+        {
+            return await _context.ComputerPassports.Where(cp => cp.WarehouseId != null && cp.computerPassportStatus == ComputerPassportStatus.ReadyForDistribution).AsNoTracking()
+                    .Include(cp => cp.User)
+                    .Include(cp => cp.Warehouse)
+                    .Include(cp => cp.Computer)                 
+                        .ThenInclude(c => c.Processor)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Motherboard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Ram)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Oc)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.MemoryDisk)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.PowerUnit)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.VideoCard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Mouse)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Keyboard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Screen)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Coming)
+                    .ToListAsync();
         }
     }
 }

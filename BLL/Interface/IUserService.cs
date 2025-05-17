@@ -27,5 +27,7 @@ namespace BLL.Interface
         Task<UserEditDTO?> GetUserByEdit(string id);
 
         Task<IdentityResult> UpdateUserAsync(UpdateUserDTO dto);
+
+        Task<IEnumerable<UserByDepartment>> GetByDepartmentId(int departmentId);
     }
 }

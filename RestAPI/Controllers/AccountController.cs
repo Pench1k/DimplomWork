@@ -142,5 +142,19 @@ namespace RestAPI.Controllers
 
             return BadRequest(result.Errors);
         }
+
+        [HttpGet("ByDepartment/{departmentId}")]
+        public async Task<IActionResult> GetUsersByDepartment(int departmentId)
+        {
+            try
+            {
+                var users = await _userService.GetByDepartmentId(departmentId);
+                return Ok(users);
+            }
+            catch
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+        }
     }
 }
