@@ -8,5 +8,15 @@ namespace UI.Controllers
         {
             return View();
         }
+
+        public IActionResult ArrivalAcceptMethodist()
+        {
+            return View();
+        }
+
+        public IActionResult ComputerPassportDepartment()
+        {
+            return View();
+        }
     }
 }

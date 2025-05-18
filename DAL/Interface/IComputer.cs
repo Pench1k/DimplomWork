@@ -5,7 +5,7 @@ namespace DAL.Interface
     public interface IComputer
     {
         Task<IEnumerable<Computer>> GetAllAsync();
-        Task<Computer?> GetByIdAsync(int id);
+        Task<Computer?> GetByIdAsync(int? id);
         Task<bool> AddAsync(Computer entity);
         Task<bool> UpdateAsync(Computer entity);
         Task<bool> DeleteAsync(int id);

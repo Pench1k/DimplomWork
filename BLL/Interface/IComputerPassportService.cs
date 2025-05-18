@@ -12,5 +12,6 @@ namespace BLL.Interface
 
         Task<IEnumerable<ComputerPassportWithComputerWarehouse>> ComputerPassportWithComputerWarehouse(int warehouseId);
         Task<IEnumerable<ComputerPassportWithComputerRector>> ComputerPassportWithComputerRector();
+        Task<IEnumerable<ComputerPassportWithComputerMethodist>> ComputerPassportWithComputerMethodist(int departmentId);
     }
 }

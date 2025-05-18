@@ -177,120 +177,100 @@
 
 
 <script>
+    // Глобальные переменные
+    let currentDistributionData = {
+        computerId: null,
+        warehouseId: null
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
+        loadComputerPassports();
+        
+        // Обработчик закрытия модального окна распределения
+        document.getElementById('distributionModal').addEventListener('hidden.bs.modal', resetDistributionForm);
+    });
+
+    // Функция загрузки списка компьютеров
+    function loadComputerPassports() {
         fetch('https://localhost:5001/api/ComputerPassport/Rector', {credentials: 'include'})
             .then(response => response.json())
             .then(data => {
                 document.getElementById('loadingSpinner').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
-
-                const tableBody = document.getElementById('passportTableBody');
-
-                if (data.length === 0) {
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">
-                                <i class="bi bi-pc display-4 opacity-50"></i>
-                                <p class="mt-3">Компьютеры не найдены</p>
-                            </td>
-                        </tr>`;
-                    return;
-                }
-
-                data.forEach(passport => {
-                    const row = document.createElement('tr');
-
-                    const debitDate = passport.dateOfDebit ? new Date(passport.dateOfDebit) : null;
-                    const isExpired = debitDate && debitDate < new Date();
-                    const dateClass = isExpired ? 'text-danger' : 'text-success';
-                    const dateText = passport.dateOfDebit || '—';
-
-                    row.innerHTML = `
-                        <td class="ps-4 fw-bold">${passport.inventoryNumber}</td>
-                        <td>${passport.userName}</td>
-                        <td>${passport.warehouseName || 'Не указан'}</td>
-                        <td>${passport.dateOfReceipt || '—'}</td>
-                        <td class="${dateClass} fw-medium">${dateText}</td>
-                        <td>
-                            <div class="text-truncate" style="max-width: 200px;">
-                                <small class="text-muted">Процессор:</small> ${passport.processorName || '—'}<br>
-                                <small class="text-muted">Видеокарта:</small> ${passport.videoCardName || '—'}
-                            </div>
-                        </td>
-                        <td><span class="badge bg-primary">${getStatusText(passport.computerPassportStatus)}</span></td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-outline-primary me-2" onclick="showPassportModal(${JSON.stringify(passport).replace(/"/g, '&quot;')})">
-                                <i class="bi bi-eye"></i> Просмотр
-                            </button>
-                            <button class="btn btn-sm btn-success" 
-                                    onclick="openDistributionModal(${passport.id}, ${passport.warehouseId || 'null'}, '${passport.inventoryNumber}', '${passport.warehouseName || ''}')">
-                                <i class="bi bi-send"></i> Распределить
-                            </button>
-                        </td>
-                    `;
-
-                    tableBody.appendChild(row);
-                });
+                renderComputerTable(data);
             })
             .catch(error => {
                 console.error('Ошибка загрузки данных:', error);
                 document.getElementById('loadingSpinner').style.display = 'none';
                 showAlert('Ошибка загрузки данных', 'danger');
             });
-    });
-
-
-    // Остальные функции остаются без изменений
-    function showPassportModal(passport) {
-        document.getElementById('modalInventoryNumber').textContent = passport.inventoryNumber || '—';
-        document.getElementById('modalProcessor').textContent = passport.processorName || '—';
-        document.getElementById('modalMotherboard').textContent = passport.motherboardName || '—';
-        document.getElementById('modalRam').textContent = passport.ramName || '—';
-        document.getElementById('modalOc').textContent = passport.ocName || '—';
-        document.getElementById('modalMemoryDisk').textContent = passport.memoryDiskName || '—';
-        document.getElementById('modalPowerUnit').textContent = passport.powerUnitName || '—';
-        document.getElementById('modalVideoCard').textContent = passport.videoCardName || '—';
-        document.getElementById('modalMouse').textContent = passport.mouseName || '—';
-        document.getElementById('modalKeyboard').textContent = passport.keyboardName || '—';
-        document.getElementById('modalScreen').textContent = passport.screenName || '—';
-
-        const modal = new bootstrap.Modal(document.getElementById('passportModal'));
-        modal.show();
     }
 
-    function getStatusText(status) {
-        const statuses = {
-            0: 'Готов к распределению',
-            1: 'Списан',
-            2: 'В ремонте'
-        };
-        return statuses[status] || 'Неизвестно';
-    }
-
-    function showAlert(message, type) {
-            const alertContainer = document.getElementById('alertContainer');
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type} alert-dismissible fade show`;
-            alert.role = 'alert';
-            alert.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-            alertContainer.appendChild(alert);
+    // Функция отрисовки таблицы компьютеров
+    function renderComputerTable(data) {
+        const tableBody = document.getElementById('passportTableBody');
+        
+        if (data.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center py-5 text-muted">
+                        <i class="bi bi-pc display-4 opacity-50"></i>
+                        <p class="mt-3">Компьютеры не найдены</p>
+                    </td>
+                </tr>`;
+            return;
         }
 
-        let currentDistributionData = {
-        computerId: null,
-        warehouseId: null
-    };
+        tableBody.innerHTML = ''; // Очищаем таблицу перед заполнением
+        
+        data.forEach(passport => {
+            const row = document.createElement('tr');
+            const debitDate = passport.dateOfDebit ? new Date(passport.dateOfDebit) : null;
+            const isExpired = debitDate && debitDate < new Date();
+            const dateClass = isExpired ? 'text-danger' : 'text-success';
+            const dateText = passport.dateOfDebit || '—';
 
-function openDistributionModal(computerId, warehouseId, inventoryNumber, warehouseName) {
+            row.innerHTML = `
+                <td class="ps-4 fw-bold">${passport.inventoryNumber}</td>
+                <td>${passport.userName}</td>
+                <td>${passport.warehouseName || 'Не указан'}</td>
+                <td>${passport.dateOfReceipt || '—'}</td>
+                <td class="${dateClass} fw-medium">${dateText}</td>
+                <td>
+                    <div class="text-truncate" style="max-width: 200px;">
+                        <small class="text-muted">Процессор:</small> ${passport.processorName || '—'}<br>
+                        <small class="text-muted">Видеокарта:</small> ${passport.videoCardName || '—'}
+                    </div>
+                </td>
+                <td><span class="badge bg-primary">${getStatusText(passport.computerPassportStatus)}</span></td>
+                <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-primary me-2" 
+                            onclick="showPassportModal(${JSON.stringify(passport).replace(/"/g, '&quot;')})">
+                        <i class="bi bi-eye"></i> Просмотр
+                    </button>
+                    <button class="btn btn-sm btn-success" 
+                            onclick="openDistributionModal(
+                                ${passport.id}, 
+                                ${passport.warehouseId !== null ? passport.warehouseId : 'null'}, 
+                                '${passport.inventoryNumber}', 
+                                '${passport.warehouseName || ''}'
+                            )">
+                        <i class="bi bi-send"></i> Распределить
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Функция открытия модального окна распределения
+    function openDistributionModal(computerId, warehouseId, inventoryNumber, warehouseName) {
         currentDistributionData = {
-            computerId: computerId,
-            warehouseId: warehouseId
+            computerId: Number(computerId),
+            warehouseId: warehouseId !== null ? Number(warehouseId) : null
         };
         
-        // Заполняем информацию
         document.getElementById('distComputerNumber').textContent = inventoryNumber;
         document.getElementById('currentWarehouse').value = warehouseName || 'Не указан';
         
@@ -308,88 +288,113 @@ function openDistributionModal(computerId, warehouseId, inventoryNumber, warehou
                     select.appendChild(option);
                 });
                 
-                // Показываем модальное окно
                 new bootstrap.Modal(document.getElementById('distributionModal')).show();
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки подразделений:', error);
+                showAlert('Ошибка загрузки подразделений', 'danger');
             });
     }
 
+    // Функция сброса формы распределения
+    function resetDistributionForm() {
+        document.getElementById('departmentSelect').selectedIndex = 0;
+        document.getElementById('officeSelect').innerHTML = '<option value="">Сначала выберите подразделение</option>';
+        document.getElementById('officeSelect').disabled = true;
+        document.getElementById('responsibleUserSelect').innerHTML = '<option value="">Сначала выберите подразделение</option>';
+        document.getElementById('responsibleUserSelect').disabled = true;
+        document.getElementById('distributionNote').value = '';
+        
+        currentDistributionData = {
+            computerId: null,
+            warehouseId: null
+        };
+    }
+
+    // Функция загрузки данных подразделения
     function loadDepartmentData(departmentId) {
         if (!departmentId) {
-            document.getElementById('officeSelect').innerHTML = '<option value="">Сначала выберите подразделение</option>';
-            document.getElementById('officeSelect').disabled = true;
-            document.getElementById('responsibleUserSelect').innerHTML = '<option value="">Сначала выберите подразделение</option>';
-            document.getElementById('responsibleUserSelect').disabled = true;
+            resetDepartmentFields();
             return;
         }
         
-        // Загружаем кабинеты
-        fetch(`https://localhost:5001/api/Office/ByDepartment/${departmentId}`, { 
-            credentials: 'include' 
-        })
-        .then(response => response.json())
-        .then(offices => {
-            const officeSelect = document.getElementById('officeSelect');
-            officeSelect.innerHTML = '';
-            
-            // Фильтруем кабинеты - оставляем только с availableSeats > 0
-            const availableOffices = offices.filter(office => office.numberOfAvailableSeats > 0);
-            
-            if (availableOffices.length === 0) {
-                const option = document.createElement('option');
-                option.value = '';
-                option.textContent = 'Нет доступных кабинетов (все заняты)';
-                officeSelect.appendChild(option);
-                officeSelect.disabled = true;
-            } else {
-                availableOffices.forEach(office => {
-                    const option = document.createElement('option');
-                    option.value = office.id;
-                    option.textContent = `${office.body}-${office.number} (Свободно мест: ${office.numberOfAvailableSeats})`;
-                    option.dataset.seats = office.numberOfAvailableSeats; // Сохраняем кол-во мест в data-атрибуте
-                    
-                    // Можно добавить визуальное выделение кабинетов с малым числом мест
-                    if (office.numberOfAvailableSeats < 3) {
-                        option.style.color = 'orange'; // Выделение цветом
-                    }
-                    
-                    officeSelect.appendChild(option);
-                });
-                officeSelect.disabled = false;
-            }
+        // Загружаем кабинеты и пользователей параллельно
+        Promise.all([
+            fetch(`https://localhost:5001/api/Office/ByDepartment/${departmentId}`, { credentials: 'include' }),
+            fetch(`https://localhost:5001/api/account/ByDepartment/${departmentId}`, { credentials: 'include' })
+        ])
+        .then(responses => Promise.all(responses.map(r => r.json())))
+        .then(([offices, users]) => {
+            renderOfficeSelect(offices);
+            renderUserSelect(users);
         })
         .catch(error => {
-            console.error('Ошибка загрузки кабинетов:', error);
-            const officeSelect = document.getElementById('officeSelect');
-            officeSelect.innerHTML = '<option value="">Ошибка загрузки данных</option>';
-            officeSelect.disabled = true;
+            console.error('Ошибка загрузки данных подразделения:', error);
+            resetDepartmentFields();
+            showAlert('Ошибка загрузки данных подразделения', 'danger');
         });
-        
-        // Загружаем пользователей подразделения
-        fetch(`https://localhost:5001/api/account/ByDepartment/${departmentId}`, { credentials: 'include' })
-            .then(response => response.json())
-            .then(users => {
-                const userSelect = document.getElementById('responsibleUserSelect');
-                userSelect.innerHTML = '';
-                
-                if (users.length === 0) {
-                    const option = document.createElement('option');
-                    option.value = '';
-                    option.textContent = 'Нет пользователей в подразделении';
-                    userSelect.appendChild(option);
-                    userSelect.disabled = true;
-                } else {
-                    users.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.id;
-                        option.textContent = `${user.fullName})`;
-                        userSelect.appendChild(option);
-                    });
-                    userSelect.disabled = false;
-                }
-            });
     }
 
-    // Обновленный обработчик подтверждения распределения
+    function resetDepartmentFields() {
+        document.getElementById('officeSelect').innerHTML = '<option value="">Сначала выберите подразделение</option>';
+        document.getElementById('officeSelect').disabled = true;
+        document.getElementById('responsibleUserSelect').innerHTML = '<option value="">Сначала выберите подразделение</option>';
+        document.getElementById('responsibleUserSelect').disabled = true;
+    }
+
+    function renderOfficeSelect(offices) {
+        const officeSelect = document.getElementById('officeSelect');
+        officeSelect.innerHTML = '';
+        
+        const availableOffices = offices.filter(office => office.numberOfAvailableSeats > 0);
+        
+        if (availableOffices.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'Нет доступных кабинетов (все заняты)';
+            officeSelect.appendChild(option);
+            officeSelect.disabled = true;
+            return;
+        }
+        
+        availableOffices.forEach(office => {
+            const option = document.createElement('option');
+            option.value = office.id;
+            option.textContent = `${office.body}-${office.number} (Свободно мест: ${office.numberOfAvailableSeats})`;
+            option.dataset.seats = office.numberOfAvailableSeats;
+            
+            if (office.numberOfAvailableSeats < 3) {
+                option.style.color = 'orange';
+            }
+            
+            officeSelect.appendChild(option);
+        });
+        officeSelect.disabled = false;
+    }
+
+    function renderUserSelect(users) {
+        const userSelect = document.getElementById('responsibleUserSelect');
+        userSelect.innerHTML = '';
+        
+        if (users.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'Нет пользователей в подразделении';
+            userSelect.appendChild(option);
+            userSelect.disabled = true;
+            return;
+        }
+        
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.fullName;
+            userSelect.appendChild(option);
+        });
+        userSelect.disabled = false;
+    }
+
+    // Функция подтверждения распределения
     document.getElementById('confirmDistributionBtn').addEventListener('click', function() {
         const officeId = document.getElementById('officeSelect').value;
         const responsibleUserId = document.getElementById('responsibleUserSelect').value;
@@ -406,14 +411,14 @@ function openDistributionModal(computerId, warehouseId, inventoryNumber, warehou
         }
         
         const distributionData = {
-            ComputerPassportId: currentDistributionData.computerId,
-            WarehouseId: currentDistributionData.warehouseId,
-            OfficeId: officeId,
-            ResponsibleUserId: responsibleUserId, // Добавляем ответственного
+            ComputerPassportId: Number(currentDistributionData.computerId),
+            WarehouseId: Number(currentDistributionData.warehouseId),
+            OfficeId: Number(officeId),
+            ResponsibleUserId: responsibleUserId,
             Note: note,
         };
         
-        fetch('/api/ArrivalFromTheWarehouse', {
+        fetch('https://localhost:5001/api/ArrivalFromTheWarehouse', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -422,20 +427,69 @@ function openDistributionModal(computerId, warehouseId, inventoryNumber, warehou
             credentials: 'include'
         })
         .then(response => {
-            if (response.ok) {
-                showAlert('Компьютер успешно распределен', 'success');
-                bootstrap.Modal.getInstance(document.getElementById('distributionModal')).hide();
-                // Обновляем таблицу
-                document.getElementById('passportTableBody').innerHTML = '';
-                loadComputerPassports();
-            } else {
-                throw new Error('Ошибка распределения');
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Ошибка распределения');
+                });
             }
+            return response.json();
+        })
+        .then(() => {
+            showAlert('Компьютер успешно распределен', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('distributionModal')).hide();
+            loadComputerPassports(); // Перезагружаем данные
         })
         .catch(error => {
             console.error('Ошибка:', error);
-            showAlert('Ошибка при распределении компьютера: ' + error.message, 'danger');
+            showAlert('Ошибка при распределении: ' + error.message, 'danger');
         });
     });
 
+    // Вспомогательные функции
+    function showPassportModal(passport) {
+        const fields = {
+            'modalInventoryNumber': passport.inventoryNumber,
+            'modalProcessor': passport.processorName,
+            'modalMotherboard': passport.motherboardName,
+            'modalRam': passport.ramName,
+            'modalOc': passport.ocName,
+            'modalMemoryDisk': passport.memoryDiskName,
+            'modalPowerUnit': passport.powerUnitName,
+            'modalVideoCard': passport.videoCardName,
+            'modalMouse': passport.mouseName,
+            'modalKeyboard': passport.keyboardName,
+            'modalScreen': passport.screenName
+        };
+
+        Object.entries(fields).forEach(([id, value]) => {
+            document.getElementById(id).textContent = value || '—';
+        });
+
+        new bootstrap.Modal(document.getElementById('passportModal')).show();
+    }
+
+    function getStatusText(status) {
+        const statuses = {
+            0: 'Готов к распределению',
+            1: 'Списан',
+            2: 'В ремонте'
+        };
+        return statuses[status] || 'Неизвестно';
+    }
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.role = 'alert';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertContainer.appendChild(alert);
+
+        setTimeout(() => {
+            alert.remove();
+        }, 5000);
+    }
 </script>

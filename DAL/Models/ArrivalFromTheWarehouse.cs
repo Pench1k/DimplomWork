@@ -1,4 +1,6 @@
-﻿namespace DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
 {
     public class ArrivalFromTheWarehouse // Выдача со склада в подразделение // Дописать статусы!!!
     {
@@ -24,7 +26,19 @@
 
     public enum StatusForArrival
     {
+        [Display(Name = "Ожидает подтверждение от склада")]
+        WaiteWarehouse,
 
+        [Display(Name = "Отклонен складом")]
+        RejectWarehouse,
+
+        [Display(Name = "Ожидает подтверждение от подразделения")]
+        WaiteMetodist,
+
+        [Display(Name = "Отклонен подразделением")]
+        RejectMetodist,
+
+        [Display(Name = "Завершен")]
+        Сompleted
     }
-
 }

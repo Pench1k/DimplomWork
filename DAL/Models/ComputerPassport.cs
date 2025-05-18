@@ -30,7 +30,13 @@ namespace DAL.Models
     public enum ComputerPassportStatus
     {
         [Display(Name = "Готов к распределению")]
-        ReadyForDistribution
+        ReadyForDistribution,
+
+        [Display(Name = "Распределен")]
+        Arrival,
+
+        [Display(Name = "В работе")]
+        Work
     }
 }
 

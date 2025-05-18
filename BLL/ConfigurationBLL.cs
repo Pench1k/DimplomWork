@@ -2,6 +2,8 @@
 using DAL;
 using BLL.Interface;
 using BLL.Service;
+using DAL.Interface;
+using DAL.Models;
 
 namespace BLL
 {
@@ -29,6 +31,11 @@ namespace BLL
             service.AddScoped<IOfficeService, OfficeService>();
             service.AddScoped<IComputerService, ComputerService>();
             service.AddScoped<IComputerPassportService, ComputerPassportService>();
+
+            service.AddScoped<IArrivalFromTheWarehouseService, ArrivalFromTheWarehouseService>();
+            service.AddScoped<IMovingThroughDivisionsService, MovingThroughDivisionsService>();
+            service.AddScoped<IRepairComputerService, RepairComputerService>();
+            service.AddScoped<IWriteDownsService, WriteDownsService>();
 
             return service;
         }

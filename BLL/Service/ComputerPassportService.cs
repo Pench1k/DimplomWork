@@ -132,6 +132,38 @@ namespace BLL.Service
             });
         }
 
+        public async Task<IEnumerable<ComputerPassportWithComputerMethodist>> ComputerPassportWithComputerMethodist(int departmentId)
+        {
+            var computer = await _unitOfWork.Passport.GetAllComputerPassportWithComputerMethodist(departmentId);
+
+            return computer.Select(c => new ComputerPassportWithComputerMethodist
+            {
+                Id = c.Id,
+                InventoryNumber = c.InventoryNumber,
+                DateOfReceipt = c.DateOfReceipt,
+                DateOfDebit = c.DateOfDebit,
+                computerPassportStatus = c.computerPassportStatus,
+                
+                OfficeId = c.Office?.Id,
+                Body = c.Office?.Body,
+                Number = c.Office?.Number,
+
+                ComputerId = c.ComputerId,
+                ProcessorName = c.Computer?.Processor?.Name,
+                MotherboardName = c.Computer?.Motherboard?.Name,
+                RamName = c.Computer?.Ram?.Name,
+                OcName = c.Computer?.Oc?.Name,
+                MemoryDiskName = c.Computer?.MemoryDisk?.Name,
+                PowerUnitName = c.Computer?.PowerUnit?.Name,
+                VideoCardName = c.Computer?.VideoCard?.Name,
+                MouseName = c.Computer?.Mouse?.Name,
+                KeyboardName = c.Computer?.Keyboard?.Name,
+                ScreenName = c.Computer?.Screen?.Name,
+                UserName = c.User?.UserName
+            });
+        }
+
+
         public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();

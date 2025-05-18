@@ -10,7 +10,7 @@
 <div class="container-fluid py-4" id="mainContent" style="display: none;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">
-            <i class="bi bi-file-earmark-text me-2"></i>Компьютеры на складе
+            <i class="bi bi-file-earmark-text me-2"></i>Наличие подразделения
         </h1>
     </div>
 
@@ -22,6 +22,7 @@
                         <tr>
                             <th class="ps-4">Инв. номер</th>
                             <th>Ответственный</th>
+                             <th>Расположение</th>
                             <th>Дата поступления</th>
                             <th>Дата списания</th>
                             <th>Комплектующие</th>
@@ -113,7 +114,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Загрузка данных
-    fetch('https://localhost:5001/api/ComputerPassport', {credentials: 'include'})
+    fetch('https://localhost:5001/api/ComputerPassport/Methodist', {credentials: 'include'})
         .then(response => response.json())
         .then(data => {
             // Скрываем спиннер
@@ -149,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.innerHTML = `
                     <td class="ps-4 fw-bold">${passport.inventoryNumber}</td>
                     <td>${passport.userName}</td>
+                    <td>${passport.body}-${passport.number}</td>
                     <td>${passport.dateOfReceipt || '—'}</td>
                     <td class="${dateClass} fw-medium">${dateText}</td>
                     <td>
@@ -200,7 +202,7 @@ function getStatusText(status) {
     const statuses = {
         0: 'Готов к распределению',
         1: 'Распределен',
-        2: 'В ремонте'
+        2: 'В работе'
     };
     return statuses[status] || 'Неизвестно';
 }

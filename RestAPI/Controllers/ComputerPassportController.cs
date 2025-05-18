@@ -50,7 +50,7 @@ namespace RestAPI.Controllers
                 var result = await _computerPassportService.ComputerPassportWithComputerWarehouse(warehouseId);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch
             { 
                 return StatusCode(500, "Внутренняя ошибка сервера");
             }
@@ -64,7 +64,27 @@ namespace RestAPI.Controllers
                 var result = await _computerPassportService.ComputerPassportWithComputerRector();
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
+        }
+
+        [HttpGet("Methodist")]
+        public async Task<IActionResult> GetAllMethodist()
+        {
+            try
+            {
+                var departmentIdClaim = User.FindFirst("DepartmentId")?.Value;
+                if (string.IsNullOrEmpty(departmentIdClaim))
+                    return Forbid(); // 403 - нет доступа
+                if (!int.TryParse(departmentIdClaim, out int departmentId))
+                    return BadRequest("Неверный формат идентификатора подразделения");
+
+                var result = await _computerPassportService.ComputerPassportWithComputerMethodist(departmentId);
+                return Ok(result);
+            }
+            catch
             {
                 return StatusCode(500, "Внутренняя ошибка сервера");
             }

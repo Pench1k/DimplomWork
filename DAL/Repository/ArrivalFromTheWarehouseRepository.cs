@@ -28,6 +28,8 @@ namespace DAL.Repository
             }
         }
 
+       
+
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -74,6 +76,26 @@ namespace DAL.Repository
 
                 return false;
             }
+        }
+
+
+        public async Task<IEnumerable<ArrivalFromTheWarehouse>> ArrivalFromTheWarehouseAccepts(int warehouseId)
+        {
+            return await _context.ArrivalFromTheWarehouses.Where(aftw => aftw.WarehouseId == warehouseId && aftw.Status == StatusForArrival.WaiteWarehouse)
+                .Include(aftw => aftw.Office)
+                  .ThenInclude(of => of.Department)
+                .Include(aftw => aftw.ComputerPassport)
+                .AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IEnumerable<ArrivalFromTheWarehouse>> ArrivalFromTheMetodistAccepts(int departmentId)
+        {
+
+            return await _context.ArrivalFromTheWarehouses.Where(aftw => aftw.Office.DepartmentId == departmentId && aftw.Status == StatusForArrival.WaiteMetodist)
+               .Include(aftw => aftw.Office)
+                 .ThenInclude(of => of.Department)
+               .Include(aftw => aftw.ComputerPassport)
+               .AsNoTracking().ToListAsync();
         }
     }
 }

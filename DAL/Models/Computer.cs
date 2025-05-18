@@ -53,6 +53,12 @@ namespace DAL.Models
         Confirmed,
 
         [Display(Name = "Готов к работе")]
-        HavePassport
+        HavePassport,
+
+        [Display(Name = "Распределен")]
+        Arrival,
+
+        [Display(Name = "В работе")]
+        Work
     }
 }

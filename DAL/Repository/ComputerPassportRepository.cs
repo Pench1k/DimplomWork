@@ -53,7 +53,7 @@ namespace DAL.Repository
             return await _context.ComputerPassports.ToListAsync();
         }
 
-        public async Task<ComputerPassport> GetByIdAsync(int id)
+        public async Task<ComputerPassport> GetByIdAsync(int? id)
         {
             return await _context.ComputerPassports.FindAsync(id);
         }
@@ -122,6 +122,36 @@ namespace DAL.Repository
                     .Include(cp => cp.User)
                     .Include(cp => cp.Warehouse)
                     .Include(cp => cp.Computer)                 
+                        .ThenInclude(c => c.Processor)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Motherboard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Ram)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Oc)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.MemoryDisk)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.PowerUnit)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.VideoCard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Mouse)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Keyboard)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Screen)
+                    .Include(cp => cp.Computer)
+                        .ThenInclude(c => c.Coming)
+                    .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerMethodist(int departmentId)
+        {
+            return await _context.ComputerPassports.Where(cp => cp.Office.DepartmentId == departmentId && cp.computerPassportStatus == ComputerPassportStatus.Work).AsNoTracking() //???
+                    .Include(cp => cp.User)
+                    .Include(cp => cp.Office)
+                    .Include(cp => cp.Computer)
                         .ThenInclude(c => c.Processor)
                     .Include(cp => cp.Computer)
                         .ThenInclude(c => c.Motherboard)

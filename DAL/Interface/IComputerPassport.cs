@@ -5,7 +5,7 @@ namespace DAL.Interface
     public interface IComputerPassport
     {
         Task<IEnumerable<ComputerPassport>> GetAllAsync();
-        Task<ComputerPassport> GetByIdAsync(int id);
+        Task<ComputerPassport> GetByIdAsync(int? id);
         Task<bool> AddAsync(ComputerPassport entity);
         Task<bool> UpdateAsync(ComputerPassport entity);
         Task<bool> DeleteAsync(int id);
@@ -15,5 +15,7 @@ namespace DAL.Interface
         Task<bool> ExistInventoryNumber(string inventoryNumber);
 
         Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerRector();
+
+        Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerMethodist(int departmentId);
     }
 }

@@ -52,7 +52,7 @@ namespace DAL.Repository
             return await _context.Computers.ToListAsync();
         }
 
-        public async Task<Computer?> GetByIdAsync(int id)
+        public async Task<Computer?> GetByIdAsync(int? id)
         {
             return await _context.Computers.FindAsync(id);
         }
