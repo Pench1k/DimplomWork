@@ -17,5 +17,7 @@ namespace DAL.Interface
         Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerRector();
 
         Task<IEnumerable<ComputerPassport>> GetAllComputerPassportWithComputerMethodist(int departmentId);
+
+        
     }
 }

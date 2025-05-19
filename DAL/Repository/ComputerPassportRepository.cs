@@ -174,6 +174,6 @@ namespace DAL.Repository
                     .Include(cp => cp.Computer)
                         .ThenInclude(c => c.Coming)
                     .ToListAsync();
-        }
+        }      
     }
 }

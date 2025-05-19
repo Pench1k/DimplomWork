@@ -18,5 +18,10 @@ namespace UI.Controllers
         {
             return View();
         }
+
+        public IActionResult RepairAcceptDepartment()
+        {
+            return View();
+        }
     }
 }

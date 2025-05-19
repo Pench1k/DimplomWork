@@ -1,4 +1,6 @@
-﻿namespace DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
 {
     public class MovingThroughDivisions // Перемещение по подразделениям // Подумать над статусами
     {
@@ -25,7 +27,7 @@
 
     public enum StatusForMoving
     {
-
+        [Display(Name = "Завершен")]
+        Сompleted
     }
-
 }

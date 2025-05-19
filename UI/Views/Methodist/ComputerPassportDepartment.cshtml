@@ -12,6 +12,20 @@
         <h1 class="mb-0">
             <i class="bi bi-file-earmark-text me-2"></i>Наличие подразделения
         </h1>
+        <div class="d-flex gap-2">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" id="inventorySearch" class="form-control" placeholder="Поиск по инв. номеру">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <select id="officeFilter" class="form-select">
+                    <option value="">Все кабинеты</option>
+                    <!-- Кабинеты будут загружены динамически -->
+                </select>
+            </div>
+        </div>
     </div>
 
     <div class="card shadow-sm">
@@ -22,7 +36,7 @@
                         <tr>
                             <th class="ps-4">Инв. номер</th>
                             <th>Ответственный</th>
-                             <th>Расположение</th>
+                            <th>Расположение</th>
                             <th>Дата поступления</th>
                             <th>Дата списания</th>
                             <th>Комплектующие</th>
@@ -111,111 +125,588 @@
     </div>
 </div>
 
+<div class="modal fade" id="distributionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title">Перемещение компьютера <span id="distComputerNumber"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Текущее расположение</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Кабинет:</label>
+                                    <input type="text" class="form-control" id="currentOffice" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Ответственный:</label>
+                                    <input type="text" class="form-control" id="currentResponsible" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Новое расположение</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Кабинет:</label>
+                                    <select class="form-select" id="officeSelect">
+                                        <option value="">Выберите кабинет</option>
+                                        <!-- Кабинеты будут загружены динамически -->
+                                    </select>
+                                </div>                               
+                                <div class="mb-3">
+                                    <label class="form-label">Примечание:</label>
+                                    <textarea class="form-control" id="distributionNote" rows="2" placeholder="Укажите причину перемещения"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="confirmDistributionBtn">Подтвердить перемещение</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для отправки в ремонт -->
+<div class="modal fade" id="repairModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Отправка в ремонт <span id="repairComputerNumber"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Название сервисного центра:</label>
+                    <input type="text" class="form-control" id="serviceCentre" placeholder="Введите название сервиса">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Причина ремонта:</label>
+                    <select class="form-select" id="repairNote">
+                        <option value="">Выберите причину</option>
+                        <option value="Аппаратная неисправность">Аппаратная неисправность</option>
+                        <option value="Программная неисправность">Программная неисправность</option>
+                        <option value="Профилактические работы">Профилактические работы</option>
+                        <option value="Другое">Другое</option>
+                    </select>
+                </div>              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-warning" id="confirmRepairBtn">Подтвердить ремонт</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="writeOffModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title">Списание компьютера <span id="writeOffComputerNumber"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Склад:</label>
+                    <select class="form-select" id="warehouseSelect">
+                        <option value="">Выберите склад</option>
+                        <!-- Склады будут загружены динамически -->
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Примечание:</label>
+                    <textarea class="form-control" id="writeOffNote" rows="3" placeholder="Укажите причину списания"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-danger" id="confirmWriteOffBtn">Подтвердить списание</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Загрузка данных
-    fetch('https://localhost:5001/api/ComputerPassport/Methodist', {credentials: 'include'})
+    // Глобальные переменные
+    let allComputers = [];
+    let currentFilter = {
+        office: '',
+        search: ''
+    };
+
+    let currentRepairData = {
+        computerId: null
+    };
+
+    let currentDistributionData = {
+        computerId: null,
+        currentOfficeId: null,
+        currentResponsible: null
+    };
+
+    let currentWriteOffData = {
+        computerId: null
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Загрузка данных
+        fetch('https://localhost:5001/api/ComputerPassport/Methodist', {credentials: 'include'})
+            .then(response => response.json())
+            .then(data => {
+                allComputers = data;
+                
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                populateOfficeFilter(data);
+                applyFilters();
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных:', error);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                showAlert('Ошибка загрузки данных', 'danger');
+            });
+            
+        // Обработчики фильтров
+        document.getElementById('officeFilter').addEventListener('change', function() {
+            currentFilter.office = this.value;
+            applyFilters();
+        });
+        
+        document.getElementById('inventorySearch').addEventListener('input', function() {
+            currentFilter.search = this.value.toLowerCase();
+            applyFilters();
+        });
+    });
+
+    function populateOfficeFilter(data) {
+        const officeFilter = document.getElementById('officeFilter');
+        
+        // Получаем уникальные кабинеты
+        const offices = [...new Set(data.map(item => `${item.body}-${item.number}`))].sort();
+        
+        offices.forEach(office => {
+            const option = document.createElement('option');
+            option.value = office;
+            option.textContent = office;
+            officeFilter.appendChild(option);
+        });
+    }
+
+    function applyFilters() {
+        let filteredData = [...allComputers];
+        
+        // Фильтрация по кабинету
+        if (currentFilter.office) {
+            const [body, number] = currentFilter.office.split('-');
+            filteredData = filteredData.filter(computer => 
+                computer.body == body && computer.number == number
+            );
+        }
+        
+        // Фильтрация по поиску
+        if (currentFilter.search) {
+            filteredData = filteredData.filter(computer => 
+                computer.inventoryNumber.toLowerCase().includes(currentFilter.search)
+            );
+        }
+        
+        renderTable(filteredData);
+    }
+
+   function renderTable(data) {
+    const tableBody = document.getElementById('passportTableBody');
+    tableBody.innerHTML = '';
+    
+    if (data.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center py-5 text-muted">
+                    <i class="bi bi-pc display-4 opacity-50"></i>
+                    <p class="mt-3">Компьютеры не найдены</p>
+                </td>
+            </tr>`;
+        return;
+    }
+
+    data.forEach(passport => {
+        const row = document.createElement('tr');
+                        
+        const debitDate = passport.dateOfDebit ? new Date(passport.dateOfDebit) : null;
+        const isExpired = debitDate && debitDate < new Date();
+        const dateClass = isExpired ? 'text-danger' : 'text-success';
+        const dateText = passport.dateOfDebit || '—';
+        
+        row.innerHTML = `
+            <td class="ps-4 fw-bold">${passport.inventoryNumber}</td>
+            <td>${passport.userName}</td>
+            <td>${passport.body}-${passport.number}</td>
+            <td>${passport.dateOfReceipt || '—'}</td>
+            <td class="${dateClass} fw-medium">${dateText}</td>
+            <td>
+                <div class="text-truncate" style="max-width: 200px;">
+                    <small class="text-muted">Процессор:</small> ${passport.processorName || '—'}<br>
+                    <small class="text-muted">Видеокарта:</small> ${passport.videoCardName || '—'}
+                </div>
+            </td>
+            <td><span class="badge bg-primary">${getStatusText(passport.computerPassportStatus)}</span></td>
+            <td class="text-end pe-4">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-sm btn-outline-primary me-1" 
+                            onclick="event.stopPropagation(); showPassportModal(${JSON.stringify(passport).replace(/"/g, '&quot;')})">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success" 
+                            onclick="event.stopPropagation(); openMoveModal(
+                                ${passport.id}, 
+                                ${passport.officeId || 'null'}, 
+                                '${passport.body}-${passport.number}', 
+                                '${passport.userName || ''}', 
+                                '${passport.inventoryNumber}'
+                            )">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning" 
+                        onclick="event.stopPropagation(); openRepairModal(
+                        ${passport.id},
+                        '${passport.inventoryNumber}'
+                        )"
+                        data-bs-toggle="tooltip" title="Отправить в ремонт">
+                        <i class="bi bi-tools"></i>
+                    </button>
+
+                     <button class="btn btn-sm btn-outline-danger" 
+                        onclick="event.stopPropagation(); openWriteOffModal(
+                            ${passport.id},
+                            '${passport.inventoryNumber}'
+                        )"
+                        data-bs-toggle="tooltip" title="Списать компьютер">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+            
+        tableBody.appendChild(row);
+        });
+    }
+
+    // Остальные функции остаются без изменений
+    function showPassportModal(passport) {
+        document.getElementById('modalInventoryNumber').textContent = passport.inventoryNumber || '—';
+        document.getElementById('modalProcessor').textContent = passport.processorName || '—';
+        document.getElementById('modalMotherboard').textContent = passport.motherboardName || '—';
+        document.getElementById('modalRam').textContent = passport.ramName || '—';
+        document.getElementById('modalOc').textContent = passport.ocName || '—';
+        document.getElementById('modalMemoryDisk').textContent = passport.memoryDiskName || '—';
+        document.getElementById('modalPowerUnit').textContent = passport.powerUnitName || '—';
+        document.getElementById('modalVideoCard').textContent = passport.videoCardName || '—';
+        document.getElementById('modalMouse').textContent = passport.mouseName || '—';
+        document.getElementById('modalKeyboard').textContent = passport.keyboardName || '—';
+        document.getElementById('modalScreen').textContent = passport.screenName || '—';
+        
+        const modal = new bootstrap.Modal(document.getElementById('passportModal'));
+        modal.show();
+    }
+
+    function getStatusText(status) {
+        const statuses = {
+            0: 'Готов к распределению',
+            1: 'Распределен',
+            2: 'В работе',
+            3: 'В ремонте'
+        };
+        return statuses[status] || 'Неизвестно';
+    }
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.role = 'alert';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertContainer.appendChild(alert);
+
+        setTimeout(() => {
+            alert.remove();
+        }, 2000);
+    }
+
+
+    function openMoveModal(computerId, officeId, officeName, responsible, inventoryNumber) {
+    currentDistributionData = {
+        computerId: computerId,
+        currentOfficeId: officeId,
+        currentResponsible: responsible
+    };
+    
+    // Заполняем информацию о текущем расположении
+    document.getElementById('distComputerNumber').textContent = inventoryNumber;
+    document.getElementById('currentOffice').value = officeName || 'Не указан';
+    document.getElementById('currentResponsible').value = responsible || 'Не указан';
+    
+    // Загружаем доступные кабинеты (исключая текущий)
+    loadAvailableOffices(officeId);
+    
+    // Показываем модальное окно
+    new bootstrap.Modal(document.getElementById('distributionModal')).show();
+}
+
+    // Функция загрузки доступных кабинетов
+    function loadAvailableOffices(currentOfficeId) {
+        fetch('https://localhost:5001/api/Office', {
+            credentials: 'include'
+        })
         .then(response => response.json())
-        .then(data => {
-            // Скрываем спиннер
-            document.getElementById('loadingSpinner').style.display = 'none';
+        .then(offices => {
+            const officeSelect = document.getElementById('officeSelect');
+            officeSelect.innerHTML = '<option value="">Выберите кабинет</option>';
             
-            // Показываем основной контент
-            document.getElementById('mainContent').style.display = 'block';
+            // Фильтруем кабинеты (исключаем текущий)
+            const availableOffices = offices.filter(office => 
+                office.id != currentOfficeId && office.numberOfAvailableSeats > 0
+            );
             
-            
-            // Заполняем таблицу
-            const tableBody = document.getElementById('passportTableBody');
-            
-            if (data.length === 0) {
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">
-                            <i class="bi bi-pc display-4 opacity-50"></i>
-                            <p class="mt-3">Компьютеры не найдены</p>
-                        </td>
-                    </tr>`;
+            if (availableOffices.length === 0) {
+                officeSelect.innerHTML = '<option value="">Нет доступных кабинетов</option>';
                 return;
             }
+            
+            availableOffices.forEach(office => {
+                const option = document.createElement('option');
+                option.value = office.id;
+                option.textContent = `${office.body}-${office.number} (Свободно мест: ${office.numberOfAvailableSeats})`;
+                officeSelect.appendChild(option);
+            });
+                     
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки кабинетов:', error);
+            showAlert('Ошибка загрузки кабинетов', 'danger');
+        });
+    }
 
-            data.forEach(passport => {
-                const row = document.createElement('tr');
-                              
-                // Проверяем просрочена ли дата списания
-                const debitDate = passport.dateOfDebit ? new Date(passport.dateOfDebit) : null;
-                const isExpired = debitDate && debitDate < new Date();
-                const dateClass = isExpired ? 'text-danger' : 'text-success';
-                const dateText = passport.dateOfDebit || '—';
-                
-                row.innerHTML = `
-                    <td class="ps-4 fw-bold">${passport.inventoryNumber}</td>
-                    <td>${passport.userName}</td>
-                    <td>${passport.body}-${passport.number}</td>
-                    <td>${passport.dateOfReceipt || '—'}</td>
-                    <td class="${dateClass} fw-medium">${dateText}</td>
-                    <td>
-                        <div class="text-truncate" style="max-width: 200px;">
-                            <small class="text-muted">Процессор:</small> ${passport.processorName || '—'}<br>
-                            <small class="text-muted">Видеокарта:</small> ${passport.videoCardName || '—'}
-                        </div>
-                    </td>
-                    <td><span class="badge bg-primary">${getStatusText(passport.computerPassportStatus)}</span></td>
-                    <td class="text-end pe-4">
-                        <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); showPassportModal(${JSON.stringify(passport).replace(/"/g, '&quot;')})">
-                            <i class="bi bi-eye"></i> Просмотр
-                        </button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
+    // Обработчик подтверждения перемещения
+    document.getElementById('confirmDistributionBtn').addEventListener('click', function() {
+        const officeId = document.getElementById('officeSelect').value;       
+        const note = document.getElementById('distributionNote').value;
+        
+        if (!officeId) {
+            showAlert('Пожалуйста, выберите кабинет', 'warning');
+            return;
+        }
+        
+        const moveData = {
+            ComputerPassportId: currentDistributionData.computerId,
+            OfficeOldId: currentDistributionData.currentOfficeId,
+            OfficeNewId: officeId,
+            Note: note
+        };
+        
+        fetch('https://localhost:5001/api/MovingThroughDivisions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(moveData),
+            credentials: 'include'
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Ошибка перемещения');
+                });
+            }
+            return response.json();
+        })
+        .then(() => {
+            showAlert('Компьютер успешно перемещен', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('distributionModal')).hide();
+            loadComputerPassports(); // Обновляем таблицу
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showAlert('Ошибка при перемещении: ' + error.message, 'danger');
+        });
+    });
+
+    // Добавьте эту функцию в ваш скрипт
+    function loadComputerPassports() {
+        fetch('https://localhost:5001/api/ComputerPassport/Methodist', {credentials: 'include'})
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка загрузки данных');
+                }
+                return response.json();
+            })
+            .then(data => {
+                allComputers = data;
+                applyFilters(); // Применяем текущие фильтры к новым данным
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных:', error);
+                showAlert('Ошибка загрузки данных', 'danger');
+            });
+    }
+
+    function openRepairModal(computerId, inventoryNumber) {
+    currentRepairData = {
+        computerId: computerId
+    };
+    
+    // Обновленные ID элементов
+    document.getElementById('repairComputerNumber').textContent = inventoryNumber;
+    document.getElementById('serviceCentre').value = '';  
+    document.getElementById('repairNote').value = ''; 
+    
+    new bootstrap.Modal(document.getElementById('repairModal')).show();
+}
+
+// Обработчик подтверждения ремонта
+document.getElementById('confirmRepairBtn').addEventListener('click', function() {
+    const serviceCentre = document.getElementById('serviceCentre').value;
+    const note = document.getElementById('repairNote').value;
+    
+    if (!serviceCentre) {
+        showAlert('Пожалуйста, укажите сервисный центр', 'warning');
+        return;
+    }
+    
+    if (!note) {
+        showAlert('Пожалуйста, выберите причину ремонта', 'warning');
+        return;
+    }
+    
+    const repairData = {
+        ComputerPassportId: currentRepairData.computerId,
+        ServiceCentre: serviceCentre,
+        Note: note
+    };
+    
+    fetch('https://localhost:5001/api/Repair', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(repairData),
+        credentials: 'include'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => {
+                throw new Error(err.message || 'Ошибка отправки в ремонт');
+            });
+        }
+        return response.json();
+    })
+    .then(() => {
+        showAlert('Компьютер отправлен в ремонт', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('repairModal')).hide();
+        loadComputerPassports();
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        showAlert('Ошибка при отправке в ремонт: ' + error.message, 'danger');
+    });
+});
+
+
+ function openWriteOffModal(computerId, inventoryNumber) {
+        currentWriteOffData = {
+            computerId: computerId
+        };
+        
+        document.getElementById('writeOffComputerNumber').textContent = inventoryNumber;
+        document.getElementById('writeOffNote').value = '';
+        
+        // Загружаем список складов
+        loadWarehouses();
+        
+        new bootstrap.Modal(document.getElementById('writeOffModal')).show();
+    }
+
+    // Функция загрузки складов
+    function loadWarehouses() {
+        fetch('https://localhost:5001/api/Warehouse', {
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(warehouses => {
+            const warehouseSelect = document.getElementById('warehouseSelect');
+            warehouseSelect.innerHTML = '<option value="">Выберите склад</option>';
+            
+            warehouses.forEach(warehouse => {
+                const option = document.createElement('option');
+                option.value = warehouse.id;
+                option.textContent = warehouse.name;
+                warehouseSelect.appendChild(option);
             });
         })
         .catch(error => {
-            console.error('Ошибка загрузки данных:', error);
-            document.getElementById('loadingSpinner').style.display = 'none';
-            showAlert('Ошибка загрузки данных', 'danger');
+            console.error('Ошибка загрузки складов:', error);
+            showAlert('Ошибка загрузки списка складов', 'danger');
         });
-});
+    }
 
-function showPassportModal(passport) {
-    // Заполняем модальное окно данными
-    document.getElementById('modalInventoryNumber').textContent = passport.inventoryNumber || '—';
-    
-    // Заполняем комплектующие
-    document.getElementById('modalProcessor').textContent = passport.processorName || '—';
-    document.getElementById('modalMotherboard').textContent = passport.motherboardName || '—';
-    document.getElementById('modalRam').textContent = passport.ramName || '—';
-    document.getElementById('modalOc').textContent = passport.ocName || '—';
-    document.getElementById('modalMemoryDisk').textContent = passport.memoryDiskName || '—';
-    document.getElementById('modalPowerUnit').textContent = passport.powerUnitName || '—';
-    document.getElementById('modalVideoCard').textContent = passport.videoCardName || '—';
-    document.getElementById('modalMouse').textContent = passport.mouseName || '—';
-    document.getElementById('modalKeyboard').textContent = passport.keyboardName || '—';
-    document.getElementById('modalScreen').textContent = passport.screenName || '—';
-    
-    // Показываем модальное окно
-    const modal = new bootstrap.Modal(document.getElementById('passportModal'));
-    modal.show();
-}
-
-function getStatusText(status) {
-    const statuses = {
-        0: 'Готов к распределению',
-        1: 'Распределен',
-        2: 'В работе'
-    };
-    return statuses[status] || 'Неизвестно';
-}
-
-function showAlert(message, type) {
-    const alertContainer = document.getElementById('alertContainer');
-    const alert = document.createElement('div');
-    alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.role = 'alert';
-    alert.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `;
-    alertContainer.appendChild(alert);
-}
+    // Обработчик подтверждения списания
+    document.getElementById('confirmWriteOffBtn').addEventListener('click', function() {
+        const warehouseId = document.getElementById('warehouseSelect').value;
+        const note = document.getElementById('writeOffNote').value;
+        
+        if (!warehouseId) {
+            showAlert('Пожалуйста, выберите склад', 'warning');
+            return;
+        }
+        
+        const writeOffData = {
+            ComputerPassportId: currentWriteOffData.computerId,
+            WarehouseId: warehouseId,
+            Note: note
+        };
+        
+        fetch('https://localhost:5001/api/WriteDown', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(writeOffData),
+            credentials: 'include'
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Ошибка списания компьютера');
+                });
+            }
+            return response.json();
+        })
+        .then(() => {
+            showAlert('Компьютер успешно списан', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('writeOffModal')).hide();
+            loadComputerPassports(); // Обновляем таблицу
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showAlert('Ошибка при списании компьютера: ' + error.message, 'danger');
+        });
+    });
 </script>

@@ -1,4 +1,6 @@
-﻿namespace DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
 {
     public class RepairComputer // Ремонт компьютера
     {
@@ -14,12 +16,17 @@
 
         public string? Note { get; set; }
 
+
+        public DateOnly DateOfRepairComputer { get; set; }
         public StatusRepair Status { get; set; }
     }
 
     public enum StatusRepair
     {
+        [Display(Name = "Заявка открыта")]
+        Open,
 
+        [Display(Name = "Заявка выполнена")]
+        Close,
     }
-
 }

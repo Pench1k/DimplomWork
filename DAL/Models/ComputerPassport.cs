@@ -25,6 +25,8 @@ namespace DAL.Models
 
         public ComputerPassportStatus computerPassportStatus { get; set; }
 
+        public List<RepairComputer>? RepairComputers { get; set; }
+
     }
 
     public enum ComputerPassportStatus
@@ -36,7 +38,10 @@ namespace DAL.Models
         Arrival,
 
         [Display(Name = "В работе")]
-        Work
+        Work,
+
+        [Display(Name = "В ремонте")]
+        UnderRenovation
     }
 }
 

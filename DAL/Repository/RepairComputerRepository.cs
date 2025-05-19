@@ -74,5 +74,16 @@ namespace DAL.Reporitory
                 return false;
             }
         }
+
+        public async Task<IEnumerable<RepairComputer>> RepairOnDepartment(int departmentId)
+        {
+
+            return await _context.RepairComputers.Where(rp => rp.ComputerPassport.Office.Department.Id == departmentId && rp.Status == StatusRepair.Open)
+               .Include(rp => rp.ComputerPassport)
+                 .ThenInclude(cp => cp.Office)
+               .Include(rp => rp.ComputerPassport)
+               .AsNoTracking().ToListAsync();
+        }
     }
 }
+

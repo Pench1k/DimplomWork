@@ -59,6 +59,11 @@ namespace DAL.Models
         Arrival,
 
         [Display(Name = "В работе")]
-        Work
+        Work,
+
+        [Display(Name = "В ремонте")]
+        UnderRenovation
+
+        
     }
 }

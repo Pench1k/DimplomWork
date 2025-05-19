@@ -1,0 +1,193 @@
+﻿<div id="loadingSpinner" class="text-center my-5 py-5">
+    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+    <p class="mt-3 text-muted">Загрузка компьютеров в ремонте...</p>
+</div>
+
+<div id="alertContainer" class="container mt-3"></div>
+
+<div class="container-fluid py-4" id="mainContent" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">
+            <i class="bi bi-tools me-2"></i>Компьютеры в ремонте
+        </h1>
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" id="inventorySearch" class="form-control" placeholder="Поиск по инв. номеру">
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="repairTable" class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Инв. номер</th>
+                            <th>Сервисный центр</th>
+                            <th>Причина ремонта</th>
+                            <th>Дата отправки</th>
+                            <th class="text-end pe-4">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="repairTableBody">
+                        <!-- Данные будут загружаться динамически -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения принятия -->
+<div class="modal fade" id="confirmAcceptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title">Подтверждение принятия</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите принять компьютер <span id="confirmComputerNumber" class="fw-bold"></span> с ремонта?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-success" id="confirmAcceptBtn">Подтвердить принятие</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Глобальные переменные
+    let allRepairs = [];
+    let currentRepairId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Загрузка данных
+        fetch('https://localhost:5001/api/Repair', { 
+            method: 'PUT',
+            credentials: 'include'
+        })
+            .then(response => response.json())
+            .then(data => {
+                allRepairs = data;
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                renderTable(data);
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки данных:', error);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                showAlert('Ошибка загрузки данных', 'danger');
+            });
+        
+        // Поиск по инвентарному номеру
+        document.getElementById('inventorySearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filtered = allRepairs.filter(repair => 
+                repair.inventoryNumber.toLowerCase().includes(searchTerm))
+            renderTable(filtered);
+        });
+    });
+
+    function renderTable(data) {
+        const tableBody = document.getElementById('repairTableBody');
+        tableBody.innerHTML = '';
+        
+        if (data.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-tools display-4 opacity-50"></i>
+                        <p class="mt-3">Компьютеры в ремонте не найдены</p>
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        data.forEach(repair => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="ps-4 fw-bold">${repair.inventoryNumber}</td>
+                <td>${repair.serviceCenter || '—'}</td>
+                <td>${repair.note || '—'}</td>
+                <td>${formatDate(repair.dateOfRepairComputer)}</td>
+                <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-success" 
+                        onclick="openAcceptModal(${repair.id}, '${repair.inventoryNumber}')">
+                        <i class="bi bi-check-circle me-1"></i> Принять
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '—';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU');
+    }
+
+    function openAcceptModal(repairId, inventoryNumber) {
+        currentRepairId = repairId;
+        document.getElementById('confirmComputerNumber').textContent = inventoryNumber;       
+        new bootstrap.Modal(document.getElementById('confirmAcceptModal')).show();
+    }
+
+    // Обработчик подтверждения принятия
+    document.getElementById('confirmAcceptBtn').addEventListener('click', function() {
+        
+        
+        fetch(`https://localhost:5001/api/Repair/AcceptRepair/${currentRepairId}`, {
+            method: 'PUT',           
+            credentials: 'include'
+        })
+        .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.message || 'Ошибка обработки запроса');
+                    });
+                }
+                return response.json();
+            })
+            .then(() => {
+            showAlert('Компьютер успешно принят с ремонта', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('confirmAcceptModal')).hide();
+            // Обновляем список
+            return fetch('https://localhost:5001/api/Repair', { 
+                  method: 'PUT',
+                  credentials: 'include'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            allRepairs = data;
+            renderTable(data);
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            showAlert('Ошибка при принятии компьютера: ' + error.message, 'danger');
+        });
+    });
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.role = 'alert';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertContainer.appendChild(alert);
+
+        setTimeout(() => {
+            alert.remove();
+        }, 5000);
+    }
+</script>
