@@ -41,7 +41,10 @@ namespace DAL.Models
         Work,
 
         [Display(Name = "В ремонте")]
-        UnderRenovation
+        UnderRenovation,
+
+        [Display(Name = "На списании")]
+        OnWriteOff
     }
 }
 

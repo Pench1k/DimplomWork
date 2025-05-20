@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using DAL.Models;
+using System.Linq.Expressions;
 
 namespace DAL.Interface
 {
@@ -9,5 +10,7 @@ namespace DAL.Interface
         Task<bool> AddAsync(T entity);
         Task<bool> UpdateAsync(T entity);
         Task<bool> DeleteAsync(int id);
+
+        
     }
 }

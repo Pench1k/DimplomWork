@@ -75,5 +75,13 @@ namespace DAL.Repository
                 return false;
             }
         }
+
+        public async Task<IEnumerable<WriteDowns>> WriteDownWarehouseAccepts(int warehouseId)
+        {
+            return await _context.WriteDowns.Where(aftw => aftw.WarehouseId == warehouseId && aftw.Status == StatusWrite.WaiteWarehouse)
+                .Include(wr => wr.ComputerPassport)
+                .Include(wr => wr.Warehouse)
+                .AsNoTracking().ToListAsync();
+        }
     }
 }
